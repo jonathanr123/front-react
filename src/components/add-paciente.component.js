@@ -36,7 +36,7 @@ class AddPaciente extends Component {
             error: {},
             enviado: false,
             //Para añadir personaEP a la base de datos
-            //idPersonaEP:"",
+            
 
             hoy:new Date(),
 
