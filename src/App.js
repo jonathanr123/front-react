@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
 import AddPaciente from "./components/add-paciente.component";
+import ListaDiagnostico from "./components/list-diagnostico.component";
 import logo from "./images/logo.png";
 import Footer from "./components/footer.component";
 import Login from "./components/login.component";
@@ -47,6 +48,7 @@ class App extends Component {
               <Switch>
                 <Route exact path={["/", "/add-paciente"]} component={AddPaciente}/>
                 <Route exact path="/login" component={Login}/>
+                <Route exact path="/list-diagnostico" component={ListaDiagnostico}/>
               </Switch>
             </div>
 
