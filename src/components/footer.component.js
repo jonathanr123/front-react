@@ -6,9 +6,7 @@ class Footer extends React.Component {
         return (
             <footer>
                 <img className="logo" src={logo} alt="logo de telepark" />
-                <p>Sobre Telepark</p>
                 <p>Informacion Adicional</p>
-                <p>Contacto</p>
             </footer>
         )
     }
