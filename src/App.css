@@ -1,3 +1,8 @@
+body {
+   min-height:100vh; 
+   display:flex;
+   flex-direction: column;
+  }
 .App {
   text-align: center;
 }
@@ -55,7 +60,6 @@ footer {
   width:100%;
   font-style: italic;
   align-items: center;
-  justify-content: space-around;
+  justify-content:center;
   background-color: #f8f8f3;
-  flex-direction: column-reverse;
 }
