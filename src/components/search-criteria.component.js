@@ -5,31 +5,55 @@ class Search extends React.Component {
     render() {
         return (
             <main className="border-top-sm m-0 row justify-content-center m-md-3 rounded shadow container-lg mx-md-auto">
-                <div>
-                    <label id="name" htmlFor="">Nombre</label>
+                <div class="mt-1 mb-2">
+                    <label id="name" htmlFor="" class="me-1">Nombre</label>
                     <input type="text" name="" id="name" />
                 </div>
                 <div>
-                    <label id="lastName" htmlFor="">Apellido</label>
-                    <input type="text" name="" id="lastName" />
+                    <label id="lastName" htmlFor="" class="me-1">Apellido</label>
+                    <input type="text" name="" id="lastName" />                  
+                <button type="button" class="btn btn-success col ms-3">Confirmar</button>
                 </div>
-                <table className="table-secondary">
+                <div>
+                <table class="table">
+                  <thead>
                     <tr>
-                        <th>Company</th>
-                        <th>Contact</th>
-                        <th>Country</th>
+                      <th scope="col">#</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Apellido</th>
+                      <th scope="col">Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>Otto</td>
+                      <td>
+                        <button type="button" class="btn btn-success me-1">Editar</button>
+                        <button type="button" class="btn btn-danger">Eliminar</button>
+                    </td>
                     </tr>
                     <tr>
-                        <td>Alfreds Futterkiste</td>
-                        <td>Maria Anders</td>
-                        <td>Germany</td>
+                      <th scope="row">2</th>
+                      <td>Jacob</td>
+                      <td>Thornton</td>
+                      <td>
+                        <button type="button" class="btn btn-success me-1">Editar</button>
+                        <button type="button" class="btn btn-danger">Eliminar</button>
+                    </td>
                     </tr>
                     <tr>
-                        <td>Centro comercial Moctezuma</td>
-                        <td>Francisco Chang</td>
-                        <td>Mexico</td>
+                      <th scope="row">3</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>
+                        <button type="button" class="btn btn-success me-1">Editar</button>
+                        <button type="button" class="btn btn-danger">Eliminar</button>
+                    </td>
                     </tr>
+                  </tbody>
                 </table>
+                </div>
             </main>
         )
     }
