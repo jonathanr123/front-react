@@ -52,10 +52,10 @@ class App extends Component {
                                 <nav id="navbar-example3" className="navbar navbar-light bg-light flex-column align-items-stretch p-3">
                                     <a class="navbar-brand text-center" href="#">Menu</a>
                                     <nav class="nav nav-pills flex-column ">
-                                        <Link className="nav-link text-dark" to={"/add-paciente"}>Ingresar/Modificar person con EP</Link>
+                                        <Link className="nav-link text-dark" to={"/add-paciente"}>Ingresar persona con EP</Link>
                                         <nav class="nav nav-pills flex-column">
                                             <Link className="nav-link text-dark" to={"/search"}>Criterio de busqueda</Link>
-                                            <a class="nav-link ms-3 my-1 text-secondary" href="#item-1-2">Ingresar/Modificar datos personales</a>
+                                            <a class="nav-link ms-3 my-1 text-secondary" href="#item-1-2">Modificar datos personales</a>
                                         </nav>
                                         <Link className="nav-link text-dark" to={"/"}>Ingresar/Modificar familiar</Link>
                                         <Link className="nav-link text-dark" to={"/list-diagnostico"}>Ingresar ficha medica persona con EP</Link>
