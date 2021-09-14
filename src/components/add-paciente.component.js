@@ -18,36 +18,36 @@ class AddPaciente extends Component {
             //Para validacion
             campo: {
                 //Por lo menos uno tiene q ser "", porque sino me toma todos como string y eso provoca problemas
-                calleR:"",
+                calleR: "",
                 numeroR: null,
-                pisoR:null,
-                calleEP:"",
+                pisoR: null,
+                calleEP: "",
                 numeroEP: null,
-                pisoEP:null,
+                pisoEP: null,
 
-                escolaridadEP:null,
+                escolaridadEP: null,
 
-                localidadR:null,
-                localidadEP:null,
+                localidadR: null,
+                localidadEP: null,
 
-                municipioR:null,
-                municipioEP:null
+                municipioR: null,
+                municipioEP: null
             },
             error: {},
             enviado: false,
             //Para añadir personaEP a la base de datos
-            
 
-            hoy:new Date(),
 
-           
+            hoy: new Date(),
+
+
         };
     }
 
     componentDidMount() {
         this.props.retrieveLocalidades();
         this.props.retrieveMunicipios();
-      }
+    }
 
     // Valido los campos del formulario 
     validarFormulario() {
@@ -115,7 +115,7 @@ class AddPaciente extends Component {
             formularioValido = false;
             error["ocupacionAEP"] = "Por favor, selecciona la ocupacion actual del paciente.";
         }
-        
+
         //Datos Referente
         // Nombre de R 
         if (!campo["nombreR"]) {
@@ -154,58 +154,58 @@ class AddPaciente extends Component {
 
         return formularioValido;
     }
-    
+
     savePersonaEP() {
         const { campo, hoy } = this.state;
         console.log(campo);
         //let perro=0;
         //if(perro==0) {} funciona
-        
+
         this.props
-          .createDireccion(campo.calleR, "A", campo.numeroR, campo.pisoR, campo.localidadR)
-          .then((data) => {
-            console.log(data,'direccion R')
-            this.props
-            .createDireccion(campo.calleEP, "A", campo.numeroEP, campo.pisoEP, campo.localidadEP)
-            .then((data2) => {
-                console.log(data2, 'direccion EP');
+            .createDireccion(campo.calleR, "A", campo.numeroR, campo.pisoR, campo.localidadR)
+            .then((data) => {
+                console.log(data, 'direccion R')
                 this.props
-                .createPersona(campo.nombreR, campo.apellidoR, campo.telefonoR, data.iddireccion)
-                .then((data3) => {
-                    console.log(data3, 'persona R')
-                    this.props
-                    .createPersona(campo.nombreEP, campo.apellidoEP, campo.telefonoEP, data2.iddireccion)
-                    .then((data4) => {
-                        console.log(data4, 'persona EP');
-                        console.log(data4.idpersona,'asa');
+                    .createDireccion(campo.calleEP, "A", campo.numeroEP, campo.pisoEP, campo.localidadEP)
+                    .then((data2) => {
+                        console.log(data2, 'direccion EP');
                         this.props
-                            .createPersonaEp("0", hoy, campo.nacimientoEP, campo.escolaridadEP, campo.sexoEP, "1", "0", "1", campo.ocupacionPEP, campo.ocupacionAEP, data4.idpersona, data3.idpersona)
-                            .then((data5) => {
-                                console.log(data5,'PERSONA EP');
+                            .createPersona(campo.nombreR, campo.apellidoR, campo.telefonoR, data.iddireccion)
+                            .then((data3) => {
+                                console.log(data3, 'persona R')
+                                this.props
+                                    .createPersona(campo.nombreEP, campo.apellidoEP, campo.telefonoEP, data2.iddireccion)
+                                    .then((data4) => {
+                                        console.log(data4, 'persona EP');
+                                        console.log(data4.idpersona, 'asa');
+                                        this.props
+                                            .createPersonaEp("0", hoy, campo.nacimientoEP, campo.escolaridadEP, campo.sexoEP, "1", "0", "1", campo.ocupacionPEP, campo.ocupacionAEP, data4.idpersona, data3.idpersona)
+                                            .then((data5) => {
+                                                console.log(data5, 'PERSONA EP');
+                                            })
+                                            .catch((e) => {
+                                                console.log(e);
+                                            });
+                                    })
+                                    .catch((e) => {
+                                        console.log(e);
+                                    });
                             })
                             .catch((e) => {
                                 console.log(e);
                             });
+
                     })
                     .catch((e) => {
                         console.log(e);
                     });
-                })
-                .catch((e) => {
-                    console.log(e);
-                });
 
             })
             .catch((e) => {
                 console.log(e);
             });
 
-        })
-        .catch((e) => {
-            console.log(e);
-        });
-          
-      }
+    }
 
     // Una vez que los campos del formulario han sido llenado correctamente 
     // Mostramos un mensaje al usuario diciendo: 'Mensaje Enviado Satisfactoriamente !'
@@ -219,7 +219,7 @@ class AddPaciente extends Component {
             this.setState({ enviado: true });
 
             // Muestro el mensaje que se encuentra en la función mensajeEnviado()
-           
+
             return this.send();
         }
         else {
@@ -267,18 +267,18 @@ class AddPaciente extends Component {
     }
 
     render() {
-        const {campo} = this.state;
-        const {localidades, municipios} = this.props;
-        const arrayProvincias= [{id:1,provincia:'Buenos Aires'},{id:2,provincia:'CABA'},{id:3,provincia:'Catamarca'},
-                                {id:4,provincia:'Chaco'},{id:5,provincia:'Chubut'},{id:6,provincia:'Cordoba'},
-                                {id:7,provincia:'Corrientes'},{id:8,provincia:'Entre Rios'},{id:9,provincia:'Formosa'},
-                                {id:10,provincia:'Jujuy'},{id:11,provincia:'La Pampa'},{id:12,provincia:'La Rioja'},
-                                {id:13,provincia:'Mendoza'},{id:14,provincia:'Misiones'},{id:15,provincia:'Neuquen'},
-                                {id:16,provincia:'Rio Negro'},{id:17,provincia:'Salta'},{id:18,provincia:'Santa Cruz'},
-                                {id:19,provincia:'Santa Fe'},{id:20,provincia:'Santiago del Estero'},{id:21,provincia:'San Luis'},
-                                {id:22,provincia:'San Juan'},{id:23,provincia:'Tierra del Fuego'},{id:24,provincia:'Tucuman'}
-                                ];
-        
+        const { campo } = this.state;
+        const { localidades, municipios } = this.props;
+        const arrayProvincias = [{ id: 1, provincia: 'Buenos Aires' }, { id: 2, provincia: 'CABA' }, { id: 3, provincia: 'Catamarca' },
+        { id: 4, provincia: 'Chaco' }, { id: 5, provincia: 'Chubut' }, { id: 6, provincia: 'Cordoba' },
+        { id: 7, provincia: 'Corrientes' }, { id: 8, provincia: 'Entre Rios' }, { id: 9, provincia: 'Formosa' },
+        { id: 10, provincia: 'Jujuy' }, { id: 11, provincia: 'La Pampa' }, { id: 12, provincia: 'La Rioja' },
+        { id: 13, provincia: 'Mendoza' }, { id: 14, provincia: 'Misiones' }, { id: 15, provincia: 'Neuquen' },
+        { id: 16, provincia: 'Rio Negro' }, { id: 17, provincia: 'Salta' }, { id: 18, provincia: 'Santa Cruz' },
+        { id: 19, provincia: 'Santa Fe' }, { id: 20, provincia: 'Santiago del Estero' }, { id: 21, provincia: 'San Luis' },
+        { id: 22, provincia: 'San Juan' }, { id: 23, provincia: 'Tierra del Fuego' }, { id: 24, provincia: 'Tucuman' }
+        ];
+
         return (
             <form onSubmit={this.enviarFormulario.bind(this)}>
                 <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto">
@@ -355,7 +355,7 @@ class AddPaciente extends Component {
                                         <option
                                             value={provincia.provincia}
                                             key={index}
-                                            >
+                                        >
                                             {provincia.provincia}
                                         </option>
                                     ))}
@@ -369,11 +369,11 @@ class AddPaciente extends Component {
                             <select className="form-select" id="municipioEP" onChange={this.detectarCambio.bind(this, "municipioEP")} value={this.state.campo["municipioEP"] || ''}>
                                 <option value="">Municipio</option>
                                 {municipios &&
-                                    municipios.filter(municipio=>municipio.provincia==campo.provinciaEP).map((municipio, index) => (
+                                    municipios.filter(municipio => municipio.provincia === campo.provinciaEP).map((municipio, index) => (
                                         <option
                                             value={municipio.idmunicipio}
                                             key={index}
-                                            >
+                                        >
                                             {municipio.nombre}
                                         </option>
                                     ))}
@@ -387,18 +387,18 @@ class AddPaciente extends Component {
                             <select className="form-select" id="localidadEP" onChange={this.detectarCambio.bind(this, "localidadEP")} value={this.state.campo["localidadEP"] || ''}>
                                 <option value="">Localidad</option>
                                 {localidades &&
-                                    localidades.filter(localidad=>localidad.municipio_idmunicipio==campo.municipioEP).map((localidad, index) => (
+                                    localidades.filter(localidad => localidad.municipio_idmunicipio === campo.municipioEP).map((localidad, index) => (
                                         <option
                                             value={localidad.idlocalidad}
                                             key={index}
-                                            >
+                                        >
                                             {localidad.nombre}
                                         </option>
                                     ))}
                             </select>
                             <span style={{ color: "red" }}>{this.state.error["localidadEP"]}</span>
                         </div>
-                    </div>                    
+                    </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
                         <label className="col-form-label">Calle</label>
                         <div>
@@ -549,7 +549,7 @@ class AddPaciente extends Component {
                                         <option
                                             value={municipio.idmunicipio}
                                             key={index}
-                                            >
+                                        >
                                             {municipio.nombre}
                                         </option>
                                     ))}
@@ -563,18 +563,18 @@ class AddPaciente extends Component {
                             <select className="form-select" id="localidadR" onChange={this.detectarCambio.bind(this, "localidadR")} value={this.state.campo["localidadR"] || ''}>
                                 <option value="">Localidad</option>
                                 {localidades &&
-                                    localidades.filter(localidad=>localidad.municipio_idmunicipio==campo.municipioR).map((localidad, index) => (
+                                    localidades.filter(localidad => localidad.municipio_idmunicipio === campo.municipioR).map((localidad, index) => (
                                         <option
                                             value={localidad.idlocalidad}
                                             key={index}
-                                            >
+                                        >
                                             {localidad.nombre}
                                         </option>
                                     ))}
                             </select>
                             <span style={{ color: "red" }}>{this.state.error["localidadEP"]}</span>
                         </div>
-                    </div>                    
+                    </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
                         <label className="col-form-label">Calle</label>
                         <div>
@@ -610,8 +610,8 @@ class AddPaciente extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      localidades: state.localidad,
-      municipios: state.municipio
+        localidades: state.localidad,
+        municipios: state.municipio
     };
 };
 //onClick={this.send}

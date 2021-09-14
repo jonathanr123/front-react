@@ -12,7 +12,7 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <body>
+                <div className="contenedor">
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
                         <div className="container-fluid">
                             <a className="navbar-brand" href="/">
@@ -47,23 +47,23 @@ class App extends Component {
                     </nav>
 
                     <div className="d-flex">
-                        <div className="container" class="Submenu">
+                        <div className="submenu">
                             <aside className="row ">
                                 <nav id="navbar-example3" className="navbar navbar-light bg-light flex-column align-items-stretch p-3">
-                                    <a class="navbar-brand text-center" href="#">Menu</a>
-                                    <nav class="nav nav-pills flex-column ">
+                                    <a className="navbar-brand text-center" href="#">Menu</a>
+                                    <nav className="nav nav-pills flex-column ">
                                         <Link className="nav-link text-dark" to={"/add-paciente"}>Ingresar persona con EP</Link>
-                                        <nav class="nav nav-pills flex-column">
+                                        <nav className="nav nav-pills flex-column">
                                             <Link className="nav-link text-dark" to={"/search"}>Criterio de busqueda</Link>
-                                            <a class="nav-link ms-3 my-1 text-secondary" href="#item-1-2">Modificar datos personales</a>
+                                            <a className="nav-link ms-3 my-1 text-secondary" href="#item-1-2">Modificar datos personales</a>
                                         </nav>
                                         <Link className="nav-link text-dark" to={"/"}>Ingresar/Modificar familiar</Link>
                                         <Link className="nav-link text-dark" to={"/list-diagnostico"}>Ingresar ficha medica persona con EP</Link>
-                                        <nav class="nav nav-pills flex-column">
-                                            <a class="nav-link ms-3 my-1 text-secondary" href="#item-3-1">Item 3-1</a>
-                                            <a class="nav-link ms-3 my-1 text-secondary" href="#item-3-2">Item 3-2</a>
+                                        <nav className="nav nav-pills flex-column">
+                                            <a className="nav-link ms-3 my-1 text-secondary" href="#item-3-1">Item 3-1</a>
+                                            <a className="nav-link ms-3 my-1 text-secondary" href="#item-3-2">Item 3-2</a>
                                         </nav>
-                                        <a class="nav-link" href="#item-3"></a>
+                                        <a className="nav-link" href="#item-3"></a>
                                         <Link className="nav-link text-dark" to={"/"}>Ingresar/Modificar Evolucion</Link>
                                     </nav>
                                 </nav>
@@ -83,7 +83,7 @@ class App extends Component {
                         </div>
                     </div>
                     <Footer />
-                </body>
+                </div>
             </Router>
         );
     }
