@@ -3,10 +3,13 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
 import AddPaciente from "./components/add-paciente.component";
 import ListaDiagnostico from "./components/list-diagnostico.component";
+import ListaEvolucion from "./components/list-evolucion.component";
 import logo from "./images/logo.png";
 import Footer from "./components/footer.component";
 import Login from "./components/login.component";
 import Search from "./components/search-criteria.component";
+
+import Sidebar from "./components/sidebar.component";
 
 class App extends Component {
     render() {
@@ -46,29 +49,10 @@ class App extends Component {
                         </div>
                     </nav>
 
-                    <div className="d-flex">
-                        <div className="container" class="Submenu">
-                            <aside className="row ">
-                                <nav id="navbar-example3" className="navbar navbar-light bg-light flex-column align-items-stretch p-3">
-                                    <a class="navbar-brand text-center" href="#">Menu</a>
-                                    <nav class="nav nav-pills flex-column ">
-                                        <Link className="nav-link text-dark" to={"/add-paciente"}>Ingresar persona con EP</Link>
-                                        <nav class="nav nav-pills flex-column">
-                                            <Link className="nav-link text-dark" to={"/search"}>Criterio de busqueda</Link>
-                                            <a class="nav-link ms-3 my-1 text-secondary" href="#item-1-2">Modificar datos personales</a>
-                                        </nav>
-                                        <Link className="nav-link text-dark" to={"/"}>Ingresar/Modificar familiar</Link>
-                                        <Link className="nav-link text-dark" to={"/list-diagnostico"}>Ingresar ficha medica persona con EP</Link>
-                                        <nav class="nav nav-pills flex-column">
-                                            <a class="nav-link ms-3 my-1 text-secondary" href="#item-3-1">Item 3-1</a>
-                                            <a class="nav-link ms-3 my-1 text-secondary" href="#item-3-2">Item 3-2</a>
-                                        </nav>
-                                        <a class="nav-link" href="#item-3"></a>
-                                        <Link className="nav-link text-dark" to={"/"}>Ingresar/Modificar Evolucion</Link>
-                                    </nav>
-                                </nav>
-                            </aside>
-                        </div>
+                    <Sidebar></Sidebar>
+
+                    
+                        
                         <div className="container">
                             <div className="row">
                                 <div>
@@ -76,12 +60,13 @@ class App extends Component {
                                         <Route exact path={["/add-paciente"]} component={AddPaciente} />
                                         <Route exact path="/login" component={Login} />
                                         <Route exact path="/list-diagnostico" component={ListaDiagnostico} />
+                                        <Route exact path="/list-evolucion" component={ListaEvolucion} />
                                         <Route exact path="/search" component={Search} />
                                     </Switch>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    
                     <Footer />
                 </body>
             </Router>

@@ -51,17 +51,16 @@ class Search extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                  {arrayPersonas &&
-                                    arrayPersonas.map((person, index) => ())}
+                  
                     <tr>
-                    <td>{person.name}</td>
-                    <td>{person.lastName}</td>
+                    <td></td>
+                    <td></td>
                       <th scope="row">1</th>
                       <td>Mark</td>
                       <td>Otto</td>
                       <td>
                         <button type="button" class="btn btn-success me-1">Editar</button>
-                        <button type="button" class="btn btn-danger" onClick={() => this.eliminar(person.id)}>Eliminar</button>
+                        <button type="button" class="btn btn-danger" onClick={() => this.eliminar(1)}>Eliminar</button>
                     </td>
                     </tr>
                     <tr>
