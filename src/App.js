@@ -54,7 +54,7 @@ class App extends Component {
                                     <nav className="nav nav-pills flex-column ">
                                         <Link className="nav-link text-dark" to={"/add-paciente"}>Ingresar persona con EP</Link>
                                         <nav className="nav nav-pills flex-column">
-                                            <Link className="nav-link text-dark" to={"/search"}>Criterio de busqueda</Link>
+                                            <Link className="nav-link text-dark" to={"/search"}>Criterio de búsqueda</Link>
                                             <a className="nav-link ms-3 my-1 text-secondary" href="#item-1-2">Modificar datos personales</a>
                                         </nav>
                                         <Link className="nav-link text-dark" to={"/"}>Ingresar/Modificar familiar</Link>

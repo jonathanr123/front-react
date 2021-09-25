@@ -7,8 +7,12 @@ class Search extends React.Component {
 
     this.state = {
       arrayPerson: [
-        { id: 1, name: 'juan', lastName: 'ortega' },
-        { id: 2, name: 'Asmael', lastName: 'santos' },
+        { id: 0, name: 'juan', lastName: 'ortega' },
+        { id: 1, name: 'Asmael', lastName: 'santos' },
+        { id: 2, name: 'franco', lastName: 'raggio' },
+        { id: 3, name: 'lucas', lastName: 'gomez' },
+        { id: 4, name: 'juan', lastName: 'santos' },
+        { id: 5, name: 'francisco', lastName: 'rhapael' },
       ],
       name: '',
       lastName: '',
@@ -31,7 +35,7 @@ class Search extends React.Component {
     let name = this.state.name
     let lastName = this.state.lastName
     let arrayPersonas = this.state.searchArrayperson.filter(function (person) {
-      return person.name.includes(name) || person.lastName.includes(lastName)
+      return person.name.includes(name) && person.lastName.includes(lastName)
     });
     this.setState({ searchArrayperson: arrayPersonas })
   }
