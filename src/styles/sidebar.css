@@ -43,6 +43,14 @@
     line-height: 60px;
   }
 
+  .sidebar.open .logo-details svg{
+    opacity: 0;
+    margin: 20px;
+    display: none;
+    pointer-events: auto;
+    text-align: center;
+  }
+
   .sidebar .logo-details{
     height: 50px;
     align-items: center;
@@ -120,6 +128,13 @@
     text-align: center;
   }
 
+  .sidebar.open .logo-details .links_name{
+    opacity: 1;
+    pointer-events: auto;
+    text-align: center;
+    margin: 20px;
+  }
+
   .sidebar li a:hover .links_name,
 .sidebar li a:hover svg{
   transition: all 0.5s ease;
@@ -148,7 +163,7 @@
     line-height: 60px;
   }
 
-@media (max-width: 420px) {
+@media (max-width: 576px) {
     .sidebar li .tooltip{
       display: none;
     }
@@ -180,6 +195,17 @@
         color: white;
         display: contents;
         text-align: left;
+      }
+
+      .sidebar .logo-details .links_name{
+        opacity: 1;
+        pointer-events: auto;
+        text-align: center;
+        margin: 7px;
+      }
+
+      .sidebar .logo-details svg{
+        display: none;
       }
     
   }

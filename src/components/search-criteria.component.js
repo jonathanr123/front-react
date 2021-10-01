@@ -31,17 +31,17 @@ class Search extends React.Component {
       const {show, showNuevo}=this.state;
         return (
             <main className="border-top-sm m-0 row justify-content-center m-md-3 rounded shadow container-lg mx-md-auto">
-                <div class="mt-1 mb-2">
-                    <label id="name" htmlFor="" class="me-1">Nombre</label>
+                <div className="mt-1 mb-2">
+                    <label id="name" htmlFor="" className="me-1">Nombre</label>
                     <input type="text" name="" id="name" />
                 </div>
                 <div>
-                    <label id="lastName" htmlFor="" class="me-1">Apellido</label>
+                    <label id="lastName" htmlFor="" className="me-1">Apellido</label>
                     <input type="text" name="" id="lastName" />                  
-                <button type="button" class="btn btn-success col ms-3">Confirmar</button>
+                <button type="button" className="btn btn-success col ms-3">Confirmar</button>
                 </div>
                 <div>
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th scope="col">#</th>
@@ -59,8 +59,8 @@ class Search extends React.Component {
                       <td>Mark</td>
                       <td>Otto</td>
                       <td>
-                        <button type="button" class="btn btn-success me-1">Editar</button>
-                        <button type="button" class="btn btn-danger" onClick={() => this.eliminar(1)}>Eliminar</button>
+                        <button type="button" className="btn btn-success me-1">Editar</button>
+                        <button type="button" className="btn btn-danger" onClick={() => this.eliminar(1)}>Eliminar</button>
                     </td>
                     </tr>
                     <tr>
@@ -68,16 +68,16 @@ class Search extends React.Component {
                       <td>Jacob</td>
                       <td>Thornton</td>
                       <td>
-                        <button type="button" class="btn btn-success me-1">Editar</button>
-                        <button type="button" class="btn btn-danger">Eliminar</button>
+                        <button type="button" className="btn btn-success me-1">Editar</button>
+                        <button type="button" className="btn btn-danger">Eliminar</button>
                     </td>
                     </tr>
                     <tr>
                       <th scope="row">3</th>
                       <td colspan="2">Larry the Bird</td>
                       <td>
-                        <button type="button" class="btn btn-success me-1">Editar</button>
-                        <button type="button" class="btn btn-danger">Eliminar</button>
+                        <button type="button" className="btn btn-success me-1">Editar</button>
+                        <button type="button" className="btn btn-danger">Eliminar</button>
                     </td>
                     </tr>
                   </tbody>
