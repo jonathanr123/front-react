@@ -7,6 +7,9 @@ import municipio from "./municipio";
 import diagnostico from "./diagnostico";
 import enfermedad from "./enfermedad";
 import evolucion from "./evolucion";
+import obrasocial from "./obrasocial";
+import medicamento from "./medicamento";
+import indicacion from "./indicacion";
 
 export default combineReducers({
   persona,
@@ -14,5 +17,8 @@ export default combineReducers({
   municipio,
   enfermedad,
   diagnostico,
-  evolucion
+  evolucion,
+  obrasocial,
+  medicamento,
+  indicacion
 });

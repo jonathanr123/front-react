@@ -5,6 +5,8 @@ import AddPaciente from "./components/add-paciente.component";
 import FichaMedica from "./components/fichaMedica.component";
 import ListaDiagnostico from "./components/list-diagnostico.component";
 import ListaEvolucion from "./components/list-evolucion.component";
+import ListaObraSocial from "./components/list-obrasocial.component";
+import ListaIndicacion from "./components/list-indicacion.component";
 import Footer from "./components/footer.component";
 import Login from "./components/login.component";
 import Search from "./components/search-criteria.component";
@@ -40,6 +42,8 @@ class App extends Component {
                                         <Route exact path="/ficha" component={FichaMedica} />
                                         <Route exact path="/list-diagnostico" component={ListaDiagnostico} />
                                         <Route exact path="/list-evolucion" component={ListaEvolucion} />
+                                        <Route exact path="/list-obrasocial" component={ListaObraSocial} />
+                                        <Route exact path="/list-indicacion" component={ListaIndicacion} />
                                         <Route exact path="/search" component={Search} />
                                     </Switch>
                                 </div>
