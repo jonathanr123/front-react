@@ -22,7 +22,7 @@ class ListaEvolucion extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveEvolucionEp(4);
+        this.props.retrieveEvolucionEp(this.props.idEpElegido);
     }
 
 
@@ -43,12 +43,12 @@ class ListaEvolucion extends Component {
             var data = {
                 escalaevolucion: escala,
                 fecha: fechaEvolucion,
-                idpersonaep: 4,
+                idpersonaep: this.props.idEpElegido,
               };
             this.props
                 .updateEvolucion(id, data)
                 .then(() => {
-                    this.props.retrieveEvolucionEp(4);
+                    this.props.retrieveEvolucionEp(this.props.idEpElegido);
                     this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -82,10 +82,10 @@ class ListaEvolucion extends Component {
         let fechaEvolucion=this.state.campo.fecha;
         if(escala!=='' & fechaEvolucion!=='' ){
             this.props
-                .createEvolucion(escala, fechaEvolucion, 4)
+                .createEvolucion(escala, fechaEvolucion, this.props.idEpElegido)
                 .then((dataevolucion) => {
                         console.log(dataevolucion,'Evolucion creado');
-                        this.props.retrieveEvolucionEp(4);
+                        this.props.retrieveEvolucionEp(this.props.idEpElegido);
                         this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -101,7 +101,7 @@ class ListaEvolucion extends Component {
         this.props
             .deleteEvolucion(idevolucion)
             .then(() => {
-                    this.props.retrieveEvolucionEp(4);
+                    this.props.retrieveEvolucionEp(this.props.idEpElegido);
              })
         this.setState({show:false});
     }
@@ -165,9 +165,8 @@ class ListaEvolucion extends Component {
     }
 
     render() {
-            const paciente='Hernan Gutierrez';
             const {show, showNuevo}=this.state;
-            const {evoluciones} = this.props;
+            const {evoluciones, nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -176,7 +175,7 @@ class ListaEvolucion extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-6 col-lg-6 col-xl-6">
-                    <a><b>Nombre y Apellido:</b> {paciente}</a>
+                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
                 </div>
                 <div className="mb-4 col-12 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right'}}>
                 <button type="button" className="btn btn-primary" onClick={() => this.agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -282,7 +281,9 @@ class ListaEvolucion extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      evoluciones: state.evolucion
+      evoluciones: state.evolucion,
+      idEpElegido: state.global.idEpElegido,
+      nombreEpElegido: state.global.nombreEpElegido
     };
 };
 

@@ -23,7 +23,8 @@ class ListaObraSocial extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveObraSocialEp(4);
+        console.log(this.props.idEpElegido);
+        this.props.retrieveObraSocialEp(this.props.idEpElegido);
     }
 
 
@@ -47,12 +48,12 @@ class ListaObraSocial extends Component {
             var data = {
                 nombre: nombre,
                 esestatal: tipoObraSocial,
-                idpersonaep: 4,
+                idpersonaep: this.props.idEpElegido,
               };
             this.props
                 .updateObraSocial(id, data)
                 .then(() => {
-                    this.props.retrieveObraSocialEp(4);
+                    this.props.retrieveObraSocialEp(this.props.idEpElegido);
                     this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -92,10 +93,10 @@ class ListaObraSocial extends Component {
         let tipoObraSocial=this.state.campo.tipo;
         if(nombre!=='' & tipoObraSocial!=='' ){
             this.props
-                .createObraSocial(nombre, tipoObraSocial, 4)
+                .createObraSocial(nombre, tipoObraSocial, this.props.idEpElegido)
                 .then((dataobrasocial) => {
                         console.log(dataobrasocial,'ObraSocial creado');
-                        this.props.retrieveObraSocialEp(4);
+                        this.props.retrieveObraSocialEp(this.props.idEpElegido);
                         this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -111,7 +112,7 @@ class ListaObraSocial extends Component {
         this.props
             .deleteObraSocial(idobrasocial)
             .then(() => {
-                    this.props.retrieveObraSocialEp(4);
+                    this.props.retrieveObraSocialEp(this.props.idEpElegido);
              })
         this.setState({show:false});
     }
@@ -175,9 +176,8 @@ class ListaObraSocial extends Component {
     }
 
     render() {
-            const paciente='Hernan Gutierrez';
             const {show, showNuevo, arrayOS}=this.state;
-            const {obrasociales} = this.props;
+            const {obrasociales, nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -186,7 +186,7 @@ class ListaObraSocial extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-6 col-lg-6 col-xl-6">
-                    <a><b>Nombre y Apellido:</b> {paciente}</a>
+                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
                 </div>
                 <div className="mb-4 col-12 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right'}}>
                 <button type="button" className="btn btn-primary" onClick={() => this.agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -281,8 +281,11 @@ class ListaObraSocial extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      obrasociales: state.obrasocial
+      obrasociales: state.obrasocial,
+      idEpElegido: state.global.idEpElegido,
+      nombreEpElegido: state.global.nombreEpElegido
     };
 };
+
 
 export default connect(mapStateToProps, { retrieveObraSocialEp, createObraSocial, updateObraSocial, deleteObraSocial})(ListaObraSocial);

@@ -11,6 +11,8 @@ import Footer from "./components/footer.component";
 import Login from "./components/login.component";
 import Search from "./components/search-criteria.component";
 
+import ListaPaciente from "./components/list-pacientesEp.component";
+
 import Sidebar from "./components/sidebar.component";
 
 class App extends Component {
@@ -45,6 +47,7 @@ class App extends Component {
                                         <Route exact path="/list-obrasocial" component={ListaObraSocial} />
                                         <Route exact path="/list-indicacion" component={ListaIndicacion} />
                                         <Route exact path="/search" component={Search} />
+                                        <Route exact path="/list-pacientes" component={ListaPaciente} />
                                     </Switch>
                                 </div>
                             </div>

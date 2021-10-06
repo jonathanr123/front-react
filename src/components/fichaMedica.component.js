@@ -16,9 +16,9 @@ class FichaMedica extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveDiagnosticosEp(4);
-        this.props.retrieveEvolucionEp(4);
-        this.props.retrieveObraSocialEp(4)
+        this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
+        this.props.retrieveEvolucionEp(this.props.idEpElegido);
+        this.props.retrieveObraSocialEp(this.props.idEpElegido)
     }
 
 
@@ -37,9 +37,7 @@ class FichaMedica extends Component {
 
 
     render() {
-            const paciente='Hernan Gutierrez';
-            //const {show, showNuevo}=this.state;
-            const {diagnosticos, evoluciones, obrasociales} = this.props;
+            const {diagnosticos, evoluciones, obrasociales, nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -48,7 +46,7 @@ class FichaMedica extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-12 col-lg-12 col-xl-12">
-                    <a><b>Nombre y Apellido:</b> {paciente}</a>
+                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
                 </div>
                 </div>
                 
@@ -158,7 +156,9 @@ const mapStateToProps = (state) => {
     return {
       diagnosticos: state.diagnostico,
       evoluciones: state.evolucion,
-      obrasociales: state.obrasocial
+      obrasociales: state.obrasocial,
+      idEpElegido: state.global.idEpElegido,
+      nombreEpElegido: state.global.nombreEpElegido
     };
 };
 

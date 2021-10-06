@@ -23,7 +23,7 @@ class ListaDiagnostico extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveDiagnosticosEp(4);
+        this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
         this.props.retrieveEnfermedad();
     }
 
@@ -44,13 +44,13 @@ class ListaDiagnostico extends Component {
         if(idEnfermedad!=='' & fechaEnfermedad!=='' ){
             var data = {
                 fecha: fechaEnfermedad,
-                idpersonaep: 4,
+                idpersonaep: this.props.idEpElegido,
                 idenfermedad: idEnfermedad,
               };
             this.props
                 .updateDiagnostico(id, data)
                 .then(() => {
-                    this.props.retrieveDiagnosticosEp(4);
+                    this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
                     this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -84,10 +84,10 @@ class ListaDiagnostico extends Component {
         let fechaEnfermedad=this.state.campo.fecha;
         if(idEnfermedad!=='' & fechaEnfermedad!=='' ){
             this.props
-                .createDiagnostico(fechaEnfermedad, 4, idEnfermedad)
+                .createDiagnostico(fechaEnfermedad, this.props.idEpElegido, idEnfermedad)
                 .then((datadiagnostico) => {
                         console.log(datadiagnostico,'Diagnostico creado');
-                        this.props.retrieveDiagnosticosEp(4);
+                        this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
                         this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -103,7 +103,7 @@ class ListaDiagnostico extends Component {
         this.props
             .deleteDiagnostico(iddiagnostico)
             .then(() => {
-                    this.props.retrieveDiagnosticosEp(4);
+                    this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
              })
         this.setState({show:false});
     }
@@ -167,9 +167,8 @@ class ListaDiagnostico extends Component {
     }
 
     render() {
-            const paciente='Hernan Gutierrez';
             const {show, showNuevo}=this.state;
-            const {diagnosticos, enfermedades} = this.props;
+            const {diagnosticos, enfermedades, nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -178,7 +177,7 @@ class ListaDiagnostico extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-6 col-lg-6 col-xl-6">
-                    <a><b>Nombre y Apellido:</b> {paciente}</a>
+                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
                 </div>
                 <div className="mb-4 col-12 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right'}}>
                 <button type="button" className="btn btn-primary" onClick={() => this.agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -293,7 +292,9 @@ class ListaDiagnostico extends Component {
 const mapStateToProps = (state) => {
     return {
       diagnosticos: state.diagnostico,
-      enfermedades: state.enfermedad
+      enfermedades: state.enfermedad,
+      idEpElegido: state.global.idEpElegido,
+      nombreEpElegido: state.global.nombreEpElegido
     };
 };
 

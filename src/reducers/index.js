@@ -10,6 +10,8 @@ import evolucion from "./evolucion";
 import obrasocial from "./obrasocial";
 import medicamento from "./medicamento";
 import indicacion from "./indicacion";
+import global from "./global";
+import paciente from "./persona-ep"
 
 export default combineReducers({
   persona,
@@ -20,5 +22,8 @@ export default combineReducers({
   evolucion,
   obrasocial,
   medicamento,
-  indicacion
+  indicacion,
+  paciente,
+
+  global
 });
