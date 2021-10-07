@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { retrieveDiagnosticosEp } from "../actions/diagnostico";
 import { retrieveEvolucionEp } from "../actions/evolucion";
 import { retrieveObraSocialEp } from "../actions/obrasocial";
+import { retrieveIndicacionEp } from "../actions/indicacion";
+
 class FichaMedica extends Component {
 
     constructor(props) {
@@ -18,13 +20,27 @@ class FichaMedica extends Component {
     componentDidMount() {
         this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
         this.props.retrieveEvolucionEp(this.props.idEpElegido);
-        this.props.retrieveObraSocialEp(this.props.idEpElegido)
+        this.props.retrieveObraSocialEp(this.props.idEpElegido);
+        this.props.retrieveIndicacionEp(this.props.idEpElegido)
     }
 
 
     convertirFormatoFecha(string){
         var info = string.split('-');
         return info[2] + '/' + info[1] + '/' + info[0];
+    }
+
+    convertirFormatoHora(string){
+        var info = string.split(':');
+        return info[0] + ':' + info[1];
+    }
+
+    convertirEstado(estado){
+        if( estado == 1 ){
+            return 'Vigente';
+        } else{
+            return 'Caducado';
+        }
     }
 
     convertirTipo(tipo){
@@ -37,7 +53,7 @@ class FichaMedica extends Component {
 
 
     render() {
-            const {diagnosticos, evoluciones, obrasociales, nombreEpElegido} = this.props;
+            const {diagnosticos, evoluciones, obrasociales, indicaciones, nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -144,6 +160,43 @@ class FichaMedica extends Component {
                 </div>
                 </div>
 
+                <div className="row" style={{verticalAlign:'middle'}}>
+                    <div className="col-6 col-md-6 col-lg-6 col-xl-6">
+                    <h4 className="mt-4">Indicación de Medicamentos</h4>
+                    </div>
+                    <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
+                    <Link to={"/list-indicacion"}><button className="btn btn-success" to={"/list-indicacion"} >Editar</button></Link>
+                    </div>
+                </div>
+                <div className="row">
+                <div className="col-12">
+                <table className="table table-bordered table-hover shadow" style={{width:'100%'}}>
+                <thead>
+                    <tr>
+                    <th scope="col">Nombre de Medicamento</th>
+                    <th scope="col">Dosis en mg</th>
+                    <th scope="col">Hora de Toma</th>
+                    <th scope="col">Fecha de Prescripción</th>
+                    <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody style={{verticalAlign:'middle'}}>
+                    
+                    {indicaciones &&
+                                        indicaciones.map((indicacion, index) => (
+                                            <tr key={index}>
+                                            <td >{indicacion.idmedicamento.nombre}</td>
+                                            <td >{indicacion.cantidadmiligramos} mg</td>
+                                            <td >Cada {this.convertirFormatoHora(indicacion.horadetoma)} hs</td>
+                                            <td>{this.convertirFormatoFecha(indicacion.fechaprescripcion)}</td>
+                                            <td >{this.convertirEstado(indicacion.estavigente)}</td>
+                                            </tr>
+                                        ))}
+                </tbody>
+                </table>
+                </div>
+                </div>
+
                 </div>
 
                 
@@ -157,9 +210,10 @@ const mapStateToProps = (state) => {
       diagnosticos: state.diagnostico,
       evoluciones: state.evolucion,
       obrasociales: state.obrasocial,
+      indicaciones: state.indicacion,
       idEpElegido: state.global.idEpElegido,
       nombreEpElegido: state.global.nombreEpElegido
     };
 };
 
-export default connect(mapStateToProps, { retrieveDiagnosticosEp, retrieveEvolucionEp, retrieveObraSocialEp})(FichaMedica);
+export default connect(mapStateToProps, { retrieveDiagnosticosEp, retrieveEvolucionEp, retrieveObraSocialEp, retrieveIndicacionEp})(FichaMedica);
