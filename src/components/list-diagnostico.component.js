@@ -12,8 +12,6 @@ class ListaDiagnostico extends Component {
         this.state = {
             show:false,
             showNuevo:false,
-            nomEnfermedad:'',
-            fechaEnfermedad:'',
             campo:{
                 enfermedad:'',
                 fecha:''
@@ -34,7 +32,7 @@ class ListaDiagnostico extends Component {
     }
 
     editar(enfermedad, fecha, iddiagnostico){
-        this.setState({show:true, showNuevo:false, nomEnfermedad:enfermedad, fechaEnfermedad:fecha, idEditado:iddiagnostico, campo:{enfermedad:""}});
+        this.setState({show:true, showNuevo:false, idEditado:iddiagnostico, campo:{enfermedad:enfermedad, fecha:fecha}});
     }
 
     guardar(){
@@ -76,7 +74,7 @@ class ListaDiagnostico extends Component {
     }
 
     agregar(){
-        this.setState({showNuevo:true, show:false})
+        this.setState({showNuevo:true, show:false, campo:{enfermedad:'', fecha:''}})
     }
 
     cargarNuevo(){
@@ -234,12 +232,10 @@ class ListaDiagnostico extends Component {
                                         </option>
                                     ))}
                             </select>
-                        <span style={{ color: "red", paddingLeft:10 }}>{this.state.nomEnfermedad}</span>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
                         <label className="col-form-label">Fecha de Diagnóstico</label>
-                        <input type="date" className="form-control" id="fecha" onChange={this.detectarCambio.bind(this, "fecha")}/>
-                        <span style={{ color: "red", paddingLeft:10 }}>{this.convertirFormatoFecha(this.state.fechaEnfermedad)}</span>
+                        <input type="date" className="form-control" id="fecha" onChange={this.detectarCambio.bind(this, "fecha")} value={this.state.campo["fecha"] || ''}/>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4" style={{textAlign:'center', paddingTop:38}}>
                         <button type="submit" className="btn btn-success" style={{width:'40%'}} onClick={() => this.guardar()}>Guardar</button>
@@ -266,7 +262,7 @@ class ListaDiagnostico extends Component {
                                         <tr key={index}>
                                         <td >{diagnostico.idenfermedad.nombre}</td>
                                         <td>{this.convertirFormatoFecha(diagnostico.fecha)}</td>
-                                        <td><button type="button" className="btn btn-success" style={{marginRight:10}} onClick={() => this.editar(diagnostico.idenfermedad.nombre, diagnostico.fecha, diagnostico.iddiagnostico)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <td><button type="button" className="btn btn-success" style={{marginRight:10}} onClick={() => this.editar(diagnostico.idenfermedad.idenfermedad, diagnostico.fecha, diagnostico.iddiagnostico)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                 <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                                                 </svg></button>

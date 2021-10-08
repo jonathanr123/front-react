@@ -11,8 +11,6 @@ class ListaObraSocial extends Component {
         this.state = {
             show:false,
             showNuevo:false,
-            nombreObraSocial:'',
-            tipoObraSocial:'',
             campo:{
                 nombreObraSocial:'',
                 tipo:''
@@ -37,7 +35,7 @@ class ListaObraSocial extends Component {
     }
 
     editar(nombreObraSocial, tipo, idobrasocial){
-        this.setState({show:true, showNuevo:false, nombreObraSocial:nombreObraSocial, tipoObraSocial:tipo, idEditado:idobrasocial, campo:{nombreObraSocial:""}});
+        this.setState({show:true, showNuevo:false, idEditado:idobrasocial, campo:{nombreObraSocial:nombreObraSocial, tipo:tipo}});
     }
 
     guardar(){
@@ -85,7 +83,7 @@ class ListaObraSocial extends Component {
     }
 
     agregar(){
-        this.setState({showNuevo:true, show:false})
+        this.setState({showNuevo:true, show:false, campo:{nombreObraSocial:"", tipo:""}})
     }
 
     cargarNuevo(){
@@ -229,7 +227,6 @@ class ListaObraSocial extends Component {
                                             <option key={index} value={OS.nombre} onClick={()=>this.setState({tipoObraSocial:OS.estatal})}>{OS.nombre}</option>
                                         ))}
                             </select>
-                        <span style={{ color: "red", paddingLeft:10 }}>{this.state.nombreObraSocial}</span>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4" style={{textAlign:'center', paddingTop:38}}>
                         <button type="submit" className="btn btn-success" style={{width:'40%'}} onClick={() => this.guardar()}>Guardar</button>

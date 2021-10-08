@@ -11,8 +11,6 @@ class ListaEvolucion extends Component {
         this.state = {
             show:false,
             showNuevo:false,
-            numeroEvolucion:'',
-            fechaEvolucion:'',
             campo:{
                 nroEvolucion:'',
                 fecha:''
@@ -32,7 +30,7 @@ class ListaEvolucion extends Component {
     }
 
     editar(nroEvolucion, fecha, idevolucion){
-        this.setState({show:true, showNuevo:false, numeroEvolucion:nroEvolucion, fechaEvolucion:fecha, idEditado:idevolucion, campo:{nroEvolucion:""}});
+        this.setState({show:true, showNuevo:false, idEditado:idevolucion, campo:{nroEvolucion:nroEvolucion, fecha:fecha}});
     }
 
     guardar(){
@@ -74,7 +72,7 @@ class ListaEvolucion extends Component {
     }
 
     agregar(){
-        this.setState({showNuevo:true, show:false})
+        this.setState({showNuevo:true, show:false, campo:{nroEvolucion:"", fecha:""}})
     }
 
     cargarNuevo(){
@@ -224,12 +222,10 @@ class ListaEvolucion extends Component {
                                 <option value="4">4</option>
                                 <option value="5">5</option>
                             </select>
-                        <span style={{ color: "red", paddingLeft:10 }}>Estado: {this.state.numeroEvolucion}</span>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
                         <label className="col-form-label">Fecha de Observación</label>
-                        <input type="date" className="form-control" id="fecha" onChange={this.detectarCambio.bind(this, "fecha")}/>
-                        <span style={{ color: "red", paddingLeft:10 }}>{this.convertirFormatoFecha(this.state.fechaEvolucion)}</span>
+                        <input type="date" className="form-control" id="fecha" onChange={this.detectarCambio.bind(this, "fecha")} value={this.state.campo["fecha"] || ''}/>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4" style={{textAlign:'center', paddingTop:38}}>
                         <button type="submit" className="btn btn-success" style={{width:'40%'}} onClick={() => this.guardar()}>Guardar</button>
