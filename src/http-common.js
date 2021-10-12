@@ -4,6 +4,6 @@ export default axios.create({
   baseURL: "http://localhost:8080/api",
   headers: {
     "Content-type": "application/json",
-    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjI5OTYzNDk3LCJqdGkiOiJhNzZlYWU0ZDEyOWE0MmFiOGUwMjVlYjYzN2VlYWE2ZCIsInVzZXJfaWQiOiJqb25hIn0._J-ROFmyAZZWqxKcagCddBZBOKDjXrlFHo2C7cV53Bk"
+    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjMzNjU4ODUwLCJqdGkiOiIwM2Q2OTY5NWJiOWY0NGQwYWY1MmE3MGU4NmI3MGZkMSIsInVzZXJfaWQiOiJqb25hIn0.3x5JuoNhYqxHFU4JziWRo1DyTjKuDoqhDaQpJ7NpTOM"
   }
 });

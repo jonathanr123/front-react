@@ -2,88 +2,59 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
 import AddPaciente from "./components/add-paciente.component";
+import FichaMedica from "./components/fichaMedica.component";
 import ListaDiagnostico from "./components/list-diagnostico.component";
-import logo from "./images/logo.png";
+import ListaEvolucion from "./components/list-evolucion.component";
+import ListaObraSocial from "./components/list-obrasocial.component";
+import ListaIndicacion from "./components/list-indicacion.component";
 import Footer from "./components/footer.component";
 import Login from "./components/login.component";
 import Search from "./components/search-criteria.component";
+
+import ListaPaciente from "./components/list-pacientesEp.component";
+
+import Sidebar from "./components/sidebar.component";
 
 class App extends Component {
     render() {
         return (
             <Router>
-                <div className="contenedor">
-                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                        <div className="container-fluid">
-                            <a className="navbar-brand" href="/">
-                                <img className="logo" src={logo} alt="logo de telepark" />
-                            </a>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon"></span>
-                            </button>
-                            <div className="collapse navbar-collapse" id="navbarNav">
+                
+                    <nav className="navbar navbar-expand navbar-light bg-light">
+                        <div className="container-fluid" style={{justifyContent:"right"}}>
                                 <ul className="navbar-nav text-center text-md-start ps-md-3">
                                     <li className="nav-item">
-                                        <Link className="nav-link" to={"/"}>Conoce al paciente</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to={"/"}>Información al paciente</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to={"/"}>Cartilla de taller</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to={"/"}>Novedades</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to={"/"}>Contacto</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to={"/login"}>Iniciar Sesión</Link>
+                                        <Link to={"/login"}><button className="btn btn-primary" to={"/login"} >Iniciar Sesión</button></Link>
+                                        
                                     </li>
                                 </ul>
-                            </div>
                         </div>
                     </nav>
 
-                    <div className="d-flex">
-                        <div className="submenu">
-                            <aside className="row ">
-                                <nav id="navbar-example3" className="navbar navbar-light bg-light flex-column align-items-stretch p-3">
-                                    <a className="navbar-brand text-center" href="#">Menu</a>
-                                    <nav className="nav nav-pills flex-column ">
-                                        <Link className="nav-link text-dark" to={"/add-paciente"}>Ingresar persona con EP</Link>
-                                        <nav className="nav nav-pills flex-column">
-                                            <Link className="nav-link text-dark" to={"/search"}>Criterio de búsqueda</Link>
-                                            <a className="nav-link ms-3 my-1 text-secondary" href="#item-1-2">Modificar datos personales</a>
-                                        </nav>
-                                        <Link className="nav-link text-dark" to={"/"}>Ingresar/Modificar familiar</Link>
-                                        <Link className="nav-link text-dark" to={"/list-diagnostico"}>Ingresar ficha medica persona con EP</Link>
-                                        <nav className="nav nav-pills flex-column">
-                                            <a className="nav-link ms-3 my-1 text-secondary" href="#item-3-1">Item 3-1</a>
-                                            <a className="nav-link ms-3 my-1 text-secondary" href="#item-3-2">Item 3-2</a>
-                                        </nav>
-                                        <a className="nav-link" href="#item-3"></a>
-                                        <Link className="nav-link text-dark" to={"/"}>Ingresar/Modificar Evolucion</Link>
-                                    </nav>
-                                </nav>
-                            </aside>
-                        </div>
+                    <Sidebar></Sidebar>
+
+                    
+                        
                         <div className="container">
                             <div className="row">
                                 <div>
                                     <Switch>
                                         <Route exact path={["/add-paciente"]} component={AddPaciente} />
                                         <Route exact path="/login" component={Login} />
+                                        <Route exact path="/ficha" component={FichaMedica} />
                                         <Route exact path="/list-diagnostico" component={ListaDiagnostico} />
+                                        <Route exact path="/list-evolucion" component={ListaEvolucion} />
+                                        <Route exact path="/list-obrasocial" component={ListaObraSocial} />
+                                        <Route exact path="/list-indicacion" component={ListaIndicacion} />
                                         <Route exact path="/search" component={Search} />
+                                        <Route exact path="/list-pacientes" component={ListaPaciente} />
                                     </Switch>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    
                     <Footer />
-                </div>
+                
             </Router>
         );
     }
