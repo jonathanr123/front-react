@@ -387,7 +387,7 @@ class AddPaciente extends Component {
                             <select className="form-select" id="localidadEP" onChange={this.detectarCambio.bind(this, "localidadEP")} value={this.state.campo["localidadEP"] || ''}>
                                 <option value="">Localidad</option>
                                 {localidades &&
-                                    localidades.filter(localidad => localidad.municipio_idmunicipio === campo.municipioEP).map((localidad, index) => (
+                                    localidades.filter(localidad => localidad.idmunicipio == campo.municipioEP).map((localidad, index) => (
                                         <option
                                             value={localidad.idlocalidad}
                                             key={index}
@@ -563,7 +563,7 @@ class AddPaciente extends Component {
                             <select className="form-select" id="localidadR" onChange={this.detectarCambio.bind(this, "localidadR")} value={this.state.campo["localidadR"] || ''}>
                                 <option value="">Localidad</option>
                                 {localidades &&
-                                    localidades.filter(localidad => localidad.municipio_idmunicipio === campo.municipioR).map((localidad, index) => (
+                                    localidades.filter(localidad => localidad.idmunicipio == campo.municipioR).map((localidad, index) => (
                                         <option
                                             value={localidad.idlocalidad}
                                             key={index}

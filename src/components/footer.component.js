@@ -1,12 +1,11 @@
 import React from 'react';
-import logo from "../images/logo.png";
+import logoTelepark from "../images/logoTelepark2.png";
 
 class Footer extends React.Component {
     render() {
         return (
             <footer>
-                <img className="logo" src={logo} alt="logo de telepark" />
-                <p>Informacion Adicional</p>
+                <img className="logo" src={logoTelepark} style={{width:"250px"}}alt="logo de telepark" />
             </footer>
         )
     }
