@@ -21,7 +21,6 @@ class ListaDiagnostico extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
         this.props.retrieveEnfermedad();
     }
 

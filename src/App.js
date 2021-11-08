@@ -10,6 +10,8 @@ import ListaIndicacion from "./components/list-indicacion.component";
 import Footer from "./components/footer.component";
 import Login from "./components/login.component";
 import Search from "./components/search-criteria.component";
+import Nomenclador from "./components/nomenclador.component";
+
 
 import ListaPaciente from "./components/list-pacientesEp.component";
 
@@ -48,6 +50,7 @@ class App extends Component {
                                         <Route exact path="/list-indicacion" component={ListaIndicacion} />
                                         <Route exact path="/search" component={Search} />
                                         <Route exact path="/list-pacientes" component={ListaPaciente} />
+                                        <Route exact path="/nomenclador" component={Nomenclador} />
                                     </Switch>
                                 </div>
                             </div>
