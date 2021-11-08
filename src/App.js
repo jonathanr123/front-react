@@ -5,6 +5,18 @@ import AddPaciente from "./components/add-paciente.component";
 import logo from "./images/logo.png";
 import Footer from "./components/footer.component";
 import Login from "./components/login.component";
+import Taller from "./components/taller.component";
+
+import addTaller from "./components/addTaller";
+
+import editTaller from "./components/editTaller";
+
+import iniciarTaller from "./components/iniciarTaller";
+
+import asistencia from "./components/asistencia";
+import addComportamiento from "./components/addComportamiento";
+import comportamiento from "./components/comportamiento";
+
 
 class App extends Component {
   render() {
@@ -38,6 +50,10 @@ class App extends Component {
                             <li className="nav-item">
                                 <Link className="nav-link" to={"/login"}>Iniciar Sesión</Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to={"/Taller"}>Taller</Link>
+                            </li>
+                            
                         </ul>
                     </div>
                 </div>
@@ -47,6 +63,21 @@ class App extends Component {
               <Switch>
                 <Route exact path={["/", "/add-paciente"]} component={AddPaciente}/>
                 <Route exact path="/login" component={Login}/>
+                <Route exact path="/taller" component={Taller}/>
+                
+                <Route exact path="/iniciarTaller" component={iniciarTaller}/>
+                
+                <Route exact path="/editTaller" component={editTaller}/>
+                <Route exact path="/addTaller" component={addTaller}/>
+                
+                <Route exact path="/asistencia" component={asistencia}/>
+                
+                <Route exact path="/addComportamiento" component={addComportamiento}/>
+                
+                <Route exact path="/comportamiento" component={comportamiento}/>
+             
+
+
               </Switch>
             </div>
 
