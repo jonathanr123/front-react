@@ -26,7 +26,7 @@ class App extends Component {
                         <div className="container-fluid" style={{justifyContent:"right"}}>
                                 <ul className="navbar-nav text-center text-md-start ps-md-3">
                                     <li className="nav-item">
-                                        <Link to={"/login"}><button className="btn btn-primary" to={"/login"} >Iniciar Sesión</button></Link>
+                                        <Link to={"/login"}><button className="btn btn-celeste" to={"/login"} >Iniciar Sesión</button></Link>
                                         
                                     </li>
                                 </ul>

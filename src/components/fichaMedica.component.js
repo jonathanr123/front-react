@@ -70,7 +70,7 @@ class FichaMedica extends Component {
                     <h4 className="mt-4">Diagnósticos</h4>
                     </div>
                     <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
-                    <Link to={"/list-diagnostico"}><button className="btn btn-success" to={"/list-diagnostico"} >Editar</button></Link>
+                    <Link to={"/list-diagnostico"}><button className="btn btn-verde" to={"/list-diagnostico"} >Editar</button></Link>
                     </div>
                 </div>
                 <div className="row">
@@ -102,7 +102,7 @@ class FichaMedica extends Component {
                     <h4 className="mt-4">Evolución</h4>
                     </div>
                     <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
-                    <Link to={"/list-evolucion"}><button className="btn btn-success" to={"/list-evolucion"} >Editar</button></Link>
+                    <Link to={"/list-evolucion"}><button className="btn btn-verde" to={"/list-evolucion"} >Editar</button></Link>
                     </div>
                 </div>
                 <div className="row">
@@ -133,7 +133,7 @@ class FichaMedica extends Component {
                     <h4 className="mt-4">Obra Social</h4>
                     </div>
                     <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
-                    <Link to={"/list-obrasocial"}><button className="btn btn-success" to={"/list-obrasocial"} >Editar</button></Link>
+                    <Link to={"/list-obrasocial"}><button className="btn btn-verde" to={"/list-obrasocial"} >Editar</button></Link>
                     </div>
                 </div>
                 <div className="row">
@@ -164,7 +164,7 @@ class FichaMedica extends Component {
                     <h4 className="mt-4">Indicación de Medicamentos</h4>
                     </div>
                     <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
-                    <Link to={"/list-indicacion"}><button className="btn btn-success" to={"/list-indicacion"} >Editar</button></Link>
+                    <Link to={"/list-indicacion"}><button className="btn btn-verde" to={"/list-indicacion"} >Editar</button></Link>
                     </div>
                 </div>
                 <div className="row">

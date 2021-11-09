@@ -16,6 +16,40 @@
   margin-left: 15px;
 }
 
+.btn-verde {
+  box-shadow: 3px 3px #0d8602;
+  background-image: linear-gradient(to right, #44f334, #12c70c, #28c209);
+  color:white
+}
+
+.btn-rojo {
+  box-shadow: 3px 3px #860202;
+  background-image: linear-gradient(to right, #f73838, #c70c0c, #c20909);
+  color:white
+}
+
+.btn-rojo-simple {
+  background-image: linear-gradient(to right, #f73838, #c70c0c, #c20909);
+  color:white
+}
+
+.btn-azul {
+  box-shadow: 3px 3px #0b0286;
+  background-image: linear-gradient(to right, #383bf7, #1f0cc7, #2509c2);
+  color:white
+}
+
+.btn-azul-simple {
+  background-image: linear-gradient(to right, #383bf7, #1f0cc7, #2509c2);
+  color:white
+}
+
+.btn-celeste {
+  box-shadow: 3px 3px #024686;
+  background-image: linear-gradient(to right, #387bf7, #0c6dc7, #096fc2);
+  color:white
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
