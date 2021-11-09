@@ -20,14 +20,25 @@ class Nomenclador extends Component {
             showNuevo3:true,
             campo:{
                 },
+            isChecked:false,
             idEditado:'',
         }
+        this.detectarCheck = this.detectarCheck.bind(this);
     }
 
     componentDidMount() {
         this.props.retrieveEnfermedad();
         this.props.retrieveMedicamento();
         this.props.retrieveObraSocial();
+    }
+
+    convertirCheck(opcion){
+        if (opcion==false){
+            return "0";
+        }
+        else {
+            return "1";
+        }
     }
 
     editarEnfermedad(nombre, idenfermedad){
@@ -125,6 +136,14 @@ class Nomenclador extends Component {
         console.log(campo);
     }
 
+    detectarCheck(event){
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        this.setState({
+        [name]: value    });
+    }
+
     cargarNuevaEnfermedad(){
         let nomEnfermedad=this.state.campo.enfermedad;
         if(nomEnfermedad!==''){
@@ -159,9 +178,10 @@ class Nomenclador extends Component {
     
     cargarNuevaObrasocial(){
         let nomObrasocial=this.state.campo.obrasocial;
+        let esestatal=this.convertirCheck(this.state.isChecked);
         if(nomObrasocial!==''){
             this.props
-                .createObraSocial(nomObrasocial, "0")
+                .createObraSocial(nomObrasocial, esestatal)
                 .then(() => {
                         this.props.retrieveObraSocial();
                         this.notificacionGuardar();
@@ -272,7 +292,7 @@ class Nomenclador extends Component {
                     <div className="row">
                         <div className="col-12 col-md-4 col-lg-4 col-xl-4">
                             <div className="row">
-                            <div className="col-12 col-md-12 col-lg-12 col-xl-12 input-group">
+                            <div className="mb-4 col-12 col-md-12 col-lg-12 col-xl-12 input-group">
                                 <input type="text" className="form-control" placeholder="Enfermedad..." id="enfermedad" onChange={this.detectarCambio.bind(this, "enfermedad")} value={this.state.campo["enfermedad"] || ''}/>
                                 
                                 {showNuevo ? (
@@ -329,7 +349,7 @@ class Nomenclador extends Component {
 
                         <div className="col-12 col-md-4 col-lg-4 col-xl-4">
                             <div className="row">
-                            <div className="col-12 col-md-12 col-lg-12 col-xl-12 input-group">
+                            <div className="mb-4 col-12 col-md-12 col-lg-12 col-xl-12 input-group">
                                 <input type="text" className="form-control" placeholder="Medicamento..." id="medicamento" onChange={this.detectarCambio.bind(this, "medicamento")} value={this.state.campo["medicamento"] || ''}/>
                                 {showNuevo2 ? (
                                 <button type="button" className="btn btn-primary" onClick={() => this.cargarNuevoMedicamento()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -401,7 +421,11 @@ class Nomenclador extends Component {
                                 </svg></button>
                                 </span>
                                 ):('')}
-                            </div>  
+                                
+                            </div>
+                                <div className="col-12 col-md-12 col-lg-12 col-xl-12">
+                                <label className="col-form-label" style={{marginRight:10, marginLeft:10}}>Es Publica</label><input type="checkbox" name="isChecked" checked={this.state.isChecked} onChange={this.detectarCheck} />
+                                </div>  
                             </div>
 
                             <div className="row">
