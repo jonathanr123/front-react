@@ -52,6 +52,7 @@ class addTaller extends Component {
       handleSubmit(event) {
         event.preventDefault();
         alert(`${this.state.value} ${this.state.value2}`);
+        
       }
 
      render() {
@@ -112,12 +113,12 @@ class addTaller extends Component {
 
                   <div className="w-100 pull-right">
                   <button type="submit" className="mb-3 col-3 btn btn-danger col-md-3 col-xl-2" 
-                  style={{ float: "right" , margin: 5 }} onClick={this.handleSubmit} >Cancelar
+                  style={{ float: "right" , margin: 5 }} >Cancelar
                     <span class="glyphicon glyphicon-chevron-right"></span>
                     </button>
                     <button type="submit" className="mb-3 col-3 btn btn-success col-md-3 col-xl-2 " 
                      style={{ float: "right", margin: 5  }}
-                     onClick={this.handleSubmit} >Guardar 
+                     onClick={this.handleSubmit}>Guardar
                     <span class="glyphicon glyphicon-remove-sign"></span>
                     </button>
                     
