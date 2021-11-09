@@ -54,6 +54,40 @@ class addTaller extends Component {
         alert(`${this.state.value} ${this.state.value2}`);
         
       }
+      
+    //   validarFormulario() {
+    //   let campo = this.state.campo;
+    //   let error = {};
+    //   let formularioValido = true;
+
+    //   //Datos de fecha
+    //   if (!campo["fecha"]) {
+    //       formularioValido = false;
+    //       error["fecha"] = "Por favor, ingresa la fecha del paciente.";
+    //   }
+
+    //   // Apellido de EP 
+    //   if (!campo["tipoTaller"]) {
+    //       formularioValido = false;
+    //       error["tipoTaller"] = "Por favor, ingresa el tipo de taller.";
+    //   }
+
+    //   // Sexo de EP 
+    //   if (!campo["tipoActividad"]) {
+    //       formularioValido = false;
+    //       error["tipoActividad"] = "Por favor, selecciona el tipo de actividad.";
+
+    //       this.setState({
+    //         error: error
+    //     });
+    //     //   if (this.formularioValido == true) {
+            
+    //     //     {this.handleSubmit}
+    //     //   }
+
+    //       return formularioValido;
+    //   }
+    // }
 
      render() {
 
@@ -85,28 +119,33 @@ class addTaller extends Component {
                     <hr />
                     <div className="mb-3 col-12 col-md-6 col-lg-4 col-xl-3">
                         <label className=" col-form-label">Fecha de Taller</label>
-                        <input type="date" className="form-control" placeholder="Fecha" 
+                        <input type="date" className="form-control" id= "fecha" placeholder="Fecha" 
                         id="fechaA" required/>
+                        {/* <span style={{ color: "red" }}>{this.state.error["fecha"]}</span> */}
+
                     </div>
             <div className="mb-2 col-9 col-md-6 col-lg-4 col-xl-3">
                     <label className="col-form-label">Tipo Taller         
                         </label>
-                <select className="form-select " value={this.state.value} onChange={this.handleChange} required>
+                <select className="form-select " id= "tipoTaller" value={this.state.value} onChange={this.handleChange} required>
                 <option value=''>Seleccionar una opción</option>
                 <option value="educacionFisica">Educación Física</option>
                 <option value="danza">Danza</option>
                 <option value="literario">Leterario</option>
               </select>
+              {/* <span style={{ color: "red" }}>{this.state.error["taller"]}</span> */}
               </div>
               <div className="mb-2 col-12 col-md-6 col-lg-4 col-xl-3">
               <label className="col-form-label"> Tipo Actividad         
                         </label>
-              <select className="form-select" value={this.state.value2} onChange={this.handleChange2} required>
+              <select className="form-select" id= "tipoActividad" value={this.state.value2} onChange={this.handleChange2} required>
                 <option value=''>Seleccionar Actividad</option>
                 {
                   this.state.options.map((item, index) => <option value={item} key={index}>{item}</option>)
                 }
               </select>
+              {/* <span style={{ color: "red" }}>{this.state.error["actividad"]}</span> */}
+
               </div>
             
           
@@ -118,7 +157,7 @@ class addTaller extends Component {
                     </button>
                     <button type="submit" className="mb-3 col-3 btn btn-success col-md-3 col-xl-2 " 
                      style={{ float: "right", margin: 5  }}
-                     onClick={this.handleSubmit}>Guardar
+                     onClick={this.validarFormulario}>Guardar
                     <span class="glyphicon glyphicon-remove-sign"></span>
                     </button>
                     
