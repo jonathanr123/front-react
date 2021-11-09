@@ -1,19 +1,19 @@
 import {
-    RETRIEVE_OBRASOCIAL
+    RETRIEVE_OS_EP
   } from "../actions/types";
   
   const initialState = [];
   
-  function obrasocialReducer(obrasociales = initialState, action) {
+  function osReducer(osociales = initialState, action) {
     const { type, payload } = action;
   
     switch (type) {
-      case RETRIEVE_OBRASOCIAL:
+      case RETRIEVE_OS_EP:
         return payload;
         
       default:
-        return obrasociales;
+        return osociales;
     }
   };
   
-  export default obrasocialReducer;
+  export default osReducer;

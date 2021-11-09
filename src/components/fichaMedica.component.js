@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
 import { retrieveDiagnosticosEp } from "../actions/diagnostico";
 import { retrieveEvolucionEp } from "../actions/evolucion";
-import { retrieveObraSocialEp } from "../actions/obrasocial";
+import { retrieveOSEp } from "../actions/os";
 import { retrieveIndicacionEp } from "../actions/indicacion";
 
 class FichaMedica extends Component {
@@ -13,14 +13,13 @@ class FichaMedica extends Component {
         super(props);
         // Defino los estados locales
         this.state={
-        arrayOS:[{nombre:'O.S.D.E',estatal:0},{nombre:'I.O.M.A',estatal:1},{nombre:'Medifé',estatal:0},{nombre:'Swiss Medical',estatal:0}]
         }
     }
 
     componentDidMount() {
         this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
         this.props.retrieveEvolucionEp(this.props.idEpElegido);
-        this.props.retrieveObraSocialEp(this.props.idEpElegido);
+        this.props.retrieveOSEp(this.props.idEpElegido);
         this.props.retrieveIndicacionEp(this.props.idEpElegido)
     }
 
@@ -53,7 +52,7 @@ class FichaMedica extends Component {
 
 
     render() {
-            const {diagnosticos, evoluciones, obrasociales, indicaciones, nombreEpElegido} = this.props;
+            const {diagnosticos, evoluciones, osociales, indicaciones, nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -148,11 +147,11 @@ class FichaMedica extends Component {
                 </thead>
                 <tbody style={{verticalAlign:'middle'}}>
                     
-                    {obrasociales &&
-                                    obrasociales.map((obrasocial, index) => (
+                    {osociales &&
+                                    osociales.filter(osocial => osocial.borrado == "0").map((osocial, index) => (
                                         <tr key={index}>
-                                        <td>{obrasocial.nombre}</td>
-                                        <td>{this.convertirTipo(obrasocial.esestatal)}</td>
+                                        <td>{osocial.idobrasocial.nombre}</td>
+                                        <td>{this.convertirTipo(osocial.idobrasocial.esestatal)}</td>
                                         </tr>
                                     ))}
                 </tbody>
@@ -209,11 +208,11 @@ const mapStateToProps = (state) => {
     return {
       diagnosticos: state.diagnostico,
       evoluciones: state.evolucion,
-      obrasociales: state.obrasocial,
+      osociales: state.os,
       indicaciones: state.indicacion,
       idEpElegido: state.global.idEpElegido,
       nombreEpElegido: state.global.nombreEpElegido
     };
 };
 
-export default connect(mapStateToProps, { retrieveDiagnosticosEp, retrieveEvolucionEp, retrieveObraSocialEp, retrieveIndicacionEp})(FichaMedica);
+export default connect(mapStateToProps, { retrieveDiagnosticosEp, retrieveEvolucionEp, retrieveOSEp, retrieveIndicacionEp})(FichaMedica);

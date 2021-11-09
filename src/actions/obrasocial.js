@@ -1,5 +1,5 @@
 import {
-    RETRIEVE_OBRASOCIAL_EP,
+    RETRIEVE_OBRASOCIAL,
     CREATE_OBRASOCIAL,
     UPDATE_OBRASOCIAL,
     DELETE_OBRASOCIAL
@@ -8,12 +8,12 @@ import {
 import ObraSocialDataService from "../services/obrasocial.service";
 
   //Trae todos las obras sociales de una determinada personaEP
-  export const retrieveObraSocialEp = (id) => async (dispatch) => {
+  export const retrieveObraSocial = () => async (dispatch) => {
     try {
-      const res = await ObraSocialDataService.get(id);
+      const res = await ObraSocialDataService.getAll();
       console.log(res.data);
       dispatch({
-        type: RETRIEVE_OBRASOCIAL_EP,
+        type: RETRIEVE_OBRASOCIAL,
         payload: res.data,
       });
     } catch (err) {
@@ -22,9 +22,9 @@ import ObraSocialDataService from "../services/obrasocial.service";
   };
 
   //Crea una ObraSocial
-  export const createObraSocial = (nombre, esestatal, idpersonaep) => async (dispatch) => {
+  export const createObraSocial = (nombre, esestatal) => async (dispatch) => {
     try {
-      const res = await ObraSocialDataService.create({nombre, esestatal, idpersonaep});
+      const res = await ObraSocialDataService.create({nombre, esestatal});
   
       dispatch({
         type: CREATE_OBRASOCIAL,
