@@ -86,7 +86,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {diagnosticos &&
-                                    diagnosticos.map((diagnostico, index) => (
+                                    diagnosticos.filter(diagnostico => diagnostico.borrado == "0").map((diagnostico, index) => (
                                         <tr key={index}>
                                         <td >{diagnostico.idenfermedad.nombre}</td>
                                         <td>{this.convertirFormatoFecha(diagnostico.fecha)}</td>
@@ -118,7 +118,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {evoluciones &&
-                                    evoluciones.map((evolucion, index) => (
+                                    evoluciones.filter(evolucion => evolucion.borrado == "0").map((evolucion, index) => (
                                         <tr key={index}>
                                         <td>Estado: {evolucion.escalaevolucion}</td>
                                         <td>{this.convertirFormatoFecha(evolucion.fecha)}</td>
@@ -183,7 +183,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {indicaciones &&
-                                        indicaciones.map((indicacion, index) => (
+                                        indicaciones.filter(indicacion => indicacion.borrado == "0").map((indicacion, index) => (
                                             <tr key={index}>
                                             <td >{indicacion.idmedicamento.nombre}</td>
                                             <td >{indicacion.cantidadmiligramos} mg</td>

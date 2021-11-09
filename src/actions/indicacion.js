@@ -22,9 +22,9 @@ import IndicacionDataService from "../services/indicacion.service";
   };
 
   //Crea un Indicacion
-  export const createIndicacion = (cantidadmiligramos, estavigente, fechaprescripcion, horadetoma, idpersonaep,idmedicamento) => async (dispatch) => {
+  export const createIndicacion = (cantidadmiligramos, estavigente, fechaprescripcion, horadetoma, idpersonaep, idmedicamento, borrado) => async (dispatch) => {
     try {
-      const res = await IndicacionDataService.create({cantidadmiligramos, estavigente, fechaprescripcion, horadetoma, idpersonaep,idmedicamento});
+      const res = await IndicacionDataService.create({cantidadmiligramos, estavigente, fechaprescripcion, horadetoma, idpersonaep, idmedicamento, borrado});
   
       dispatch({
         type: CREATE_INDICACION,
