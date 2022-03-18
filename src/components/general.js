@@ -1,7 +1,12 @@
 
+import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
+import { Link } from "react-router-dom";
 
+
+let path = '#kk';
 const dataTable = [
     {
       name:    'Carolina',
@@ -11,9 +16,17 @@ const dataTable = [
       end_date: "3/06/2019",
       manual: <input type="checkbox" checked></input>  ,
       button: 
+      // <Link to="/comportamiento">
+      //         <button
+                
+      //           variant="outline-primary">{" "}Next</button>{" "}
+      //       </Link>
+      
           <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes"
-          onClick={(e) => window.location.href = "/comportamiento"}
-          size="sm">
+          
+          onClick={(e) =>  window.location.href = "/comportamiento" +"#"+"Carolina"+"Mendez"}
+        size="sm"
+          >
            añadir comportamiento
            </button>,
           },
@@ -22,7 +35,9 @@ const dataTable = [
       position: " Architect",
       manual: <input type="checkbox" ></input>  ,
       button: 
-          <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes">
+          <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes"
+          onClick={(e) =>  window.location.href = "/comportamiento" +"#"+"Lorena"+"Architect"}
+          >
            añadir comportamiento
            </button>,
       start_date: "13/5/2019",
@@ -34,7 +49,8 @@ const dataTable = [
       office: "Vanguard",
       manual: <input type="checkbox" ></input>  ,
       button: 
-          <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes">
+          <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes"
+          onClick={(e) =>  window.location.href = "/comportamiento" +"?"+"Tiger"+"Nixob"}>
            añadir comportamiento
            </button>,
       start_date: "3/06/2019",
@@ -46,18 +62,20 @@ const dataTable = [
       office: "LCIGP",
       manual: <input type="checkbox" checked></input> ,
       button: 
-          <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes">
+          <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes"
+          onClick={(e) =>  window.location.href = "/comportamiento" +"?"+"Lurdes"+"Nixon"}>>
            añadir comportamiento
            </button>,
       start_date: "13/5/2019",
       
     },
     {
-      name: "Tiger ",
-     position: "Nixon",
+      name: "Lola ",
+     position: "Niksa",
      manual: <input type="checkbox" ></input>  ,
      button: 
-          <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes">
+          <button className="btn btn-warning" xs="14"  style={{ marginTop: 10 , marginBottom:0}} color="succes"
+          onClick={(e) =>  window.location.href = "/comportamiento" +"?"+"Lola"+"Niksa"}>
            añadir comportamiento
            </button>,
       office: "Viratec 9",

@@ -17,6 +17,9 @@ import iniciarTaller from "./components/iniciarTaller";
 import asistencia from "./components/asistencia";
 import addComportamiento from "./components/addComportamiento";
 import comportamiento from "./components/comportamiento";
+import Example from "./components/Example";
+
+
 
 
 import ListaPaciente from "./components/list-pacientesEp.component";
@@ -62,7 +65,10 @@ class App extends Component {
                                         <Route exact path="/addTaller" component={addTaller}/>
                                         <Route exact path="/asistencia" component={asistencia}/>
                                         <Route exact path="/addComportamiento" component={addComportamiento}/>
-                                        <Route exact path="/comportamiento" component={comportamiento}/>
+                                        <Route exact path="/comportamiento" component={comportamiento}/>    
+                                       
+
+                                        
                                     </Switch>
                                 </div>
                             </div>

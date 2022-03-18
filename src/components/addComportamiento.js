@@ -38,7 +38,7 @@ import {
                     </Col>
                 <Row className="align-items-center">
                   <Col xs="8">
-                    <h3 className="mb-0">Asistencia</h3>
+                    <h3 className="mb-0">Comportamiento</h3>
                   </Col>
                 </Row>
               </CardHeader>
@@ -76,10 +76,11 @@ import {
                         className="dataTables_filter px-4 pb-1"
                       >
                         <label>
-                          Buscar Paciente:
+                          Buscar Paciente : 
                           <SearchBar
                             className="form-control-sm"
                             placeholder="Buscar"
+                            srText=""
                             text=""
                             {...props.searchProps}
                           />

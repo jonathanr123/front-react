@@ -2,7 +2,8 @@
 import React, { Component } from "react";
 import { Row,
   Col,
-  Button
+  Button, 
+  
 } from "reactstrap";
 
 class addTaller extends Component {
@@ -14,6 +15,7 @@ class addTaller extends Component {
       value: '',
       value2: '',
       options: []
+      
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -49,47 +51,11 @@ class addTaller extends Component {
         alert(`${this.state.value} ${this.state.value2}`);
         
       }
-      
-    //   validarFormulario() {
-    //   let campo = this.state.campo;
-    //   let error = {};
-    //   let formularioValido = true;
 
-    //   //Datos de fecha
-    //   if (!campo["fecha"]) {
-    //       formularioValido = false;
-    //       error["fecha"] = "Por favor, ingresa la fecha del paciente.";
-    //   }
-
-    //   // Apellido de EP 
-    //   if (!campo["tipoTaller"]) {
-    //       formularioValido = false;
-    //       error["tipoTaller"] = "Por favor, ingresa el tipo de taller.";
-    //   }
-
-    //   // Sexo de EP 
-    //   if (!campo["tipoActividad"]) {
-    //       formularioValido = false;
-    //       error["tipoActividad"] = "Por favor, selecciona el tipo de actividad.";
-
-    //       this.setState({
-    //         error: error
-    //     });
-    //       if (this.formularioValido == true) {
-            
-    //         {this.handleSubmit}
-    //       }
-
-    //       return formularioValido;
-    //   }
-    // }
 
      render() {
 
-        // const arrayTiposTaller= [
-        //     {id:1,tipoTaller:'Educacion Física'},{id:2,tipoTaller:'Danza'},
-        //     {id:3,tipoTaller:'Literatura'}];
-        
+       
         return (
             
             <form>
@@ -143,9 +109,13 @@ class addTaller extends Component {
 
                   <div className="w-100 pull-right">
                   <button type="submit" className="mb-3 col-3 btn btn-danger col-md-3 col-xl-2" 
-                  style={{ float: "right" , margin: 5 }} >Cancelar
+                  style={{ float: "right" , margin: 5 }} 
+                  
+                  >Cancelar
                     <span class="glyphicon glyphicon-chevron-right"></span>
                     </button>
+                   
+
                     <button type="submit" className="mb-3 col-3 btn btn-success col-md-3 col-xl-2 " 
                      style={{ float: "right", margin: 5  }}
                      onClick={this.validarFormulario}>Guardar
