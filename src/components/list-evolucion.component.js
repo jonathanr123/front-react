@@ -29,6 +29,17 @@ class ListaEvolucion extends Component {
         return info[2] + '/' + info[1] + '/' + info[0];
     }
 
+    describirEstado(estado){
+        switch (estado) {
+            case 0: return "Ausencia de signos patológicos.";
+            case 1: return "Los síntomas parkinsonianos afectan sólo a un lado del cuerpo.";
+            case 2: return "Afectación de los dos lados del cuerpo sin transtorno del equilibrio.";
+            case 3: return "Alteración bilateral leve o moderada, con cierta inestabilidad postural. El paciente es fisicamente independiente.";
+            case 4: return "Incapacidad grave: es capaz de caminar o de permanecer de pié sin ayuda.";
+            case 5: return "El paciente necesita ayuda para todo. Permanece en cama o sentado.";
+        }
+    }
+
     editar(nroEvolucion, fecha, idevolucion){
         this.setState({show:true, showNuevo:false, idEditado:idevolucion, campo:{nroEvolucion:nroEvolucion, fecha:fecha}});
     }
@@ -200,6 +211,7 @@ class ListaEvolucion extends Component {
                         <label className="col-form-label">Estado Evolutivo</label>
                         <select className="form-select" placeholder="Ingrese estado..." id="nroEvolucion" onChange={this.detectarCambio.bind(this, "nroEvolucion")} value={this.state.campo["nroEvolucion"] || ''}>
                                 <option value="">Elegir</option>
+                                <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -226,6 +238,7 @@ class ListaEvolucion extends Component {
                         <label className="col-form-label">Estado Evolutivo</label>
                             <select className="form-select" placeholder="Ingrese estado..." id="nroEvolucion" onChange={this.detectarCambio.bind(this, "nroEvolucion")} value={this.state.campo["nroEvolucion"] || ''}>
                                 <option value="">Elegir</option>
+                                <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -251,6 +264,7 @@ class ListaEvolucion extends Component {
                 <thead>
                     <tr>
                     <th scope="col">Estado Evolutivo</th>
+                    <th scope="col">Descripción</th>
                     <th scope="col">Fecha de Observación</th>
                     <th scope="col">Acción</th>
                     </tr>
@@ -261,6 +275,7 @@ class ListaEvolucion extends Component {
                                     evoluciones.filter(evolucion => evolucion.borrado == "0").map((evolucion, index) => (
                                         <tr key={index}>
                                         <td>Estado: {evolucion.escalaevolucion}</td>
+                                        <td>{this.describirEstado(evolucion.escalaevolucion)}</td>
                                         <td>{this.convertirFormatoFecha(evolucion.fecha)}</td>
                                         <td><button type="button" className="btn btn-verde" style={{marginRight:10}} onClick={() => this.editar(evolucion.escalaevolucion, evolucion.fecha, evolucion.idevolucion)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
