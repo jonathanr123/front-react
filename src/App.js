@@ -11,6 +11,7 @@ import Footer from "./components/footer.component";
 import Login from "./components/login.component";
 import Search from "./components/search-criteria.component";
 import Events from "./components/gestion-eventos.component";
+import TypeEvents from "./components/tipos-de-eventos.component";
 
 import ListaPaciente from "./components/list-pacientesEp.component";
 
@@ -82,6 +83,7 @@ class App extends Component {
                     component={ListaPaciente}
                   />
                   <Route exact path="/events" component={Events} />
+                  <Route exact path="/type-events" component={TypeEvents} />
                 </Switch>
               </div>
             </div>

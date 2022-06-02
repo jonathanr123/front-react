@@ -75,31 +75,6 @@ function Events() {
         </main>
       </form>
     </div>
-    //     <table className="table">
-    //       <thead>
-    //         <tr>
-    //           <th scope="col">#</th>
-    //           <th scope="col">Fecha del evento</th>
-    //           <th scope="col">Motivo</th>
-    //           <th scope="col">Accion</th>
-    //         </tr>
-    //       </thead>
-    //       <tbody>
-    //         <tr>
-    //           <th scope="row">1</th>
-    //           <td>12/11/2021</td>
-    //           <td>Motivo</td>
-    //           <td>
-    //             <button type="button" className="btn btn-success me-1">
-    //               Editar
-    //             </button>
-    //             <button type="button" className="btn btn-danger">
-    //               Eliminar
-    //             </button>
-    //           </td>
-    //         </tr>
-    //       </tbody>
-    //     </table>
   );
 }
 export default Events;
