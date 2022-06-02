@@ -36,7 +36,7 @@ class FichaMedica extends Component {
     }
 
     convertirEstado(estado){
-        if( estado == 1 ){
+        if( estado === 1 ){
             return 'Vigente';
         } else{
             return 'Caducado';
@@ -44,7 +44,7 @@ class FichaMedica extends Component {
     }
 
     convertirTipo(tipo){
-        if( tipo == 1 ){
+        if( tipo === 1 ){
             return 'Publica';
         } else{
             return 'Privada';

@@ -11,7 +11,8 @@ import obrasocial from "./obrasocial";
 import medicamento from "./medicamento";
 import indicacion from "./indicacion";
 import global from "./global";
-import paciente from "./persona-ep"
+import paciente from "./persona-ep";
+import AuthReducer from "./authReducer";
 
 export default combineReducers({
   persona,
@@ -24,6 +25,6 @@ export default combineReducers({
   medicamento,
   indicacion,
   paciente,
-
+  auth: AuthReducer,
   global
 });
