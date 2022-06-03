@@ -6,8 +6,8 @@ import { createPersonaEp } from "../actions/persona-ep";
 import { createDireccion } from "../actions/direccion";
 import { retrieveLocalidades } from "../actions/localidad";
 import { retrieveMunicipios } from "../actions/municipio";
-import { useSelector } from "react-redux";
-import { setAuthUser } from "../actions/authAction";
+// import { useSelector } from "react-redux";
+// import { setAuthUser } from "../actions/authAction";
 
 class AddPaciente extends Component {
   constructor(props) {
@@ -902,9 +902,9 @@ class AddPaciente extends Component {
     );
   }
 }
-const mapDispatchToProps = (dispatch) => ({
-  user: () => dispatch(setAuthUser((state) => state.auth)),
-});
+// const mapDispatchToProps = (dispatch) => ({
+//   user: () => dispatch(setAuthUser((state) => state.auth)),
+// });
 
 const mapStateToProps = (state) => {
   return {

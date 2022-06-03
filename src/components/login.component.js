@@ -2,13 +2,13 @@ import React from "react";
 import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
 // import authService from '../services/auth.service';
-import { connect } from "react-redux";
-import { loginRequest } from "../actions/types";
+// import { connect } from "react-redux";
+// import { loginRequest } from "../actions/types";
 import { authRepository } from "../services/auth.service";
 // Actions de Redux
 import { setAuthUser } from "../actions/authAction";
 
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -153,9 +153,9 @@ class Login extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  login: (data) => dispatch(setAuthUser(data)),
-});
+// const mapDispatchToProps = (dispatch) => ({
+//   login: (data) => dispatch(setAuthUser(data)),
+// });
 
 // const mapStateToProps = (state, ownProps) => ({
 
