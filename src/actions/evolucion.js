@@ -22,9 +22,9 @@ import EvolucionDataService from "../services/evolucion.service";
   };
 
   //Crea una Evolucion
-  export const createEvolucion = (escalaevolucion, fecha, idpersonaep) => async (dispatch) => {
+  export const createEvolucion = (escalaevolucion, fecha, idpersonaep, borrado) => async (dispatch) => {
     try {
-      const res = await EvolucionDataService.create({escalaevolucion, fecha, idpersonaep});
+      const res = await EvolucionDataService.create({escalaevolucion, fecha, idpersonaep, borrado});
   
       dispatch({
         type: CREATE_EVOLUCION,

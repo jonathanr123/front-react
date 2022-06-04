@@ -1,9 +1,8 @@
 import http from "../http-common";
 
 class ObraSocialDataService {
-  get(id) {
-    return http.get(`/obrasocial/${id}/personaep`);
-    //me trae las evoluciones de una persona con ep
+  getAll() {
+    return http.get("/obrasocial");
   }
 
   create(data) {
@@ -17,7 +16,6 @@ class ObraSocialDataService {
   delete(id) {
     return http.delete(`/obrasocial/${id}`);
   }
-
 }
 
 export default new ObraSocialDataService();

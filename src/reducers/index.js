@@ -8,6 +8,7 @@ import diagnostico from "./diagnostico";
 import enfermedad from "./enfermedad";
 import evolucion from "./evolucion";
 import obrasocial from "./obrasocial";
+import os from "./os";
 import medicamento from "./medicamento";
 import indicacion from "./indicacion";
 import global from "./global";
@@ -22,6 +23,7 @@ export default combineReducers({
   diagnostico,
   evolucion,
   obrasocial,
+  os,
   medicamento,
   indicacion,
   paciente,

@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
 import { retrieveDiagnosticosEp } from "../actions/diagnostico";
 import { retrieveEvolucionEp } from "../actions/evolucion";
-import { retrieveObraSocialEp } from "../actions/obrasocial";
+import { retrieveOSEp } from "../actions/os";
 import { retrieveIndicacionEp } from "../actions/indicacion";
 
 class FichaMedica extends Component {
@@ -13,14 +13,13 @@ class FichaMedica extends Component {
         super(props);
         // Defino los estados locales
         this.state={
-        arrayOS:[{nombre:'O.S.D.E',estatal:0},{nombre:'I.O.M.A',estatal:1},{nombre:'Medifé',estatal:0},{nombre:'Swiss Medical',estatal:0}]
         }
     }
 
     componentDidMount() {
         this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
         this.props.retrieveEvolucionEp(this.props.idEpElegido);
-        this.props.retrieveObraSocialEp(this.props.idEpElegido);
+        this.props.retrieveOSEp(this.props.idEpElegido);
         this.props.retrieveIndicacionEp(this.props.idEpElegido)
     }
 
@@ -51,9 +50,20 @@ class FichaMedica extends Component {
         }
     }
 
+    describirEstado(estado){
+        switch (estado) {
+            case 0: return "Ausencia de signos patológicos.";
+            case 1: return "Los síntomas parkinsonianos afectan sólo a un lado del cuerpo.";
+            case 2: return "Afectación de los dos lados del cuerpo sin transtorno del equilibrio.";
+            case 3: return "Alteración bilateral leve o moderada, con cierta inestabilidad postural. El paciente es fisicamente independiente.";
+            case 4: return "Incapacidad grave: es capaz de caminar o de permanecer de pié sin ayuda.";
+            case 5: return "El paciente necesita ayuda para todo. Permanece en cama o sentado.";
+        }
+    }
+
 
     render() {
-            const {diagnosticos, evoluciones, obrasociales, indicaciones, nombreEpElegido} = this.props;
+            const {diagnosticos, evoluciones, osociales, indicaciones, nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -71,7 +81,7 @@ class FichaMedica extends Component {
                     <h4 className="mt-4">Diagnósticos</h4>
                     </div>
                     <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
-                    <Link to={"/list-diagnostico"}><button className="btn btn-success" to={"/list-diagnostico"} >Editar</button></Link>
+                    <Link to={"/list-diagnostico"}><button className="btn btn-verde" to={"/list-diagnostico"} >Editar</button></Link>
                     </div>
                 </div>
                 <div className="row">
@@ -86,7 +96,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {diagnosticos &&
-                                    diagnosticos.map((diagnostico, index) => (
+                                    diagnosticos.filter(diagnostico => diagnostico.borrado == "0").map((diagnostico, index) => (
                                         <tr key={index}>
                                         <td >{diagnostico.idenfermedad.nombre}</td>
                                         <td>{this.convertirFormatoFecha(diagnostico.fecha)}</td>
@@ -103,7 +113,7 @@ class FichaMedica extends Component {
                     <h4 className="mt-4">Evolución</h4>
                     </div>
                     <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
-                    <Link to={"/list-evolucion"}><button className="btn btn-success" to={"/list-evolucion"} >Editar</button></Link>
+                    <Link to={"/list-evolucion"}><button className="btn btn-verde" to={"/list-evolucion"} >Editar</button></Link>
                     </div>
                 </div>
                 <div className="row">
@@ -112,15 +122,17 @@ class FichaMedica extends Component {
                 <thead>
                     <tr>
                     <th scope="col">Estado Evolutivo</th>
+                    <th scope="col">Descripción</th>
                     <th scope="col">Fecha de Observación</th>
                     </tr>
                 </thead>
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {evoluciones &&
-                                    evoluciones.map((evolucion, index) => (
+                                    evoluciones.filter(evolucion => evolucion.borrado == "0").map((evolucion, index) => (
                                         <tr key={index}>
                                         <td>Estado: {evolucion.escalaevolucion}</td>
+                                        <td>{this.describirEstado(evolucion.escalaevolucion)}</td>
                                         <td>{this.convertirFormatoFecha(evolucion.fecha)}</td>
                                         </tr>
                                     ))}
@@ -134,7 +146,7 @@ class FichaMedica extends Component {
                     <h4 className="mt-4">Obra Social</h4>
                     </div>
                     <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
-                    <Link to={"/list-obrasocial"}><button className="btn btn-success" to={"/list-obrasocial"} >Editar</button></Link>
+                    <Link to={"/list-obrasocial"}><button className="btn btn-verde" to={"/list-obrasocial"} >Editar</button></Link>
                     </div>
                 </div>
                 <div className="row">
@@ -148,11 +160,11 @@ class FichaMedica extends Component {
                 </thead>
                 <tbody style={{verticalAlign:'middle'}}>
                     
-                    {obrasociales &&
-                                    obrasociales.map((obrasocial, index) => (
+                    {osociales &&
+                                    osociales.filter(osocial => osocial.borrado == "0").map((osocial, index) => (
                                         <tr key={index}>
-                                        <td>{obrasocial.nombre}</td>
-                                        <td>{this.convertirTipo(obrasocial.esestatal)}</td>
+                                        <td>{osocial.idobrasocial.nombre}</td>
+                                        <td>{this.convertirTipo(osocial.idobrasocial.esestatal)}</td>
                                         </tr>
                                     ))}
                 </tbody>
@@ -165,7 +177,7 @@ class FichaMedica extends Component {
                     <h4 className="mt-4">Indicación de Medicamentos</h4>
                     </div>
                     <div className="mb-4 col-6 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right', paddingTop:'18px'}}>
-                    <Link to={"/list-indicacion"}><button className="btn btn-success" to={"/list-indicacion"} >Editar</button></Link>
+                    <Link to={"/list-indicacion"}><button className="btn btn-verde" to={"/list-indicacion"} >Editar</button></Link>
                     </div>
                 </div>
                 <div className="row">
@@ -183,7 +195,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {indicaciones &&
-                                        indicaciones.map((indicacion, index) => (
+                                        indicaciones.filter(indicacion => indicacion.borrado == "0").map((indicacion, index) => (
                                             <tr key={index}>
                                             <td >{indicacion.idmedicamento.nombre}</td>
                                             <td >{indicacion.cantidadmiligramos} mg</td>
@@ -209,11 +221,11 @@ const mapStateToProps = (state) => {
     return {
       diagnosticos: state.diagnostico,
       evoluciones: state.evolucion,
-      obrasociales: state.obrasocial,
+      osociales: state.os,
       indicaciones: state.indicacion,
       idEpElegido: state.global.idEpElegido,
       nombreEpElegido: state.global.nombreEpElegido
     };
 };
 
-export default connect(mapStateToProps, { retrieveDiagnosticosEp, retrieveEvolucionEp, retrieveObraSocialEp, retrieveIndicacionEp})(FichaMedica);
+export default connect(mapStateToProps, { retrieveDiagnosticosEp, retrieveEvolucionEp, retrieveOSEp, retrieveIndicacionEp})(FichaMedica);

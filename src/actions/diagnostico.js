@@ -22,9 +22,9 @@ import DiagnosticoDataService from "../services/diagnostico.service";
   };
 
   //Crea un Diagnostico
-  export const createDiagnostico = (fecha, idpersonaep, idenfermedad) => async (dispatch) => {
+  export const createDiagnostico = (fecha, idpersonaep, idenfermedad, borrado) => async (dispatch) => {
     try {
-      const res = await DiagnosticoDataService.create({fecha, idpersonaep, idenfermedad});
+      const res = await DiagnosticoDataService.create({fecha, idpersonaep, idenfermedad, borrado});
   
       dispatch({
         type: CREATE_DIAGNOSTICO,
