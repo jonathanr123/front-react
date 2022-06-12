@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import "./App.css";
 import AddPaciente from "./components/add-paciente.component";
 import FichaMedica from "./components/fichaMedica.component";
@@ -23,10 +23,6 @@ class App extends Component {
   logout = () => {
     TokenService.removeUser()
     window.location.href = "/";
-  }
-  
-  NotFound() {
-    return <h1 style={{height:"77vh", color:"red", textAlign:"center"}}>Ha llegado a una página que no existe</h1>;
   }
 
   render() {
@@ -64,7 +60,6 @@ class App extends Component {
                   <Route exact path="/nomenclador" component={Nomenclador} />
                   <Route exact path="/events" component={Events} />
                   <Route exact path="/type-events" component={TypeEvents} />
-                  <Route path="*" component={this.NotFound} />
                   </span>
                 ):(<Redirect to="/" />)}
               </Switch>

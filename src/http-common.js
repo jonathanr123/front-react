@@ -11,7 +11,7 @@ instance.interceptors.request.use(
   (config) => {
     const token = TokenService.getLocalAccessToken();
     if (token) {
-      config.headers["Authorization"] = 'Bearer ' + token;
+      config.headers["Authorization"] = "Bearer " + token;
     }
     return config;
   },
@@ -25,7 +25,7 @@ instance.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
-    if (originalConfig.url !== "/auth/login" && err.response) {
+    if (originalConfig.url !== "/login" && err.response) {
       // Access Token was expired
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
@@ -33,7 +33,7 @@ instance.interceptors.response.use(
           const rs = await instance.post("/refresh_token", {
             refresh: TokenService.getLocalRefreshToken(),
           });
-          const { accessToken } = rs.data.access;
+          const accessToken = rs.data.access;
           TokenService.updateLocalAccessToken(accessToken);
           return instance(originalConfig);
         } catch (_error) {
