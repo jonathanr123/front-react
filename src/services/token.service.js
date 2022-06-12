@@ -32,5 +32,10 @@ export const TokenService = {
     getUsername () {
     const user = JSON.parse(localStorage.getItem("user"));
     return user?.username;
+    },
+
+    getName () {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.name;
     }
 }

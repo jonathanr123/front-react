@@ -27,7 +27,7 @@ class App extends Component {
 
   render() {
     const token = TokenService.getLocalAccessToken();
-    const username = TokenService.getUsername();
+    const user_name = TokenService.getName();
     return (
       
       <Router>
@@ -35,7 +35,7 @@ class App extends Component {
         <span>
         <nav className="navbar navbar-expand navbar-light bg-light">
           <div className="container-fluid" style={{ justifyContent: "right"}}>
-            <h4 style={{ marginBottom:"0px"}}><b>Bienvenido: </b>{username}</h4>
+            <h4 style={{ marginBottom:"0px"}}><b>Bienvenido: </b>{user_name}</h4>
           </div>
         </nav>
         

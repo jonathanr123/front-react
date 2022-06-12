@@ -102,7 +102,6 @@ class Login extends React.Component {
 
       if (response) {
       console.log("===>", response.data.access);
-      response.data.username = this.state.campo.user;
       TokenService.setUser(response.data);
 
       this.send();
