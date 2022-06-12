@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import "./App.css";
 import AddPaciente from "./components/add-paciente.component";
 import FichaMedica from "./components/fichaMedica.component";
@@ -15,43 +15,58 @@ import TypeEvents from "./components/tipos-de-eventos.component";
 import Nomenclador from "./components/nomenclador.component";
 import ListaPaciente from "./components/list-pacientesEp.component";
 import Sidebar from "./components/sidebar.component";
+import { TokenService } from "./services/token.service";
 
 class App extends Component {
+  
+  //arrow function para logout
+  logout = () => {
+    TokenService.removeUser()
+    window.location.href = "/";
+  }
+  
+  NotFound() {
+    return <h1 style={{height:"77vh", color:"red", textAlign:"center"}}>Ha llegado a una página que no existe</h1>;
+  }
+
   render() {
+    const token = TokenService.getLocalAccessToken();
+    const username = TokenService.getUsername();
     return (
+      
       <Router>
+        {token ? (
+        <span>
         <nav className="navbar navbar-expand navbar-light bg-light">
-          <div className="container-fluid" style={{ justifyContent: "right" }}>
-            <ul className="navbar-nav text-center text-md-start ps-md-3">
-              <li className="nav-item">
-                <Link to={"/login"}>
-                  <button className="btn btn-celeste" to={"/login"}>
-                    Iniciar Sesión
-                  </button>
-                </Link>
-              </li>
-            </ul>
+          <div className="container-fluid" style={{ justifyContent: "right"}}>
+            <h4 style={{ marginBottom:"0px"}}><b>Bienvenido: </b>{username}</h4>
           </div>
         </nav>
-
+        
         <Sidebar></Sidebar>
-
+        </span>
+        ):('')}
         <div className="container">
           <div className="row">
             <div>
               <Switch>
-                <Route exact path={["/add-paciente"]} component={AddPaciente} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/ficha" component={FichaMedica} />
-                <Route exact path="/list-diagnostico" component={ListaDiagnostico} />
-                <Route exact path="/list-evolucion" component={ListaEvolucion} />
-                <Route exact path="/list-obrasocial" component={ListaObraSocial} />
-                <Route exact path="/list-indicacion" component={ListaIndicacion} />
-                <Route exact path="/search" component={Search} />
-                <Route exact path="/list-pacientes" component={ListaPaciente} />
-                <Route exact path="/nomenclador" component={Nomenclador} />
-                <Route exact path="/events" component={Events} />
-                <Route exact path="/type-events" component={TypeEvents} />
+                <Route exact path="/" component={Login} />
+                {token ? (
+                  <span>
+                  <Route exact path={["/add-paciente"]} default component={AddPaciente} />
+                  <Route exact path="/ficha" component={FichaMedica} />
+                  <Route exact path="/list-diagnostico" component={ListaDiagnostico} />
+                  <Route exact path="/list-evolucion" component={ListaEvolucion} />
+                  <Route exact path="/list-obrasocial" component={ListaObraSocial} />
+                  <Route exact path="/list-indicacion" component={ListaIndicacion} />
+                  <Route exact path="/search" component={Search} />
+                  <Route exact path="/list-pacientes" component={ListaPaciente} />
+                  <Route exact path="/nomenclador" component={Nomenclador} />
+                  <Route exact path="/events" component={Events} />
+                  <Route exact path="/type-events" component={TypeEvents} />
+                  <Route path="*" component={this.NotFound} />
+                  </span>
+                ):(<Redirect to="/" />)}
               </Switch>
             </div>
           </div>

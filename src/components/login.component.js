@@ -1,14 +1,9 @@
 import React from "react";
 import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
-// import authService from '../services/auth.service';
-// import { connect } from "react-redux";
-// import { loginRequest } from "../actions/types";
 import { authRepository } from "../services/auth.service";
-// Actions de Redux
-import { setAuthUser } from "../actions/authAction";
+import { TokenService } from "../services/token.service";
 
-// import { useDispatch } from "react-redux";
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -16,8 +11,6 @@ class Login extends React.Component {
     // Defino los estados locales
     this.state = {
       campo: {},
-      enviado: false,
-      referrer: null,
     };
   }
 
@@ -77,7 +70,10 @@ class Login extends React.Component {
       timer: 1500,
     });
 
-    setTimeout(this.setState({ referrer: "/" }), 1500);
+    setTimeout(() => {
+      window.location.href = "/add-paciente";
+      }, 1500);
+    
   }
 
   errorSend() {
@@ -85,68 +81,90 @@ class Login extends React.Component {
       position: "center",
       icon: "error",
       title: "No se permite el acceso",
-      text: "El correo electrónico o la contraseña ingresada son incorrectos.",
+      text: "El nombre de usuario o la contraseña ingresada son incorrectos.",
       confirmButtonText: "OK",
+    });
+
+    this.setState({
+      campo: {
+        user: "",
+        pass: "",
+      },
     });
   }
 
   render() {
     const loginFunction = async () => {
-      let response = await authRepository.signIn({
-        user: "franco",
-        password: "1234",
-      });
+      let response = await authRepository.login({
+        username: this.state.campo.user,
+        password: this.state.campo.pass,
+      }).catch((error) => {this.errorSend()});
 
-      // Mandar a llamar el action de productoAction
-      console.log("===>", response.data);
-      setAuthUser(response.data);
-      localStorage.setItem("auth", JSON.stringify(response));
+      if (response) {
+      console.log("===>", response.data.access);
+      response.data.username = this.state.campo.user;
+      TokenService.setUser(response.data);
 
-      window.location.href = "/admin/dashboard";
+      this.send();
+      }
     };
-    const { referrer } = this.state;
-    if (referrer) return <Redirect to={referrer} />;
+    if (TokenService.getLocalAccessToken()) return <Redirect to="/add-paciente" />;
 
     return (
       <form onSubmit={this.enviarFormulario.bind(this)}>
-        <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto">
-          <h2 className="mt-4 mt-md-2 text-center">Login</h2>
-          <hr />
-          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-            <label className="col-form-label">Usuario</label>
-            <input
-              name="user"
-              type="text"
-              className="form-control"
-              placeholder="Ingrese su usuario"
-              id="user"
-              aria-describedby="user"
-              onChange={this.detectarCambio.bind(this, "user")}
-              value={this.state.campo["user"] || ""}
-            />
+        <main
+          className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto"
+          style={{ height: "80vh" }}
+        >
+          <div className="justify-content-center">
+            <h2 className="mt-4 mt-md-2 text-center">Login</h2>
+            <hr />
+            <div className="container">
+              <div className="row">
+                <div className="w-100"></div>
+                <div className="col-12 col-md-3 col-lg-4 col-xl-4"></div>
+                <div className="col-12 col-md-6 col-lg-4 col-xl-4" style={{textAlign:"center"}}>
+                  <label className="col-form-label" style={{float:"left"}}>Usuario</label>
+                  <input
+                    name="user"
+                    type="text"
+                    className="form-control"
+                    placeholder="Ingrese su usuario"
+                    id="user"
+                    aria-describedby="user"
+                    onChange={this.detectarCambio.bind(this, "user")}
+                    value={this.state.campo["user"] || ""}
+                  />
+                  <label
+                    className="col-form-label"
+                    style={{ marginTop: "20px", float:"left" }}
+                  >
+                    Contraseña
+                  </label>
+                  <input
+                    name="password"
+                    type="password"
+                    className="form-control"
+                    placeholder="Ingrese su Contraseña"
+                    id="pass"
+                    aria-describedby="pass"
+                    onChange={this.detectarCambio.bind(this, "pass")}
+                    value={this.state.campo["pass"] || ""}
+                  />
+
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    style={{ marginTop: "20px" }}
+                    onClick={() => loginFunction()}
+                  >
+                    Iniciar Sesión
+                  </button>
+                </div>
+                <div className="col-12 col-md-3 col-lg-4 col-xl-4"></div>
+              </div>
+            </div>
           </div>
-          <div className="w-100"></div>
-          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-            <label className="col-form-label">Contraseña</label>
-            <input
-              name="password"
-              type="password"
-              className="form-control"
-              placeholder="Ingrese su Contraseña"
-              id="pass"
-              aria-describedby="pass"
-              onChange={this.detectarCambio.bind(this, "pass")}
-              value={this.state.campo["pass"] || ""}
-            />
-          </div>
-          <div className="w-100"></div>
-          <button
-            type="button"
-            className="mb-3 col-6 btn btn-primary col-md-3 col-xl-2"
-            onClick={() => loginFunction()}
-          >
-            Iniciar Sesión
-          </button>
         </main>
       </form>
     );

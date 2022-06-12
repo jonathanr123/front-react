@@ -1,5 +1,5 @@
 import React from 'react';
-import logoTelepark from "../images/logoTelepark2.png";
+import logoTelepark from "../images/logoTelepark2022.png";
 
 class Footer extends React.Component {
     render() {

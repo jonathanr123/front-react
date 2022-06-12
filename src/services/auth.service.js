@@ -3,8 +3,8 @@ import http from "../http-common";
 const resource = "auth";
 
 export const authRepository = {
-  async signIn(data) {
-    let response = await http.post(`${resource}`, data);
+  async login(data) {
+    let response = await http.post(`/login`, data);
 
     return response;
   },
@@ -15,10 +15,8 @@ export const authRepository = {
     return response;
   },
 
-  async logout() {
-    let response = await http.get(`${resource}/logout`);
-
-    return response;
+  logout() {
+    localStorage.removeItem("auth");
   },
 
   async userData() {

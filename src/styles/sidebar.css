@@ -7,10 +7,11 @@
 
 .sidebar{
     position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
+    left: 1vh;
+    top: 1vh;
+    bottom: 1vh;
     width: 50px;
+    border-radius: 12px;
     background: #11101D;
     z-index: 99;
     transition: all 0.5s ease;
@@ -18,7 +19,7 @@
   }
 
   .open{
-    width: 250px;
+    width: 300px;
   }
 
   .sidebar li{
@@ -59,9 +60,10 @@
 
 
   .sidebar .nav-list{
-    margin-top: 0px;
     padding-inline-start: 0px;
-    height: 100%;
+    height: calc(100% - 62px);
+    margin-left: 5px;
+    margin-right: 5px;
   }
 
   .sidebar li a{
@@ -72,8 +74,8 @@
     text-align: center;
     text-decoration: none;
     transition: all 0.4s ease;
-    background: #11101D;
-    padding-inline-start: 9px;
+    padding: 4px;
+    padding-inline-start: 5px;
   }
 
   .sidebar li a:hover{
@@ -163,6 +165,14 @@
     line-height: 60px;
   }
 
+  .hr_sidebar{
+    border: 1px solid white;
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
 @media (max-width: 576px) {
     .sidebar li .tooltip{
       display: none;
@@ -171,6 +181,9 @@
     .sidebar{
         position: static;
         width: 100%;
+        border-radius: 0px;
+        height: fit-content;
+        padding-bottom: 2vh;
     }
 
     .sidebar li a .links_name{

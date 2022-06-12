@@ -25,7 +25,7 @@
 .btn-rojo {
   box-shadow: 3px 3px #860202;
   background-image: linear-gradient(to right, #f73838, #c70c0c, #c20909);
-  color:white
+  color:white;
 }
 
 .btn-rojo-simple {
@@ -95,6 +95,7 @@
 footer {
   display: flex;
   margin-top: auto;
+  height: 14vh;
   width:100%;
   font-style: italic;
   align-items: center;
