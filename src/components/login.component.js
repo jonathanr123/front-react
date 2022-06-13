@@ -61,7 +61,7 @@ class Login extends React.Component {
     });
   }
 
-  send() {
+  send(data) {
     Swal.fire({
       position: "center",
       icon: "success",
@@ -70,9 +70,15 @@ class Login extends React.Component {
       timer: 1500,
     });
 
-    setTimeout(() => {
-      window.location.href = "/add-paciente";
-      }, 1500);
+    if (data.is_superuser === true) {
+      setTimeout(() => {
+        window.location.href = "/list-usuarios";
+        }, 1500);
+    } else {
+      setTimeout(() => {
+        window.location.href = "/add-paciente";
+        }, 1500);
+    }
     
   }
 
@@ -104,10 +110,12 @@ class Login extends React.Component {
       console.log("===>", response.data.access);
       TokenService.setUser(response.data);
 
-      this.send();
+      this.send(response.data);
       }
     };
-    if (TokenService.getLocalAccessToken()) return <Redirect to="/add-paciente" />;
+
+    if (TokenService.getLocalAccessToken() && TokenService.getRole() === true) return <Redirect to="/list-usuarios" />;
+    if (TokenService.getLocalAccessToken() && TokenService.getRole() !== true) return <Redirect to="/add-paciente" />;
 
     return (
       <form onSubmit={this.enviarFormulario.bind(this)}>

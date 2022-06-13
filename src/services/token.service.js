@@ -37,5 +37,10 @@ export const TokenService = {
     getName () {
     const user = JSON.parse(localStorage.getItem("user"));
     return user?.name;
+    },
+
+    getRole () {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.is_superuser;
     }
 }
