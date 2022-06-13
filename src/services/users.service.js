@@ -5,6 +5,12 @@ export const userRepository = {
     let response = await http.get(`/users`);
 
     return response;
+  },
+
+  async updateUser(data) {
+    let response = await http.put(`/update_user`, data);
+
+    return response;
   }
 
 };
