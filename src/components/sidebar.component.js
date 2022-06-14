@@ -27,16 +27,6 @@ class Sidebar extends React.Component {
         }
     }
 
-    desplegar(){
-        let estado=document.getElementById("submenu").classList.contains("abierto");
-        if (estado != true){
-            document.getElementById("submenu").classList.add("abierto");
-            document.getElementById("sidebar").classList.add("open");
-        } else{
-            document.getElementById("submenu").classList.remove("abierto");
-        }
-    }
-
     //arrow function para logout
     logout = () => {
         TokenService.removeUser()
@@ -46,6 +36,7 @@ class Sidebar extends React.Component {
     render () {
 
         const user_role = TokenService.getRole();
+        const current_url = window.location.pathname;
 
         return (
             <div className="sidebar" id="sidebar">
@@ -68,7 +59,7 @@ class Sidebar extends React.Component {
                     <span className="tooltip">Home</span>
                 </li>
                 {user_role === true ? (
-                <li>
+                <li className={(current_url === '/list-usuarios')? 'active': ''}>
                     <a href="./list-usuarios">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="16" height="16"  fill="currentColor" className="bi bi-house-fill" viewBox="0 0 880 980">
                             <g transform="translate(0.000000,980.000000) scale(0.1,-0.098)" stroke="none">
@@ -81,7 +72,7 @@ class Sidebar extends React.Component {
                     <span className="tooltip">Administrar Usuarios</span>
                 </li>
                 ) : ('')}
-                <li>
+                <li className={(current_url === '/add-paciente')? 'active': ''}>
                     <a href="./add-paciente">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-plus-fill" viewBox="0 0 16 16">
                             <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -91,7 +82,7 @@ class Sidebar extends React.Component {
                     </a>
                     <span className="tooltip">Ingresar Persona con EP</span>
                 </li>
-                <li>
+                <li className={(current_url === '/search')? 'active': ''}>
                     <a href="./search">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -113,7 +104,7 @@ class Sidebar extends React.Component {
                     <span className="tooltip">Ingresar/Modificar Familiar</span>
                 </li>
 
-                <li>
+                <li className={(current_url === '/list-pacientes')? 'active': ''}>
                     <a href="./list-pacientes">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-medical" viewBox="0 0 16 16">
                             <path fillRule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v.634l.549-.317a.5.5 0 1 1 .5.866L9 6l.549.317a.5.5 0 1 1-.5.866L8.5 6.866V7.5a.5.5 0 0 1-1 0v-.634l-.549.317a.5.5 0 1 1-.5-.866L7 6l-.549-.317a.5.5 0 0 1 .5-.866l.549.317V4.5A.5.5 0 0 1 8 4zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
@@ -126,7 +117,7 @@ class Sidebar extends React.Component {
                     
                 </li>
 
-                <li>
+                <li className={(current_url === '/nomenclador')? 'active': ''}>
                     <a href="./nomenclador">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
@@ -137,7 +128,7 @@ class Sidebar extends React.Component {
                     
                 </li>
 
-                <li>
+                <li className={(current_url === '/events')? 'active': ''}>
                     <a href="./events">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"className="bi bi-calendar-event" viewBox="0 0 16 16" >
                             <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
@@ -149,7 +140,7 @@ class Sidebar extends React.Component {
 
                 </li>
 
-                <li>
+                <li className={(current_url === '/type-events')? 'active': ''}>
                     <a href="./type-events">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-table" viewBox="0 0 16 16" >
                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />

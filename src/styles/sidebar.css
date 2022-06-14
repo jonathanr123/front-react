@@ -82,6 +82,16 @@
     background: #FFF;
   }
 
+  .sidebar li.active a{
+    background: rgb(255, 255, 255);
+  }
+  
+    .sidebar li.active a .links_name,
+  .sidebar li.active a svg{
+    transition: all 0.5s ease;
+    color: #11101D;
+  }
+
   .sidebar li .tooltip{
     position: absolute;
     top: -20px;
