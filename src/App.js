@@ -45,8 +45,7 @@ class App extends Component {
         </span>
         ):('')}
         <div className="container">
-          <div className="row">
-            <div>
+          <div className="row justify-content-center">
               <Switch>
                 <Route exact path="/" component={Login} />
                 {token ? (
@@ -88,11 +87,12 @@ class App extends Component {
                   
                 ):(<Redirect to="/" />)}
               </Switch>
-            </div>
           </div>
         </div>
 
+        {token ? (
         <Footer />
+        ):('')}
       </Router>
     );
   }

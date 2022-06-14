@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
 import { authRepository } from "../services/auth.service";
 import { TokenService } from "../services/token.service";
+import logoTelepark from "../images/logo2022.png";
 
 class Login extends React.Component {
   constructor(props) {
@@ -118,19 +119,22 @@ class Login extends React.Component {
     if (TokenService.getLocalAccessToken() && TokenService.getRole() !== true) return <Redirect to="/add-paciente" />;
 
     return (
+      <div className="col-12 col-md-6 col-lg-4 col-xl-4">
       <form onSubmit={this.enviarFormulario.bind(this)}>
         <main
-          className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto"
-          style={{ height: "80vh" }}
+          className="border-top-sm row justify-content-center form-paciente shadow container-lg mx-auto"
+          style={{ marginTop: "3vh", marginBottom: "3vh" }}
         >
-          <div className="justify-content-center">
+          <div className="justify-content-center" style={{ paddingTop: "5vh", paddingBottom: "8vh" }}>
+          <div className="col-12 col-md-12 col-lg-12 col-xl-12" style={{textAlign:"center", marginBottom: "-5vh"}}>
+          <img className="logo" src={logoTelepark} style={{width:"180px"}} alt="logo de telepark" />
+          </div>
             <h2 className="mt-4 mt-md-2 text-center">Login</h2>
             <hr />
             <div className="container">
               <div className="row">
                 <div className="w-100"></div>
-                <div className="col-12 col-md-3 col-lg-4 col-xl-4"></div>
-                <div className="col-12 col-md-6 col-lg-4 col-xl-4" style={{textAlign:"center"}}>
+                <div className="col-12 col-md-12 col-lg-12 col-xl-12" style={{textAlign:"center", marginTop: "2vh"}}>
                   <label className="col-form-label" style={{float:"left"}}>Usuario</label>
                   <input
                     name="user"
@@ -161,19 +165,19 @@ class Login extends React.Component {
 
                   <button
                     type="button"
-                    className="btn btn-primary"
-                    style={{ marginTop: "20px" }}
+                    className="btn btn-azul"
+                    style={{ marginTop: "5vh" }}
                     onClick={() => loginFunction()}
                   >
                     Iniciar Sesión
                   </button>
                 </div>
-                <div className="col-12 col-md-3 col-lg-4 col-xl-4"></div>
               </div>
             </div>
           </div>
         </main>
       </form>
+      </div>
     );
   }
 }

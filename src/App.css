@@ -84,6 +84,7 @@
 
 .form-paciente {
   background-color: #f8f9fa;
+  border-radius: 12px !important;
 } 
 
 .logo {
@@ -95,7 +96,6 @@
 footer {
   display: flex;
   margin-top: auto;
-  height: 14vh;
   width:100%;
   font-style: italic;
   align-items: center;
