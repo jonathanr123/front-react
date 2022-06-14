@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "../styles/list-pacientesEp.css"
 import { userRepository } from "../services/users.service";
 import Swal from 'sweetalert2';
+import { TokenService } from "../services/token.service";
 
 class AdminUsuarios extends Component {
 
@@ -102,7 +103,9 @@ class AdminUsuarios extends Component {
             
                     if (response) {
                         console.log(response.data);
-                        this.setState({ usuarios: response.data })
+                        let admin = TokenService.getUsername();
+                        let users = response.data.filter(user => { return user.username !== admin });
+                        this.setState({ usuarios: users })
                     }
                 };
 
