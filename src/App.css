@@ -83,7 +83,9 @@
 }
 
 .form-paciente {
-  background-color: #f8f9fa;
+  background: #C9D6FF;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #E1E1E3, #ffffff);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #E1E1E3, #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   border-radius: 12px !important;
 } 
 
@@ -100,7 +102,19 @@ footer {
   font-style: italic;
   align-items: center;
   justify-content:center;
-  background-color: #f8f8f3;
+  background: #C9D6FF;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #E1E1E3, #ffffff);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #E1E1E3, #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+table {
+  background-color: white;
+  border-radius: 12px;
+  border: rgba(255, 255, 255, 0) !important;
+}
+
+table th, table td {
+  text-align: center;
 }
 
 @media screen and (max-width: 600px) {
