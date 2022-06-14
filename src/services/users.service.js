@@ -11,6 +11,12 @@ export const userRepository = {
     let response = await http.put(`/update_user`, data);
 
     return response;
+  },
+
+  async createUser(data) {
+    let response = await http.post(`/create_user`, data);
+
+    return response;
   }
 
 };

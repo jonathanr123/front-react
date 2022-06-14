@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../styles/list-pacientesEp.css"
 import { userRepository } from "../services/users.service";
+import Swal from 'sweetalert2';
 
 class AdminUsuarios extends Component {
 
@@ -9,10 +10,12 @@ class AdminUsuarios extends Component {
         super(props);
         // Defino los estados locales 
         this.state = {
+            showNuevo:false,
             show:false,
             campo: {
                 buscador:'',
-            }
+            },
+            error:{}
         }
     }
 
@@ -22,6 +25,7 @@ class AdminUsuarios extends Component {
         //setInterval(() => {this.getUsers()}, 3000);
     }
 
+    // Función que obtiene los datos de los campos del formulario
     detectarCambio(field, e) {
 
         let campo = this.state.campo;
@@ -35,6 +39,64 @@ class AdminUsuarios extends Component {
 
     }
 
+    // Valido los campos del formulario
+  validarFormulario() {
+    let showNuevo = this.state.showNuevo;
+    let campo = this.state.campo;
+    let error = {};
+    let formularioValido = true;
+
+    if (showNuevo) {
+        if (!campo["username"]) {
+            formularioValido = false;
+            error["username"] = "Por favor, ingresa el nombre de usuario.";
+            }
+
+        if (!campo["firstname"]) {
+        formularioValido = false;
+        error["firstname"] = "Por favor, ingresa el nombre.";
+        }
+
+        if (!campo["lastname"]) {
+            formularioValido = false;
+            error["lastname"] = "Por favor, ingresa el apellido.";
+        }
+
+        if (!campo["password"]) {
+            formularioValido = false;
+            error["password"] = "Por favor, ingresa la contraseña.";
+        }
+
+        if (!campo["role"]) {
+            formularioValido = false;
+            error["role"] = "Por favor, ingresa el role de usuario.";
+        }
+
+        if (!campo["isActive"]) {
+            formularioValido = false;
+            error["isActive"] = "Por favor, ingresa el estado.";
+        }
+    } else {
+        if (!campo["firstname"]) {
+            formularioValido = false;
+            error["firstname"] = "Por favor, ingresa el nombre.";
+          }
+        
+          if (!campo["lastname"]) {
+            formularioValido = false;
+            error["lastname"] = "Por favor, ingresa el apellido.";
+        }
+    }
+
+    // Seteo el estado de error
+    this.setState({
+      error: error,
+    });
+
+    return formularioValido;
+  }
+
+    // Función que obtiene la lista de usuarios
     getUsers = async () => {
                     let response = await userRepository.getUsers();
             
@@ -63,58 +125,153 @@ class AdminUsuarios extends Component {
 
     editUser(user){
         this.setState({
+            showNuevo:false,
             show:true,
             campo:{
                 buscador:'',
                 username:user.username,
                 firstname:user.first_name,
                 lastname:user.last_name,
-                role: user.is_superuser,
-                isActive: user.is_active
-            }
-        })
+                role: (user.is_superuser === true) ? 'true' : 'false',
+                isActive: (user.is_active === true) ? 'true' : 'false',
+            },
+            error: ''
+        });
     }
 
     guardar(){
         let data = {}
-        if(this.state.campo.password === ''){
-            data ={
-                user:this.state.campo.username,
-                first_name:this.state.campo.firstname,
-                last_name:this.state.campo.lastname,
-                is_superuser: (this.state.campo.role === 'true') ? true : false,
-                is_active: (this.state.campo.isActive === 'true') ? true : false
+        if (this.validarFormulario()) {
+            this.cargando();
+            if(!this.state.campo["password"]){
+                data ={
+                    user:this.state.campo.username,
+                    first_name:this.state.campo.firstname,
+                    last_name:this.state.campo.lastname,
+                    is_superuser: (this.state.campo.role === 'true') ? true : false,
+                    is_active: (this.state.campo.isActive === 'true') ? true : false
+                }
+            }else{
+                data ={
+                    user:this.state.campo.username,
+                    first_name:this.state.campo.firstname,
+                    last_name:this.state.campo.lastname,
+                    password:this.state.campo.password,
+                    is_superuser: (this.state.campo.role === 'true') ? true : false,
+                    is_active: (this.state.campo.isActive === 'true') ? true : false
+                }
             }
-        }else{
+
+            setTimeout(() => {
+                userRepository.updateUser(data).then(response => {
+                    if (response) {
+                        console.log(response.data);
+                        this.notificacionExito();
+                        this.clear();
+                        this.getUsers();
+                    }
+                })
+                .catch(error => {this.notificacionError()})
+            }, 1000);
+        }
+        
+    }
+
+    guardarNuevo(){
+        let data = {}
+        if (this.validarFormulario()) {
+            this.cargando();
             data ={
                 user:this.state.campo.username,
                 first_name:this.state.campo.firstname,
                 last_name:this.state.campo.lastname,
                 password:this.state.campo.password,
                 is_superuser: (this.state.campo.role === 'true') ? true : false,
-                is_active: (this.state.campo.isActive === 'true') ? true : false
+                is_active: (this.state.campo.isActive === 'true') ? true : false,
+                is_staff: false
             }
+
+            setTimeout(() => {
+                userRepository.createUser(data).then(response => {
+                    if (response) {
+                        console.log(response);
+                        this.notificacionExito();
+                        this.clear();
+                        this.getUsers();
+                    }
+                })
+                .catch(error => {this.notificacionError()})
+            }, 1000);    
         }
-        
-        userRepository.updateUser(data).then(response => {
-            if (response) {
-                console.log(response.data);
-                this.clear();
-                this.getUsers();
-            }
-        });
         
     }
 
     clear(){
-        this.setState({show:false, campo:{buscador:'', password:'', username:'', firstname:'', lastname:'', role:'', isActive:''}})
+        this.setState({showNuevo:false, show:false, campo:{buscador:'', password:'', username:'', firstname:'', lastname:'', role:'', isActive:''}})
     }
 
+    agregar(){
+        this.setState({showNuevo:true, show:false, error:'', campo:{buscador:'', password:'', username:'', firstname:'', lastname:'', role:'', isActive:''}})
+    }
+
+    //notificaciones
+    notificacionExito(){
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+          
+          Toast.fire({
+            icon: 'success',
+            title: 'Se ha guardado con éxito'
+          })
+    }
+
+    //notificaciones
+    notificacionError(){
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+          
+          Toast.fire({
+            icon: 'error',
+            title: 'Error: Hubo un problema en la carga.'
+          })
+    }
+
+    //Progress bar
+    cargando(){
+        Swal.fire({
+        title: 'Espere...',
+        html: 'Procesando su solicitud.',
+        didOpen: () => {
+            Swal.showLoading()
+        },
+        willClose: () => {
+            console.log('Cerrando...');
+          }
+        });
+    }
 
     render() {
             
             
-            const { usuarios, show }= this.state;
+            const { usuarios, show, showNuevo }= this.state;
             console.log(usuarios);
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -132,35 +289,109 @@ class AdminUsuarios extends Component {
                     </div>
                 </div>
 
+                <div className="row">
+                <div className="mb-4 col-12 col-md-12 col-lg-12 col-xl-12" style={{textAlign:'right'}}>
+                <button type="button" className="btn btn-azul" onClick={() => this.agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                    </svg>Agregar</button>
+                </div>
+                </div>
+
+                {showNuevo ? (
+                <div className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto">
+                    <h4 className="mt-4">Agregar Usuario <h6 style={{color: "red"}}>(*) Campos Requeridos</h6></h4>
+                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
+                        <label className="col-form-label">Nombre de Usuario <label style={{color: "red"}}>*</label></label>
+                        <input type="text" className="form-control" placeholder="Nombre de usuario..." id="username" onChange={this.detectarCambio.bind(this, "username")} value={this.state.campo["username"] || ''}/>
+                        <span style={{ color: "red" }}>
+                            {this.state.error["username"]}
+                        </span>
+                    </div>
+                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
+                        <label className="col-form-label">Nombre <label style={{color: "red"}}>*</label></label>
+                        <input type="text" className="form-control" placeholder="Nombre..." id="firstname" onChange={this.detectarCambio.bind(this, "firstname")} value={this.state.campo["firstname"] || ''}/>
+                        <span style={{ color: "red" }}>
+                            {this.state.error["firstname"]}
+                        </span>
+                    </div>
+                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
+                        <label className="col-form-label">Apellido <label style={{color: "red"}}>*</label></label>
+                        <input type="text" className="form-control" placeholder="Apellido..." id="lastname" onChange={this.detectarCambio.bind(this, "lastname")} value={this.state.campo["lastname"] || ''}/>
+                        <span style={{ color: "red" }}>
+                            {this.state.error["lastname"]}
+                        </span>
+                    </div>
+                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
+                        <label className="col-form-label">Nueva Contraseña <label style={{color: "red"}}>*</label></label>
+                        <input type="password" className="form-control" placeholder="Contraseña..." id="password" onChange={this.detectarCambio.bind(this, "password")} value={this.state.campo["password"] || ''}/>
+                        <span style={{ color: "red" }}>
+                            {this.state.error["password"]}
+                        </span>
+                    </div>
+                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
+                        <label className="col-form-label">Rol <label style={{color: "red"}}>*</label></label>
+                        <select className="form-select" placeholder="Ingrese rol..." id="role" onChange={this.detectarCambio.bind(this, "role")} value={this.state.campo["role"] || ''}>
+                                <option value="">Elegir</option>
+                                <option value="false">Usuario</option>
+                                <option value="true">Administrador</option>
+                        </select>
+                        <span style={{ color: "red" }}>
+                            {this.state.error["role"]}
+                        </span>
+                    </div>
+                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
+                        <label className="col-form-label">Estado <label style={{color: "red"}}>*</label></label>
+                        <select className="form-select" placeholder="Ingrese estado..." id="isActive" onChange={this.detectarCambio.bind(this, "isActive")} value={this.state.campo["isActive"] || ''}>
+                                <option value="">Elegir</option>
+                                <option value="false">Inactivo</option>
+                                <option value="true">Activo</option>
+                        </select>
+                        <span style={{ color: "red" }}>
+                            {this.state.error["isActive"]}
+                        </span>
+                    </div>
+                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4" style={{textAlign:'center', paddingTop:38}}>
+                        <button type="submit" className="btn btn-verde" style={{width:'40%'}} onClick={() => this.guardarNuevo()}>Guardar</button>
+                        <button type="submit" className="btn btn-rojo" style={{width:'40%', marginLeft:10}} onClick={() => this.clear()}>Cancelar</button>
+                    </div>
+                </div>
+                ):('')}
+
                 {show ? (
                 <div className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto">
-                    <h4 className="mt-4">Editar Usuario</h4>
+                    <h4 className="mt-4">Editar Usuario <h6 style={{color: "red"}}>(*) Campos Requeridos</h6></h4>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
-                        <label className="col-form-label">Nombre de Usuario</label>
+                        <label className="col-form-label">Nombre de Usuario <label style={{color: "red"}}>*</label></label>
                         <input type="text" disabled="true" className="form-control" placeholder="Nombre de usuario..." id="username" onChange={this.detectarCambio.bind(this, "username")} value={this.state.campo["username"] || ''}/>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
-                        <label className="col-form-label">Nombre</label>
+                        <label className="col-form-label">Nombre <label style={{color: "red"}}>*</label></label>
                         <input type="text" className="form-control" placeholder="Nombre..." id="firstname" onChange={this.detectarCambio.bind(this, "firstname")} value={this.state.campo["firstname"] || ''}/>
+                        <span style={{ color: "red" }}>
+                            {this.state.error["firstname"]}
+                        </span>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
-                        <label className="col-form-label">Apellido</label>
+                        <label className="col-form-label">Apellido <label style={{color: "red"}}>*</label></label>
                         <input type="text" className="form-control" placeholder="Apellido..." id="lastname" onChange={this.detectarCambio.bind(this, "lastname")} value={this.state.campo["lastname"] || ''}/>
+                        <span style={{ color: "red" }}>
+                            {this.state.error["lastname"]}
+                        </span>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
                         <label className="col-form-label">Nueva Contraseña</label>
-                        <input type="text" className="form-control" placeholder="Contraseña..." id="password" onChange={this.detectarCambio.bind(this, "password")} value={this.state.campo["password"] || ''}/>
+                        <input type="password" className="form-control" placeholder="Contraseña..." id="password" onChange={this.detectarCambio.bind(this, "password")} value={this.state.campo["password"] || ''}/>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
-                        <label className="col-form-label">Rol</label>
-                        <select className="form-select" placeholder="Ingrese enfermedad..." id="role" onChange={this.detectarCambio.bind(this, "role")} value={this.state.campo["role"] || ''}>
+                        <label className="col-form-label">Rol <label style={{color: "red"}}>*</label></label>
+                        <select className="form-select" placeholder="Ingrese rol..." id="role" onChange={this.detectarCambio.bind(this, "role")} value={this.state.campo["role"] || ''}>
                                 <option value="false">Usuario</option>
                                 <option value="true">Administrador</option>
                         </select>
                     </div>
                     <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4">
-                        <label className="col-form-label">Estado</label>
-                        <select className="form-select" placeholder="Ingrese enfermedad..." id="isActive" onChange={this.detectarCambio.bind(this, "isActive")} value={this.state.campo["isActive"] || ''}>
+                        <label className="col-form-label">Estado <label style={{color: "red"}}>*</label></label>
+                        <select className="form-select" placeholder="Ingrese estado..." id="isActive" onChange={this.detectarCambio.bind(this, "isActive")} value={this.state.campo["isActive"] || ''}>
                                 <option value="false">Inactivo</option>
                                 <option value="true">Activo</option>
                         </select>
