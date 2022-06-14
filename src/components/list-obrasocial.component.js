@@ -247,7 +247,7 @@ class ListaObraSocial extends Component {
                 
                 <div className="row">
                 <div className="col-12">
-                <table className="table table-bordered table-hover shadow" style={{width:'100%'}}>
+                <table className="table table-bordered table-hover shadow table-striped" style={{width:'100%'}}>
                 <thead>
                     <tr>
                     <th scope="col">Obra Social</th>

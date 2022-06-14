@@ -86,7 +86,7 @@ class FichaMedica extends Component {
                 </div>
                 <div className="row">
                 <div className="col-12">
-                <table className="table table-bordered table-hover shadow" style={{width:'100%'}}>
+                <table className="table table-bordered table-hover shadow table-striped" style={{width:'100%'}}>
                 <thead>
                     <tr>
                     <th scope="col">Nombre de Enfermedad</th>
@@ -118,7 +118,7 @@ class FichaMedica extends Component {
                 </div>
                 <div className="row">
                 <div className="col-12">
-                <table className="table table-bordered table-hover shadow" style={{width:'100%'}}>
+                <table className="table table-bordered table-hover shadow table-striped" style={{width:'100%'}}>
                 <thead>
                     <tr>
                     <th scope="col">Estado Evolutivo</th>
@@ -151,7 +151,7 @@ class FichaMedica extends Component {
                 </div>
                 <div className="row">
                 <div className="col-12">
-                <table className="table table-bordered table-hover shadow" style={{width:'100%'}}>
+                <table className="table table-bordered table-hover shadow table-striped" style={{width:'100%'}}>
                 <thead>
                     <tr>
                     <th scope="col">Obra Social</th>
@@ -182,7 +182,7 @@ class FichaMedica extends Component {
                 </div>
                 <div className="row">
                 <div className="col-12">
-                <table className="table table-bordered table-hover shadow" style={{width:'100%'}}>
+                <table className="table table-bordered table-hover shadow table-striped" style={{width:'100%'}}>
                 <thead>
                     <tr>
                     <th scope="col">Nombre de Medicamento</th>

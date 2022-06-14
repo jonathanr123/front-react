@@ -408,7 +408,7 @@ class AdminUsuarios extends Component {
                 
                 <div className="row">
                 <div className="col-12 col-md-12 col-lg-12 col-xl-12" style={{position: "relative", height: "350px", overflow: "auto", display: "block"}}>
-                <table className="table table-bordered table-hover shadow" style={{width:'100%'}}>
+                <table className="table table-bordered table-hover shadow table-striped" style={{width:'100%'}}>
                 <thead>
                     <tr>
                     <th scope="col">Usuario</th>

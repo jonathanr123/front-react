@@ -37,6 +37,7 @@ class ListaEvolucion extends Component {
             case 3: return "Alteración bilateral leve o moderada, con cierta inestabilidad postural. El paciente es fisicamente independiente.";
             case 4: return "Incapacidad grave: es capaz de caminar o de permanecer de pié sin ayuda.";
             case 5: return "El paciente necesita ayuda para todo. Permanece en cama o sentado.";
+            default: return "";
         }
     }
 
@@ -260,7 +261,7 @@ class ListaEvolucion extends Component {
                 
                 <div className="row">
                 <div className="col-12">
-                <table className="table table-bordered table-hover shadow" style={{width:'100%'}}>
+                <table className="table table-bordered table-hover shadow table-striped" style={{width:'100%'}}>
                 <thead>
                     <tr>
                     <th scope="col">Estado Evolutivo</th>
