@@ -55,21 +55,14 @@ class App extends Component {
                     <span>
                     <Route exact path="/list-usuarios" default component={AdminUsuarios} />
                     <Route exact path={["/add-paciente"]} component={AddPaciente} />
-                    <Route exact path="/ficha" component={FichaMedica} />
-                    <Route exact path="/list-diagnostico" component={ListaDiagnostico} />
-                    <Route exact path="/list-evolucion" component={ListaEvolucion} />
-                    <Route exact path="/list-obrasocial" component={ListaObraSocial} />
-                    <Route exact path="/list-indicacion" component={ListaIndicacion} />
-                    <Route exact path="/search" component={Search} />
-                    <Route exact path="/list-pacientes" component={ListaPaciente} />
-                    <Route exact path="/nomenclador" component={Nomenclador} />
-                    <Route exact path="/events" component={Events} />
-                    <Route exact path="/type-events" component={TypeEvents} />
                     </span>
                   ):(
                     //console.log("paciente"),
                     <span>
-                    <Route exact path={["/add-paciente"]} default component={AddPaciente} />
+                    <Route exact path={["/add-paciente"]} default component={AddPaciente} />                  
+                    </span>
+                  )}
+
                     <Route exact path="/ficha" component={FichaMedica} />
                     <Route exact path="/list-diagnostico" component={ListaDiagnostico} />
                     <Route exact path="/list-evolucion" component={ListaEvolucion} />
@@ -80,9 +73,6 @@ class App extends Component {
                     <Route exact path="/nomenclador" component={Nomenclador} />
                     <Route exact path="/events" component={Events} />
                     <Route exact path="/type-events" component={TypeEvents} />
-                    
-                    </span>
-                  )}
                   </span>
                   
                 ):(<Redirect to="/" />)}
