@@ -26,7 +26,7 @@ class ListaObraSocial extends Component {
 
 
     convertirTipo(tipo){
-        if( tipo == 1 ){
+        if( tipo === 1 ){
             return 'Publica';
         } else{
             return 'Privada';
@@ -173,7 +173,7 @@ class ListaObraSocial extends Component {
     }
 
     render() {
-            const {show, showNuevo, arrayOS}=this.state;
+            const {show, showNuevo}=this.state;
             const {osociales, obrasociales, nombreEpElegido} = this.props;
 
         return (
@@ -183,7 +183,7 @@ class ListaObraSocial extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-6 col-lg-6 col-xl-6">
-                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
+                    <h5><b>Nombre y Apellido:</b> {nombreEpElegido}</h5>
                 </div>
                 <div className="mb-4 col-12 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right'}}>
                 <button type="button" className="btn btn-azul" onClick={() => this.agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -258,7 +258,7 @@ class ListaObraSocial extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {osociales &&
-                                    osociales.filter(osocial => osocial.borrado == "0").map((osocial, index) => (
+                                    osociales.filter(osocial => osocial.borrado === 0).map((osocial, index) => (
                                         <tr key={index}>
                                         <td>{osocial.idobrasocial.nombre}</td>
                                         <td>{this.convertirTipo(osocial.idobrasocial.esestatal)}</td>

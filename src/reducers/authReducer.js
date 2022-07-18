@@ -6,7 +6,7 @@ const initialState = {
     user: auth ? auth.user : null,
 }
 
-export default function ( state = initialState, action ){
+export default function authReducer( state = initialState, action ){
     switch (action.type) {
         case "SET_AUTH_USER":
             return{

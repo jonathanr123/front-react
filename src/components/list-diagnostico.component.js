@@ -185,7 +185,7 @@ class ListaDiagnostico extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-6 col-lg-6 col-xl-6">
-                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
+                    <h5><b>Nombre y Apellido:</b> {nombreEpElegido}</h5>
                 </div>
                 <div className="mb-4 col-12 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right'}}>
                 <button type="button" className="btn btn-azul" onClick={() => this.agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -268,7 +268,7 @@ class ListaDiagnostico extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {diagnosticos &&
-                                    diagnosticos.filter(diagnostico => diagnostico.borrado == "0").map((diagnostico, index) => (
+                                    diagnosticos.filter(diagnostico => diagnostico.borrado === 0).map((diagnostico, index) => (
                                         <tr key={index}>
                                         <td >{diagnostico.idenfermedad.nombre}</td>
                                         <td>{this.convertirFormatoFecha(diagnostico.fecha)}</td>

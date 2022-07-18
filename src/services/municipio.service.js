@@ -1,9 +1,10 @@
 import http from "../http-common";
 
-class MunicipioDataService {
-  getAll() {
-    return http.get("/municipio");
-  }
-}
+export const municipioRepository = {
+  async getAll() {
+    let response = await http.get(`/municipio`);
 
-export default new MunicipioDataService();
+    return response;
+  },
+
+};

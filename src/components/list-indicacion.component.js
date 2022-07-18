@@ -40,7 +40,7 @@ class ListaIndicacion extends Component {
     }
 
     convertirEstado(estado){
-        if( estado == 1 ){
+        if( estado === 1 ){
             return 'Vigente';
         } else{
             return 'Caducado';
@@ -213,7 +213,7 @@ class ListaIndicacion extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-6 col-lg-6 col-xl-6">
-                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
+                    <h5><b>Nombre y Apellido:</b> {nombreEpElegido}</h5>
                 </div>
                 <div className="mb-4 col-12 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right'}}>
                 <button type="button" className="btn btn-azul" onClick={() => this.agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -331,7 +331,7 @@ class ListaIndicacion extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {indicaciones &&
-                                    indicaciones.filter(indicacion => indicacion.borrado == "0").map((indicacion, index) => (
+                                    indicaciones.filter(indicacion => indicacion.borrado === 0).map((indicacion, index) => (
                                         <tr key={index}>
                                         <td >{indicacion.idmedicamento.nombre}</td>
                                         <td >{indicacion.cantidadmiligramos} mg</td>

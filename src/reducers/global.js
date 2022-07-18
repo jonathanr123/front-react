@@ -21,8 +21,9 @@ export const cambiarID = (id, nombre) => (dispatch) => {
                 idEpElegido:action.idPersona,
                 nombreEpElegido:action.nombrePersona,
             };
+        default:
+          return global
     }
-    return global
   };
   
   export default globalReducer;

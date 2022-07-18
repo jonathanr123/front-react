@@ -58,6 +58,7 @@ class FichaMedica extends Component {
             case 3: return "Alteración bilateral leve o moderada, con cierta inestabilidad postural. El paciente es fisicamente independiente.";
             case 4: return "Incapacidad grave: es capaz de caminar o de permanecer de pié sin ayuda.";
             case 5: return "El paciente necesita ayuda para todo. Permanece en cama o sentado.";
+            default: return ""
         }
     }
 
@@ -72,7 +73,7 @@ class FichaMedica extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-12 col-lg-12 col-xl-12">
-                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
+                    <h5><b>Nombre y Apellido:</b> {nombreEpElegido}</h5>
                 </div>
                 </div>
                 
@@ -96,7 +97,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {diagnosticos &&
-                                    diagnosticos.filter(diagnostico => diagnostico.borrado == "0").map((diagnostico, index) => (
+                                    diagnosticos.filter(diagnostico => diagnostico.borrado === 0).map((diagnostico, index) => (
                                         <tr key={index}>
                                         <td >{diagnostico.idenfermedad.nombre}</td>
                                         <td>{this.convertirFormatoFecha(diagnostico.fecha)}</td>
@@ -129,7 +130,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {evoluciones &&
-                                    evoluciones.filter(evolucion => evolucion.borrado == "0").map((evolucion, index) => (
+                                    evoluciones.filter(evolucion => evolucion.borrado === 0).map((evolucion, index) => (
                                         <tr key={index}>
                                         <td>Estado: {evolucion.escalaevolucion}</td>
                                         <td>{this.describirEstado(evolucion.escalaevolucion)}</td>
@@ -161,7 +162,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {osociales &&
-                                    osociales.filter(osocial => osocial.borrado == "0").map((osocial, index) => (
+                                    osociales.filter(osocial => osocial.borrado === 0).map((osocial, index) => (
                                         <tr key={index}>
                                         <td>{osocial.idobrasocial.nombre}</td>
                                         <td>{this.convertirTipo(osocial.idobrasocial.esestatal)}</td>
@@ -195,7 +196,7 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {indicaciones &&
-                                        indicaciones.filter(indicacion => indicacion.borrado == "0").map((indicacion, index) => (
+                                        indicaciones.filter(indicacion => indicacion.borrado === 0).map((indicacion, index) => (
                                             <tr key={index}>
                                             <td >{indicacion.idmedicamento.nombre}</td>
                                             <td >{indicacion.cantidadmiligramos} mg</td>
