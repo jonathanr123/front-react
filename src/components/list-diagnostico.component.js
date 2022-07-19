@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
-import { retrieveDiagnosticosEp, createDiagnostico, updateDiagnostico, deleteDiagnostico } from "../actions/diagnostico";
-import { retrieveEnfermedad } from "../actions/enfermedad";
+import { diagnosticoRepository } from "../services/diagnosticoService";
+import { enfermedadRepository } from "../services/enfermedadService";
+import utils from "../utils/utils";
 class ListaDiagnostico extends Component {
 
     constructor(props) {
@@ -21,15 +22,28 @@ class ListaDiagnostico extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveEnfermedad();
-        this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
+        this.getEnfermedad();
+        this.getDiagnosticos();
     }
 
+    // Funcion que obtiene la lista de enfermedades
+    getEnfermedad = async () => {
+        let response = await enfermedadRepository.getAll()
 
-    convertirFormatoFecha(string){
-        var info = string.split('-');
-        return info[2] + '/' + info[1] + '/' + info[0];
-    }
+        if (response) {
+            this.setState({ enfermedades: response.data })
+        }
+    };
+
+    // Funcion que obtiene la lista de diagnosticos de un paciente
+    getDiagnosticos = async () => {
+        let response = await diagnosticoRepository.get(this.props.idEpElegido);
+
+        if (response) {
+            this.setState({ diagnosticos: response.data })
+        }
+    };
+
 
     editar(enfermedad, fecha, iddiagnostico){
         this.setState({show:true, showNuevo:false, idEditado:iddiagnostico, campo:{enfermedad:enfermedad, fecha:fecha}});
@@ -46,18 +60,16 @@ class ListaDiagnostico extends Component {
                 idenfermedad: idEnfermedad,
                 borrado:"0",
               };
-            this.props
-                .updateDiagnostico(id, data)
-                .then(() => {
-                    this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
+            diagnosticoRepository.update(id, data).then(response => {
+                if (response) {
+                    this.getDiagnosticos()
                     this.notificacionGuardar();
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
-            this.setState({ campo:{enfermedad:'', fecha:''},
-                        show:false
-                });
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+            this.setState({ campo:{enfermedad:'', fecha:''}, show:false });
         };
     }
 
@@ -82,19 +94,22 @@ class ListaDiagnostico extends Component {
         let idEnfermedad=this.state.campo.enfermedad;
         let fechaEnfermedad=this.state.campo.fecha;
         if(idEnfermedad!=='' & fechaEnfermedad!=='' ){
-            this.props
-                .createDiagnostico(fechaEnfermedad, this.props.idEpElegido, idEnfermedad, "0")
-                .then((datadiagnostico) => {
-                        console.log(datadiagnostico,'Diagnostico creado');
-                        this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
-                        this.notificacionGuardar();
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
-            this.setState({ campo:{enfermedad:'', fecha:''},
-                        showNuevo:false
-                });
+            let data = {
+                fecha: fechaEnfermedad,
+                idpersonaep: this.props.idEpElegido,
+                idenfermedad: idEnfermedad,
+                borrado:"0",
+              };
+            diagnosticoRepository.create(data).then(reponse => {
+                if (reponse) {
+                    this.getDiagnosticos()
+                    this.notificacionGuardar();
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+            this.setState({ campo:{enfermedad:'', fecha:''}, showNuevo:false });
         };
     }
 
@@ -105,14 +120,14 @@ class ListaDiagnostico extends Component {
                 idenfermedad: idenfermedad,
                 borrado:"1",
               };
-        this.props
-                .updateDiagnostico(id, data)
-                .then(() => {
-                    this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
+        diagnosticoRepository.update(id, data).then(response => {
+            if (response) {
+                this.getDiagnosticos();
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        });
         this.setState({show:false});
     }
 
@@ -175,8 +190,8 @@ class ListaDiagnostico extends Component {
     }
 
     render() {
-            const {show, showNuevo}=this.state;
-            const {diagnosticos, enfermedades, nombreEpElegido} = this.props;
+            const {show, showNuevo, enfermedades, diagnosticos}=this.state;
+            const {nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -271,7 +286,7 @@ class ListaDiagnostico extends Component {
                                     diagnosticos.filter(diagnostico => diagnostico.borrado === 0).map((diagnostico, index) => (
                                         <tr key={index}>
                                         <td >{diagnostico.idenfermedad.nombre}</td>
-                                        <td>{this.convertirFormatoFecha(diagnostico.fecha)}</td>
+                                        <td>{utils.convertirFormatoFecha(diagnostico.fecha)}</td>
                                         <td><button type="button" className="btn btn-verde" style={{marginRight:10}} onClick={() => this.editar(diagnostico.idenfermedad.idenfermedad, diagnostico.fecha, diagnostico.iddiagnostico)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                 <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -297,11 +312,9 @@ class ListaDiagnostico extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      diagnosticos: state.diagnostico,
-      enfermedades: state.enfermedad,
       idEpElegido: state.global.idEpElegido,
       nombreEpElegido: state.global.nombreEpElegido
     };
 };
 
-export default connect(mapStateToProps, { retrieveDiagnosticosEp, createDiagnostico, updateDiagnostico, deleteDiagnostico, retrieveEnfermedad })(ListaDiagnostico);
+export default connect(mapStateToProps)(ListaDiagnostico);

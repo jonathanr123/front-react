@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.css';
-import { connect } from "react-redux";
-import { retrieveEnfermedad, createEnfermedad, updateEnfermedad, deleteEnfermedad } from "../actions/enfermedad";
-import { retrieveMedicamento, createMedicamento, updateMedicamento, deleteMedicamento } from "../actions/medicamento";
-import { retrieveObraSocial, createObraSocial, updateObraSocial, deleteObraSocial } from "../actions/obrasocial";
+import utils from "../utils/utils";
+import { enfermedadRepository } from "../services/enfermedadService";
+import { medicamentoRepository } from "../services/medicamentoService";
+import { obrasocialRepository } from "../services/obrasocialService";
 
 class Nomenclador extends Component {
 
@@ -27,28 +27,37 @@ class Nomenclador extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveEnfermedad();
-        this.props.retrieveMedicamento();
-        this.props.retrieveObraSocial();
+        this.getEnfermedad();
+        this.getMedicamento();
+        this.getObrasocial();
     }
 
-    convertirCheck(opcion){
-        if (opcion === false){
-            return "0";
-        }
-        else {
-            return "1";
-        }
-    }
+    // Funcion que obtiene la lista de enfermedades
+    getEnfermedad = async () => {
+        let response = await enfermedadRepository.getAll()
 
-    convertirEstatal(opcion){
-        if (opcion === "0"){
-            return false;
+        if (response) {
+            this.setState({ enfermedades: response.data })
         }
-        else {
-            return true;
+    };
+
+    // Funcion que obtiene la lista de medicamentos
+    getMedicamento = async () => {
+        let response = await medicamentoRepository.getAll()
+
+        if (response) {
+            this.setState({ medicamentos: response.data })
         }
-    }
+    };
+
+    // Funcion que obtiene la lista de obras sociales
+    getObrasocial = async () => {
+        let response = await obrasocialRepository.getAll()
+
+        if (response) {
+            this.setState({ obrasociales: response.data })
+        }
+    };
 
     editarEnfermedad(nombre, idenfermedad){
         this.setState({show:true, showNuevo:false, show2:false, showNuevo2:true, show3:false, showNuevo3:true, idEditado:idenfermedad, campo:{enfermedad:nombre}});
@@ -59,29 +68,26 @@ class Nomenclador extends Component {
     }
 
     editarObrasocial(nombre, esestatal, idobrasocial){
-        this.setState({show:false, showNuevo:true, show2:false, showNuevo2:true, show3:true, showNuevo3:false, idEditado3:idobrasocial, campo:{obrasocial:nombre}, isChecked:this.convertirEstatal(esestatal)});
+        this.setState({show:false, showNuevo:true, show2:false, showNuevo2:true, show3:true, showNuevo3:false, idEditado3:idobrasocial, campo:{obrasocial:nombre}, isChecked:utils.convertirEstatal(esestatal)});
     }
 
     guardarEnfermedad(){
         let nomEnfermedad=this.state.campo.enfermedad;
         let id=this.state.idEditado;
         if(nomEnfermedad!==''){
-            var data = {
+            let data = {
                 nombre: nomEnfermedad
               };
-            this.props
-                .updateEnfermedad(id, data)
-                .then(() => {
-                    this.props.retrieveEnfermedad();
+            enfermedadRepository.update(id, data).then(response => {
+                if (response) {
+                    this.getEnfermedad();
                     this.notificacionGuardar();
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
-            this.setState({ campo:{enfermedad:''},
-                        show:false,
-                        showNuevo:true
-                });
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+            this.setState({ campo:{enfermedad:''}, show:false, showNuevo:true });
         };
     }
 
@@ -89,48 +95,41 @@ class Nomenclador extends Component {
         let nomMedicamento=this.state.campo.medicamento;
         let id=this.state.idEditado2;
         if(nomMedicamento!==''){
-            var data = {
+            let data = {
                 nombre: nomMedicamento
               };
-            this.props
-                .updateMedicamento(id, data)
-                .then(() => {
-                    this.props.retrieveMedicamento();
+            medicamentoRepository.update(id, data).then(response => {
+                if (response) {
+                    this.getMedicamento();
                     this.notificacionGuardar();
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
-            this.setState({ campo:{medicamento:''},
-                        show2:false,
-                        showNuevo2:true
-                });
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+            this.setState({ campo:{medicamento:''}, show2:false, showNuevo2:true });
         };
     }
 
     guardarObrasocial(){
         let nomObrasocial=this.state.campo.obrasocial;
         let id=this.state.idEditado3;
-        let esestatal=this.convertirCheck(this.state.isChecked);
+        let esestatal=utils.convertirCheck(this.state.isChecked);
         if(nomObrasocial!==''){
-            var data = {
+            let data = {
                 nombre: nomObrasocial,
                 esestatal: esestatal,
               };
-            this.props
-                .updateObraSocial(id, data)
-                .then(() => {
-                    this.props.retrieveObraSocial();
+            obrasocialRepository.update(id, data).then(response => {
+                if (response) {
+                    this.getObrasocial();
                     this.notificacionGuardar();
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
-            this.setState({ campo:{obrasocial:''},
-                        show3:false,
-                        showNuevo3:true,
-                        isChecked:false
-                });
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+            this.setState({ campo:{obrasocial:''}, show3:false, showNuevo3:true, isChecked:false });
         };
     }
 
@@ -158,15 +157,18 @@ class Nomenclador extends Component {
     cargarNuevaEnfermedad(){
         let nomEnfermedad=this.state.campo.enfermedad;
         if(nomEnfermedad!==''){
-            this.props
-                .createEnfermedad(nomEnfermedad)
-                .then(() => {
-                        this.props.retrieveEnfermedad();
-                        this.notificacionGuardar();
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
+            let data = {
+                nombre: nomEnfermedad
+            }
+            enfermedadRepository.create(data).then(response => {
+                if (response) {
+                    this.getEnfermedad();
+                    this.notificacionGuardar();
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
             this.setState({ campo:{enfermedad:''} });
         };
     }
@@ -174,32 +176,39 @@ class Nomenclador extends Component {
     cargarNuevoMedicamento(){
         let nomMedicamento=this.state.campo.medicamento;
         if(nomMedicamento!==''){
-            this.props
-                .createMedicamento(nomMedicamento)
-                .then(() => {
-                        this.props.retrieveMedicamento();
-                        this.notificacionGuardar();
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
+            let data = {
+                nombre: nomMedicamento
+              };
+            medicamentoRepository.create(data).then(response => {
+                if (response) {
+                    this.getMedicamento();
+                    this.notificacionGuardar();
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
             this.setState({ campo:{medicamento:''} });
         };
     }
     
     cargarNuevaObrasocial(){
         let nomObrasocial=this.state.campo.obrasocial;
-        let esestatal=this.convertirCheck(this.state.isChecked);
+        let esestatal=utils.convertirCheck(this.state.isChecked);
         if(nomObrasocial!==''){
-            this.props
-                .createObraSocial(nomObrasocial, esestatal)
-                .then(() => {
-                        this.props.retrieveObraSocial();
-                        this.notificacionGuardar();
-                 })
-                .catch((e) => {
-                        console.log(e);
-                 });
+            let data = {
+                nombre: nomObrasocial,
+                esestatal: esestatal,
+              };
+            obrasocialRepository.create(data).then(response => {
+                if (response) {
+                    this.getObrasocial();
+                    this.notificacionGuardar();
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
             this.setState({ campo:{obrasocial:''} });
         };
     }
@@ -208,26 +217,26 @@ class Nomenclador extends Component {
         // eslint-disable-next-line default-case
         switch (nomenclador) {
             case "enfermedad":{
-                this.props
-                .deleteEnfermedad(id)
-                .then(() => {
-                        this.props.retrieveEnfermedad();
+                enfermedadRepository.delete(id).then(response => {
+                    if (response) {
+                        this.getEnfermedad();
+                    }
                 })
             }
             // eslint-disable-next-line no-fallthrough
             case "medicamento":{
-                this.props
-                .deleteMedicamento(id)
-                .then(() => {
-                        this.props.retrieveMedicamento();
+                medicamentoRepository.delete(id).then(response => {
+                    if (response) {
+                        this.getMedicamento();
+                    }
                 })
             }
             // eslint-disable-next-line no-fallthrough
             case "obrasocial":{
-                this.props
-                .deleteObraSocial(id)
-                .then(() => {
-                        this.props.retrieveObraSocial();
+                obrasocialRepository.delete(id).then(response => {
+                    if (response) {
+                        this.getObrasocial();
+                    }
                 })
             }
             }
@@ -294,8 +303,7 @@ class Nomenclador extends Component {
     }
 
     render() {
-            const {show, showNuevo, show2, showNuevo2, show3, showNuevo3}=this.state;
-            const {enfermedades, medicamentos, obrasociales} = this.props;
+            const {show, showNuevo, show2, showNuevo2, show3, showNuevo3, enfermedades, medicamentos, obrasociales}=this.state;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -477,25 +485,10 @@ class Nomenclador extends Component {
                         
                     </div>
                 </div>
-
-                
-                
                 </div>
-
-                
-
-                
             </main>
         )
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        enfermedades: state.enfermedad,
-        medicamentos: state.medicamento,
-        obrasociales: state.obrasocial,
-    };
-};
-
-export default connect(mapStateToProps, { retrieveEnfermedad, createEnfermedad, updateEnfermedad, deleteEnfermedad, retrieveMedicamento, createMedicamento, updateMedicamento, deleteMedicamento, retrieveObraSocial, createObraSocial, updateObraSocial, deleteObraSocial })(Nomenclador);
+export default (Nomenclador);

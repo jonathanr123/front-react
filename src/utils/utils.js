@@ -25,6 +25,24 @@ class Utils {
             return 'Privada';
         }
     }
+
+    convertirCheck(opcion){
+        if (opcion === false){
+            return "0";
+        }
+        else {
+            return "1";
+        }
+    }
+
+    convertirEstatal(opcion){
+        if (opcion === "0"){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 }
 
 export default new Utils();
