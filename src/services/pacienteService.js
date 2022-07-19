@@ -62,4 +62,11 @@ export const pacienteRepository = {
     return paciente
   },
 
+
+  async getPacientes() {
+    let response = await http.get(`/personaP`);
+
+    return response;
+  },
+
 };
