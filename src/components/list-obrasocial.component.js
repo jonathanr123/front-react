@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
-import { retrieveOSEp, createOS, updateOS, deleteOS } from "../actions/os";
-import { retrieveObraSocial } from "../actions/obrasocial";
+import { obrasocialRepository } from "../services/obrasocialService";
+import { osRepository } from "../services/osService";
 class ListaObraSocial extends Component {
 
     constructor(props) {
@@ -20,10 +20,27 @@ class ListaObraSocial extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveObraSocial();
-        this.props.retrieveOSEp(this.props.idEpElegido);
+        this.getObrasocial();
+        this.getOs();
     }
 
+    // Funcion que obtiene la lista de obras sociales
+    getObrasocial = async () => {
+        let response = await obrasocialRepository.getAll()
+
+        if (response) {
+            this.setState({ obrasociales: response.data })
+        }
+    };
+
+    // Funcion que obtiene la lista de obras sociales de un paciente
+    getOs = async () => {
+        let response = await osRepository.get(this.props.idEpElegido);
+
+        if (response) {
+            this.setState({ osociales: response.data })
+        }
+    };
 
     convertirTipo(tipo){
         if( tipo === 1 ){
@@ -41,15 +58,15 @@ class ListaObraSocial extends Component {
         let idObrasocial=this.state.campo.obrasocial;
         let id=this.state.idEditado;
         if(idObrasocial!=='' ){
-            var data = {
+            let data = {
                 idpersonaep: this.props.idEpElegido,
                 idobrasocial: idObrasocial,
                 borrado:"0",
               };
-            this.props
-                .updateOS(id, data)
+            osRepository
+                .update(id, data)
                 .then(() => {
-                    this.props.retrieveOSEp(this.props.idEpElegido);
+                    this.getOs();
                     this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -81,11 +98,15 @@ class ListaObraSocial extends Component {
     cargarNuevo(){
         let idObrasocial=this.state.campo.obrasocial;
         if(idObrasocial!=='' ){
-            this.props
-                .createOS(this.props.idEpElegido, idObrasocial, "0")
+            let data = {
+                idpersonaep: this.props.idEpElegido,
+                idobrasocial: idObrasocial,
+                borrado:"0",
+              };
+            osRepository
+                .create(data)
                 .then((dataobrasocial) => {
-                        console.log(dataobrasocial,'ObraSocial creado');
-                        this.props.retrieveOSEp(this.props.idEpElegido);
+                        this.getOs();
                         this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -103,10 +124,10 @@ class ListaObraSocial extends Component {
                 idobrasocial: idobrasocial,
                 borrado:"1",
               };
-        this.props
-                .updateOS(id, data)
+        osRepository
+                .update(id, data)
                 .then(() => {
-                    this.props.retrieveOSEp(this.props.idEpElegido);
+                    this.getOs();
                  })
                 .catch((e) => {
                         console.log(e);
@@ -173,8 +194,8 @@ class ListaObraSocial extends Component {
     }
 
     render() {
-            const {show, showNuevo}=this.state;
-            const {osociales, obrasociales, nombreEpElegido} = this.props;
+            const {show, showNuevo, osociales, obrasociales}=this.state;
+            const {nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -287,12 +308,10 @@ class ListaObraSocial extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      osociales: state.os,
-        obrasociales: state.obrasocial,
       idEpElegido: state.global.idEpElegido,
       nombreEpElegido: state.global.nombreEpElegido
     };
 };
 
 
-export default connect(mapStateToProps, { retrieveOSEp, createOS, updateOS, deleteOS, retrieveObraSocial})(ListaObraSocial);
+export default connect(mapStateToProps)(ListaObraSocial);

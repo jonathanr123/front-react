@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
-import { retrieveIndicacionEp, createIndicacion, updateIndicacion, deleteIndicacion } from "../actions/indicacion";
-import { retrieveMedicamento } from "../actions/medicamento";
+import { indicacionRepository } from "../services/indicacionService";
+import { medicamentoRepository } from "../services/medicamentoService";
+import utils from "../utils/utils";
 class ListaIndicacion extends Component {
 
     constructor(props) {
@@ -24,28 +25,27 @@ class ListaIndicacion extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveIndicacionEp(this.props.idEpElegido);
-        this.props.retrieveMedicamento();
+        this.getIndicaciones();
+        this.getMedicamento();
     }
 
+    // Funcion que obtiene la lista de indicaciones de un paciente
+    getIndicaciones = async () => {
+        let response = await indicacionRepository.get(this.props.idEpElegido);
 
-    convertirFormatoFecha(string){
-        var info = string.split('-');
-        return info[2] + '/' + info[1] + '/' + info[0];
-    }
-
-    convertirFormatoHora(string){
-        var info = string.split(':');
-        return info[0] + ':' + info[1];
-    }
-
-    convertirEstado(estado){
-        if( estado === 1 ){
-            return 'Vigente';
-        } else{
-            return 'Caducado';
+        if (response) {
+            this.setState({ indicaciones: response.data })
         }
-    }
+    };
+
+    // Funcion que obtiene la lista de medicamentos
+    getMedicamento = async () => {
+        let response = await medicamentoRepository.getAll()
+
+        if (response) {
+            this.setState({ medicamentos: response.data })
+        }
+    };
 
     editar(dosis, estado, fecha, hora, medicamento, idindicacion){
         this.setState({show:true, showNuevo:false, idEditado:idindicacion, campo:{medicamento:medicamento,dosis:dosis, hora:hora, fecha:fecha, estado:estado }});
@@ -59,7 +59,7 @@ class ListaIndicacion extends Component {
         let estadoMedicamento=this.state.campo.estado;
         let id=this.state.idEditado;
         if(idMedicamento!=='' & dosisMedicamento!=='' & horaMedicamento!=='' & fechaMedicamento!=='' & estadoMedicamento!=='' ){
-            var data = {
+            let data = {
                 cantidadmiligramos: dosisMedicamento,
                 estavigente: estadoMedicamento,
                 fechaprescripcion: fechaMedicamento,
@@ -68,10 +68,10 @@ class ListaIndicacion extends Component {
                 idmedicamento: idMedicamento,
                 borrado:"0",
               };
-            this.props
-                .updateIndicacion(id, data)
+            indicacionRepository
+                .update(id, data)
                 .then(() => {
-                    this.props.retrieveIndicacionEp(this.props.idEpElegido);
+                    this.getIndicaciones();
                     this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -107,11 +107,19 @@ class ListaIndicacion extends Component {
         let fechaMedicamento=this.state.campo.fecha;
         let estadoMedicamento=this.state.campo.estado;
         if(idMedicamento!=='' & dosisMedicamento!=='' & horaMedicamento!=='' & fechaMedicamento!=='' & estadoMedicamento!=='' ){
-            this.props
-                .createIndicacion(dosisMedicamento, estadoMedicamento, fechaMedicamento, horaMedicamento, this.props.idEpElegido, idMedicamento, "0")
+            let data = {
+                cantidadmiligramos: dosisMedicamento,
+                estavigente: estadoMedicamento,
+                fechaprescripcion: fechaMedicamento,
+                horadetoma: horaMedicamento,
+                idpersonaep: this.props.idEpElegido,
+                idmedicamento: idMedicamento,
+                borrado:"0",
+              };
+            indicacionRepository
+                .create(data)
                 .then((dataindicacion) => {
-                        console.log(dataindicacion,'Indicacion creado');
-                        this.props.retrieveIndicacionEp(this.props.idEpElegido);
+                        this.getIndicaciones();
                         this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -133,10 +141,10 @@ class ListaIndicacion extends Component {
             idmedicamento: idmedicamento,
             borrado:"1",
           };
-        this.props
-            .updateIndicacion(id, data)
+        indicacionRepository
+            .update(id, data)
             .then(() => {
-                this.props.retrieveIndicacionEp(this.props.idEpElegido);
+                this.getIndicaciones();
              })
             .catch((e) => {
                     console.log(e);
@@ -203,8 +211,8 @@ class ListaIndicacion extends Component {
     }
 
     render() {
-            const {show, showNuevo}=this.state;
-            const {indicaciones, medicamentos, nombreEpElegido} = this.props;
+            const {show, showNuevo, indicaciones, medicamentos}=this.state;
+            const {nombreEpElegido} = this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -335,9 +343,9 @@ class ListaIndicacion extends Component {
                                         <tr key={index}>
                                         <td >{indicacion.idmedicamento.nombre}</td>
                                         <td >{indicacion.cantidadmiligramos} mg</td>
-                                        <td >Cada {this.convertirFormatoHora(indicacion.horadetoma)} hs</td>
-                                        <td>{this.convertirFormatoFecha(indicacion.fechaprescripcion)}</td>
-                                        <td >{this.convertirEstado(indicacion.estavigente)}</td>
+                                        <td >Cada {utils.convertirFormatoHora(indicacion.horadetoma)} hs</td>
+                                        <td>{utils.convertirFormatoFecha(indicacion.fechaprescripcion)}</td>
+                                        <td >{utils.convertirEstado(indicacion.estavigente)}</td>
                                         <td><button type="button" className="btn btn-verde" style={{marginRight:10}} onClick={() => this.editar(indicacion.cantidadmiligramos, indicacion.estavigente, indicacion.fechaprescripcion, indicacion.horadetoma, indicacion.idmedicamento.idmedicamento, indicacion.idindicacion)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                 <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -363,11 +371,9 @@ class ListaIndicacion extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      indicaciones: state.indicacion,
-      medicamentos: state.medicamento,
       idEpElegido: state.global.idEpElegido,
       nombreEpElegido: state.global.nombreEpElegido
     };
 };
 
-export default connect(mapStateToProps, { retrieveIndicacionEp, createIndicacion, updateIndicacion, deleteIndicacion, retrieveMedicamento })(ListaIndicacion);
+export default connect(mapStateToProps)(ListaIndicacion);
