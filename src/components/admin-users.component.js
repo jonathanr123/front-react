@@ -257,7 +257,7 @@ class AdminUsuarios extends Component {
           })
     }
 
-    //Progress bar
+    // Loader
     cargando(){
         Swal.fire({
         title: 'Espere...',
