@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Swal from "sweetalert2";
 import { pacienteRepository } from "../services/pacienteService";
-import { municipioRepository } from "../services/municipio.service";
+import { municipioRepository } from "../services/municipioService";
 import Vivienda from "./AddPaciente/Vivienda";
 import DatosPersonales from "./AddPaciente/DatosPersonales";
 

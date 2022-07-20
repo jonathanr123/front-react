@@ -1,8 +1,8 @@
 import React from "react";
 import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
-import { authRepository } from "../services/auth.service";
-import { TokenService } from "../services/token.service";
+import { authRepository } from "../services/authService";
+import { TokenService } from "../services/tokenService";
 import logoTelepark from "../images/logo2022.png";
 
 class Login extends React.Component {

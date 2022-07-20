@@ -16,7 +16,7 @@ import TypeEvents from "./components/tipos-de-eventos.component";
 import Nomenclador from "./components/nomenclador.component";
 import ListaPaciente from "./components/list-pacientesEp.component";
 import Sidebar from "./components/sidebar.component";
-import { TokenService } from "./services/token.service";
+import { TokenService } from "./services/tokenService";
 
 class App extends Component {
   

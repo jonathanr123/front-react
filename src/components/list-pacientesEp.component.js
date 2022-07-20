@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
-import { cambiarID } from "../reducers/global";
+import { cambiarID } from "../actions/global";
 import { pacienteRepository } from "../services/pacienteService";
 import "../styles/list-pacientesEp.css"
 

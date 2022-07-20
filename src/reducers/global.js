@@ -1,29 +1,21 @@
-export const cambiarID = (id, nombre) => (dispatch) => {
-    try {
-      dispatch({type: CAMBIAR, idPersona: id, nombrePersona: nombre});
-    } catch (err) {
-        console.log(err);
-      }
-  };
+import { CAMBIAR } from "../actions/types";
 
-  export const CAMBIAR = "CAMBIAR";
+const initialState = {
+  idEpElegido: "",
+  nombreEpElegido: "",
+};
 
-  const initialState = {
-      idEpElegido:"",
-      nombreEpElegido:""
+function globalReducer(global = initialState, action) {
+  switch (action.type) {
+    case CAMBIAR:
+      return {
+        ...global,
+        idEpElegido: action.idPersona,
+        nombreEpElegido: action.nombrePersona,
+      };
+    default:
+      return global;
   }
-  
-  function globalReducer(global = initialState, action) {
-    switch (action.type) {
-        case CAMBIAR:
-            return {
-                ...global,
-                idEpElegido:action.idPersona,
-                nombreEpElegido:action.nombrePersona,
-            };
-        default:
-          return global
-    }
-  };
-  
-  export default globalReducer;
+}
+
+export default globalReducer;

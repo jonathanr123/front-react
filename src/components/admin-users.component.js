@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../styles/list-pacientesEp.css"
-import { userRepository } from "../services/users.service";
+import { userRepository } from "../services/usersService";
 import Swal from 'sweetalert2';
-import { TokenService } from "../services/token.service";
+import { TokenService } from "../services/tokenService";
 
 class AdminUsuarios extends Component {
 

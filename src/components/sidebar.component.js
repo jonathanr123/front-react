@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/sidebar.css'
 
 import logoTelepark from "../images/logoTelepark2022.png";
-import { TokenService } from "../services/token.service";
+import { TokenService } from "../services/tokenService";
 
 class Sidebar extends React.Component {
 
