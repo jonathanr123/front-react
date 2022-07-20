@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
 import { obrasocialRepository } from "../services/obrasocialService";
 import { osRepository } from "../services/osService";
+import utils from "../utils/utils";
 class ListaObraSocial extends Component {
 
     constructor(props) {
@@ -42,13 +43,6 @@ class ListaObraSocial extends Component {
         }
     };
 
-    convertirTipo(tipo){
-        if( tipo === 1 ){
-            return 'Publica';
-        } else{
-            return 'Privada';
-        }
-    }
 
     editar(obrasocial, idos){
         this.setState({show:true, showNuevo:false, idEditado:idos, campo:{obrasocial:obrasocial}});
@@ -282,7 +276,7 @@ class ListaObraSocial extends Component {
                                     osociales.filter(osocial => osocial.borrado === 0).map((osocial, index) => (
                                         <tr key={index}>
                                         <td>{osocial.idobrasocial.nombre}</td>
-                                        <td>{this.convertirTipo(osocial.idobrasocial.esestatal)}</td>
+                                        <td>{utils.convertirTipo(osocial.idobrasocial.esestatal)}</td>
                                         <td><button type="button" className="btn btn-verde" style={{marginRight:10}} onClick={() => this.editar(osocial.idobrasocial.idobrasocial, osocial.idos)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                 <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>

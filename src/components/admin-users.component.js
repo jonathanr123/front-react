@@ -4,6 +4,7 @@ import "../styles/list-pacientesEp.css"
 import { userRepository } from "../services/usersService";
 import Swal from 'sweetalert2';
 import { TokenService } from "../services/tokenService";
+import utils from "../utils/utils";
 
 class AdminUsuarios extends Component {
 
@@ -108,23 +109,6 @@ class AdminUsuarios extends Component {
                         this.setState({ usuarios: users })
                     }
                 };
-
-
-    convertRole(role) {
-        if (role === true) {
-            return "Administrador"
-        } else {
-            return "Usuario"
-        }
-    }
-            
-    convertStateUser(state) {
-        if (state === true) {
-            return "Activo"
-        } else {
-            return "Inactivo"
-        }
-    }
 
     editUser(user){
         this.setState({
@@ -272,8 +256,6 @@ class AdminUsuarios extends Component {
     }
 
     render() {
-            
-            
             const { usuarios, show, showNuevo }= this.state;
             console.log(usuarios);
         return (
@@ -425,8 +407,8 @@ class AdminUsuarios extends Component {
                                         <tr key={index}>
                                         <td>{usuario.username}</td>
                                         <td>{usuario.name}</td>
-                                        <td>{this.convertRole(usuario.is_superuser)}</td>
-                                        <td>{this.convertStateUser(usuario.is_active)}</td>
+                                        <td>{utils.convertRole(usuario.is_superuser)}</td>
+                                        <td>{utils.convertStateUser(usuario.is_active)}</td>
 
                                         <td>
                                         <button type="button" className="btn btn-verde" style={{marginRight:10}} onClick={() => this.editUser(usuario)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
