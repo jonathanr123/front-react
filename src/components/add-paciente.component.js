@@ -17,6 +17,7 @@ class AddPaciente extends Component {
     // Defino los estados locales
     this.state = {
       //Para validacion
+      cuidador: false,
       campo: {
         //Por lo menos uno tiene q ser "", porque sino me toma todos como string y eso provoca problemas
         calleR: "",
@@ -303,10 +304,10 @@ class AddPaciente extends Component {
     });
   }
 
-  referentePaciente(that) {
-    console.log("entro aca");
-  }
-
+  referentePaciente = () => {
+    this.setState({cuidador: !this.state.cuidador});
+  };
+  
   render() {
     const { campo } = this.state;
     const { localidades, municipios } = this.props;
@@ -439,14 +440,14 @@ class AddPaciente extends Component {
           </div>
 
           <div className="mb-4 mx-3 d-flex justify-content-between justify-content-md-around col-12 col-md-4 mx-md-0">
-            <label htmlFor="tiene_cuidador">Tiene Cuidador</label>
+            <label htmlFor="cuidador">Tiene Cuidador</label>
             <div className="form-check">
               <input
                 className="form-check-input "
                 type="checkbox"
-                value=""
-                id="tiene_cuidador"
-                onClick={this.referentePaciente(this)}
+                name="cuidador"
+                id="cuidador"
+                onClick={() => this.referentePaciente()}
               />
             </div>
           </div>
@@ -656,9 +657,9 @@ class AddPaciente extends Component {
             </div>
           </div>
           <hr />
-          <div id="referente">
-            <p>hola</p>
-          </div>
+          {/* Referente */}
+          {this.state.cuidador && 
+          <>
           <h1 className="mt-4 mt-md-2 text-center">Referente</h1>
           <h3 className=" mt-4">Datos Personales</h3>
           <hr />
@@ -716,75 +717,23 @@ class AddPaciente extends Component {
             </div>
           </div>
 
-                    <div className="mb-3 mx-3 d-flex justify-content-between justify-content-md-around col-12 col-md-4 mx-md-0">
-                        <label htmlFor="tiene_acompañante_terapeutico">Tiene Acompañante Terapeutico</label>
-                        <div className="form-check">
-                            <input className="form-check-input " type="checkbox" value="" id="tiene_acompañante_terapeutico" />
-                        </div>
-                    </div>
-                    <h3 className="mt-4">Vivienda</h3>
-                    <hr />
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Provincia</label>
-                        <div>
-                            <select className="form-select" id="provinciaEP" onChange={this.detectarCambio.bind(this, "provinciaEP")} value={this.state.campo["provinciaEP"] || ''}>
-                                <option value="">Provincia</option>
-                                {arrayProvincias &&
-                                    arrayProvincias.map((provincia, index) => (
-                                        <option
-                                            value={provincia.provincia}
-                                            key={index}
-                                        >
-                                            {provincia.provincia}
-                                        </option>
-                                    ))}
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["provinciaEP"]}</span>
-                        </div>
-                    </div>
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Municipio</label>
-                        <div>
-                            <select className="form-select" id="municipioEP" onChange={this.detectarCambio.bind(this, "municipioEP")} value={this.state.campo["municipioEP"] || ''}>
-                                <option value="">Municipio</option>
-                                {municipios &&
-                                    municipios.filter(municipio => municipio.provincia === campo.provinciaEP).map((municipio, index) => (
-                                        <option
-                                            value={municipio.idmunicipio}
-                                            key={index}
-                                        >
-                                            {municipio.nombre}
-                                        </option>
-                                    ))}
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["municipioEP"]}</span>
-                        </div>
-                    </div>
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Localidad</label>
-                        <div>
-                            <select className="form-select" id="localidadEP" onChange={this.detectarCambio.bind(this, "localidadEP")} value={this.state.campo["localidadEP"] || ''}>
-                                <option value="">Localidad</option>
-                                {localidades &&
-                                    localidades.filter(localidad => localidad.idmunicipio == campo.municipioEP).map((localidad, index) => (
-                                        <option
-                                            value={localidad.idlocalidad}
-                                            key={index}
-                                        >
-                                            {localidad.nombre}
-                                        </option>
-                                    ))}
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["localidadEP"]}</span>
-                        </div>
-                    </div>
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Calle</label>
-                        <div>
-                            <input type="number" className="form-control" placeholder="Calle" id="calleEP" aria-describedby="calleEPHelp" onChange={this.detectarCambio.bind(this, "calleEP")} value={this.state.campo["calleEP"] || ''} />
-                            <span style={{ color: "red" }}>{this.state.error["calleEP"]}</span>
-                        </div>
-                    </div>
+          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
+            <label className="col-form-label">Fecha de Nacimiento</label>
+            <div>
+              <input
+                type="date"
+                className="form-control"
+                placeholder="Fecha de Nacimiento"
+                id="nacimientoR"
+                aria-describedby="nacimientoRHelp"
+                onChange={this.detectarCambio.bind(this, "nacimientoR")}
+                value={this.state.campo["nacimientoR"] || ""}
+              />
+              <span style={{ color: "red" }}>
+                {this.state.error["nacimientoR"]}
+              </span>
+            </div>
+          </div>
 
           <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
             <label className="col-form-label ">Telefono</label>
@@ -880,7 +829,7 @@ class AddPaciente extends Component {
                 {localidades &&
                   localidades
                     .filter(
-                      (localidad) => localidad.idmunicipio === campo.municipioR
+                      (localidad) => localidad.idmunicipio == campo.municipioR
                     )
                     .map((localidad, index) => (
                       <option value={localidad.idlocalidad} key={index}>
@@ -927,188 +876,34 @@ class AddPaciente extends Component {
             </div>
           </div>
 
-                    <h3 className="mt-4">Datos Academicos</h3>
-                    <hr />
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-lg-4 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Maxima Escolaridad</label>
-                        <div>
-                            <select className="form-select" id="escolaridadEP" onChange={this.detectarCambio.bind(this, "escolaridadEP")} value={this.state.campo["escolaridadEP"] || ''}>
-                                <option value="">Escolaridad </option>
-                                <option value="1">Primario </option>
-                                <option value="2">Secundario</option>
-                                <option value="3">Terciario</option>
-                                <option value="4">Univercitario</option>
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["escolaridadEP"]}</span>
-                        </div>
-                    </div>
-
-                    <h3 className="mt-4">Ocupación</h3>
-                    <hr />
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Ocupacion Previa</label>
-                        <div>
-                            <select className="form-select" id="ocupacionPEP" onChange={this.detectarCambio.bind(this, "ocupacionPEP")} value={this.state.campo["ocupacionPEP"] || ''}>
-                                <option value="">Profesion</option>
-                                <option value="1">Desocupado</option>
-                                <option value="2">Ocupado</option>
-                                <option value="3">Subocupado</option>
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["ocupacionPEP"]}</span>
-                        </div>
-                    </div>
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Ocupacion Actual</label>
-                        <div>
-                            <select className="form-select" id="ocupacionAEP" onChange={this.detectarCambio.bind(this, "ocupacionAEP")} value={this.state.campo["ocupacionAEP"] || ''}>
-                                <option value="">Profesion</option>
-                                <option value="1">Desocupado</option>
-                                <option value="2">Ocupado</option>
-                                <option value="3">Subocupado</option>
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["ocupacionAEP"]}</span>
-                        </div>
-                    </div>
-                    <hr />
-                    <h1 className="mt-4 mt-md-2 text-center">Referente</h1>
-                    <h3 className=" mt-4">Datos Personales</h3>
-                    <hr />
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Nombre</label>
-                        <div>
-                            <input type="text" className="form-control" placeholder="Nombre" id="nombreR" aria-describedby="nombreRHelp" onChange={this.detectarCambio.bind(this, "nombreR")} value={this.state.campo["nombreR"] || ''} />
-                            <span style={{ color: "red" }}>{this.state.error["nombreR"]}</span>
-                        </div>
-                    </div>
-
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Apellido</label>
-                        <div>
-                            <input type="text" className="form-control" placeholder="Apellido" id="apellidoR" aria-describedby="apellidoRHelp" onChange={this.detectarCambio.bind(this, "apellidoR")} value={this.state.campo["apellidoR"] || ''} />
-                            <span style={{ color: "red" }}>{this.state.error["apellidoR"]}</span>
-                        </div>
-                    </div>
-
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3 ">
-                        <label className="col-form-label">Sexo</label>
-                        <div>
-                            <select className="form-select" id="sexoR" onChange={this.detectarCambio.bind(this, "sexoR")} value={this.state.campo["sexoR"] || ''}>
-                                <option value="">Sexo</option>
-                                <option value="1">Masculino</option>
-                                <option value="2">Femenino</option>
-                                <option value="3">Otro</option>
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["sexoR"]}</span>
-                        </div>
-                    </div>
-
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Fecha de Nacimiento</label>
-                        <div>
-                            <input type="date" className="form-control" placeholder="Fecha de Nacimiento" id="nacimientoR" aria-describedby="nacimientoRHelp" onChange={this.detectarCambio.bind(this, "nacimientoR")} value={this.state.campo["nacimientoR"] || ''} />
-                            <span style={{ color: "red" }}>{this.state.error["nacimientoR"]}</span>
-                        </div>
-                    </div>
-
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label ">Telefono</label>
-                        <div>
-                            <input type="number" className="form-control" placeholder="Telefono" id="telefonoR" aria-describedby="telefonoRHelp" onChange={this.detectarCambio.bind(this, "telefonoR")} value={this.state.campo["telefonoR"] || ''} />
-                            <span style={{ color: "red" }}>{this.state.error["telefonoR"]}</span>
-                        </div>
-                    </div>
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Parentesco con la 'Persona con EP'</label>
-                        <div>
-                            <select className="form-select" id="parentescoR" onChange={this.detectarCambio.bind(this, "parentescoR")} value={this.state.campo["parentescoR"] || ''}>
-                                <option value="">Parentesco</option>
-                                <option value="1">Familiar</option>
-                                <option value="2">Empleado</option>
-                                <option value="3">Conocido</option>
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["parentescoR"]}</span>
-                        </div>
-                    </div>
-                    <h3 className="mt-4">Vivienda</h3>
-                    <hr />
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Provincia</label>
-                        <div>
-                            <select className="form-select" id="provinciaR" onChange={this.detectarCambio.bind(this, "provinciaR")} value={this.state.campo["provinciaR"] || ''}>
-                                <option value="">Provincia</option>
-                                <option value="1">Buenos Aires</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["provinciaR"]}</span>
-                        </div>
-                    </div>
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Municipio</label>
-                        <div>
-                            <select className="form-select" id="municipioR" onChange={this.detectarCambio.bind(this, "municipioR")} value={this.state.campo["municipioR"] || ''}>
-                                <option value="">Municipio</option>
-                                {municipios &&
-                                    municipios.map((municipio, index) => (
-                                        <option
-                                            value={municipio.idmunicipio}
-                                            key={index}
-                                        >
-                                            {municipio.nombre}
-                                        </option>
-                                    ))}
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["municipioR"]}</span>
-                        </div>
-                    </div>
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Localidad</label>
-                        <div>
-                            <select className="form-select" id="localidadR" onChange={this.detectarCambio.bind(this, "localidadR")} value={this.state.campo["localidadR"] || ''}>
-                                <option value="">Localidad</option>
-                                {localidades &&
-                                    localidades.filter(localidad => localidad.idmunicipio == campo.municipioR).map((localidad, index) => (
-                                        <option
-                                            value={localidad.idlocalidad}
-                                            key={index}
-                                        >
-                                            {localidad.nombre}
-                                        </option>
-                                    ))}
-                            </select>
-                            <span style={{ color: "red" }}>{this.state.error["localidadEP"]}</span>
-                        </div>
-                    </div>
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Calle</label>
-                        <div>
-                            <input type="number" className="form-control" placeholder="Calle" id="calleR" aria-describedby="calleRHelp" onChange={this.detectarCambio.bind(this, "calleR")} value={this.state.campo["calleR"] || ''} />
-                            <span style={{ color: "red" }}>{this.state.error["calleR"]}</span>
-                        </div>
-                    </div>
-
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Numero</label>
-                        <div>
-                            <input type="number" className="form-control" placeholder="Numero" id="numeroR" aria-describedby="numeroRHelp" onChange={this.detectarCambio.bind(this, "numeroR")} value={this.state.campo["numeroR"] || ''} />
-                            <span style={{ color: "red" }}>{this.state.error["numeroR"]}</span>
-                        </div>
-                    </div>
-
-                    <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-                        <label className="col-form-label">Piso</label>
-                        <div>
-                            <input type="text" className="form-control" placeholder="Piso" id="pisoR" aria-describedby="pisoRHelp" onChange={this.detectarCambio.bind(this, "pisoR")} value={this.state.campo["pisoR"] || ''} />
-                            <span style={{ color: "red" }}>{this.state.error["pisoR"]}</span>
-                        </div>
-                    </div>
-                    <div className="w-100"></div>
-                    <button type="submit" className="mb-3 col-6 btn btn-success col-md-3 col-xl-2" >Confirmar</button>
-                </main>
-            </form>
-
-        )
-    }
+          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
+            <label className="col-form-label">Piso</label>
+            <div>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Piso"
+                id="pisoR"
+                aria-describedby="pisoRHelp"
+                onChange={this.detectarCambio.bind(this, "pisoR")}
+                value={this.state.campo["pisoR"] || ""}
+              />
+              <span style={{ color: "red" }}>{this.state.error["pisoR"]}</span>
+            </div>
+          </div>
+          <div className="w-100"></div>
+          <button
+            type="submit"
+            className="mb-3 col-6 btn btn-success col-md-3 col-xl-2"
+          >
+            Confirmar
+          </button>
+          </>
+        }
+        </main>
+      </form>
+    );
+  }
 }
 // const mapDispatchToProps = (dispatch) => ({
 //   user: () => dispatch(setAuthUser((state) => state.auth)),

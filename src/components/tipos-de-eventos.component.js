@@ -2,37 +2,48 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import {
   Container,
+  Form,
   FormGroup,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-const data = [
-  { id: 0, nameTypeEvent: "Movilidad impedida", checkTaller: true },
-  { id: 1, nameTypeEvent: "Fallecimiento", checkTaller: true },
-  { id: 2, nameTypeEvent: "Retorno de actividades", checkTaller: false },
-];
+import { eventRespository } from "../services/event.service";
+import Swal from "sweetalert2";
 
 class TypeEvents extends React.Component {
   state = {
-    data: data,
+    typeEvent: [],
     form: {
-      id: "",
-      nameTypeEvent: "",
-      checkTaller: false,
+      idtipoevento: 0,
+      nombre: "",
+      desactivataller: 0,
     },
     modalInsert: false,
     modalEdit: false,
   };
 
+  componentDidMount() {
+    this.getEventAll();
+  }
+
   handleChange = (e) => {
-    this.setState({
-      form: {
-        ...this.state.form,
-        [e.target.name]: e.target.value,
-      },
-    });
+    if (e.target.id === 'desactivataller') {
+      this.setState({
+        form: {
+          ...this.state.form,
+          [e.target.name]: e.target.checked,
+        },
+      });
+    } else {
+      this.setState({
+        form: {
+          ...this.state.form,
+          [e.target.name]: e.target.value,
+        },
+      });
+    }
   };
 
   showModalInsert = () => {
@@ -44,53 +55,152 @@ class TypeEvents extends React.Component {
   };
 
   showModalEdit = (data) => {
-    this.setState({ modalEdit: true, form: data });
+    this.setState({
+      modalEdit: true,
+      form: { idtipoevento: data.idtipoevento, nombre: data.nombre, desactivataller: data.desactivataller },
+      error: "",
+    });
   };
 
   handleModalEdit = () => {
     this.setState({ modalEdit: false });
   };
-
-  addNewEvent = () => {
-    let newValue = { ...this.state.form };
-    newValue.id = this.state.data.length + 1;
-
-    let list = this.state.data;
-    list.push(newValue);
-    this.setState({ data: list, modalInsert: false });
+  
+  // Función que obtiene para eliminar un tipos de evento
+  deleteTypeEvent = async (id) => {
+    await eventRespository.deleteTypeEvent(id);
   };
-
-  edit = (data) => {
-    let cont = 0;
-    let list = this.state.data;
-    list.map((listdata) => {
-      if (data.id === listdata.id) {
-        list[cont].nameTypeEvent = data.nameTypeEvent;
-        list[cont].checkTaller = data.checkTaller;
-      }
-      cont++;
-    });
-    this.setState({ data: list, modalEdit: false });
-  };
-
+  
   delete = (data) => {
-    let opcion = window.confirm(
-      "Realmente desea eliminar el tipo de evento" + data.id
-    );
+    let opcion = window.confirm("Realmente desea eliminar el tipo de evento" + data.idtipoevento);
     if (opcion) {
       let cont = 0;
-      let list = this.state.data;
+      let list = this.state.typeEvent;
       list.map((listdata) => {
-        if (data.id === listdata.id) {
+        if (data.idtipoevento === listdata.idtipoevento) {
           list.splice(cont, 1);
         }
         cont++;
       });
-      this.setState({ data: list });
+      this.deleteTypeEvent(data.idtipoevento);
+      this.setState({ typeEvent: list });
     }
   };
 
+
+  edit = (data) => {
+    let list = this.state.typeEvent;
+    let modifidedEvent;
+    list.map((listdata) => {
+      if (data.idtipoevento === listdata.idtipoevento) {
+        modifidedEvent = {
+          id: data.idtipoevento,
+          nombre: data.nombre,
+          desactivataller: data.desactivataller === true ? 1 : 0
+        }
+        return modifidedEvent
+      }
+      return list
+    });
+
+    eventRespository.updateTypeEvent(data.idtipoevento, modifidedEvent)
+      .then((response) => {
+        if (response) {
+          this.notificacionExito();
+          this.clear();
+          this.getEventAll();
+        }
+      })
+      .catch((error) => {
+        this.notificacionError();
+      });
+      this.setState({ list, modalEdit: false, error: "" });
+  };
+
+  // Función que obtiene la lista de tipos de eventos
+  getEventAll = async () => {
+    let response = await eventRespository.getEventAll();
+    if (response) {
+      this.setState({ typeEvent: response.data });
+    }
+  };
+
+  guardarNuevo() {
+    let data = {};
+    data = {
+      nombre: this.state.form.nombre,
+      desactivataller: (this.state.form.desactivataller === 'on') ? 1 : 0
+    };
+    eventRespository
+      .createTypeEvent(data)
+      .then((response) => {
+        if (response) {
+          this.setState({ modalInsert: false });
+          this.notificacionExito();
+          this.clear();
+          this.getEventAll();
+        }
+      })
+      .catch((error) => {
+        this.notificacionError();
+      });
+  }
+
+  clear() {
+    this.setState({ form: { nombre: "", desactivataller: 0 } });
+  }
+
+  addNewEvent() {
+    this.setState({ form: { nombre: "", desactivataller: 0 } });
+  }
+
+  //notificaciones
+  notificacionExito() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+
+    Toast.fire({
+      icon: "success",
+      title: "Se ha guardado con éxito",
+    });
+  }
+
+  //notificaciones
+  notificacionError() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+
+    Toast.fire({
+      icon: "error",
+      title: "Error: Hubo un problema en la carga.",
+    });
+  }
+
+  // handleSubmit(event) {
+  //   // alert('An essay was submitted: ' + this.state.value);
+  //   event.preventDefault();
+  // }
   render() {
+    const data = this.state.typeEvent;
+    console.log(data);
     return (
       <>
         <Container>
@@ -100,49 +210,60 @@ class TypeEvents extends React.Component {
           >
             Insertar nuevo tipo de evento
           </button>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Desactivar Taller</th>
-                <th scope="col">Accion</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.data.map((element) => (
-                <tr key={element.id}>
-                  <td key={element.id}>{element.id}</td>
-                  <td key={element.toString()}>{element.nameTypeEvent}</td>
-                  <td>
-                    <div className="form-check ms-5" key={element.toString()}>
-                      <input
-                        type="checkbox"
-                        value={element.checkTaller}
-                        className="form-check-input"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <button
-                      type="button"
-                      className="btn btn-success me-1"
-                      onClick={() => this.showModalEdit(element)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => this.delete(element)}
-                    >
-                      Eliminar
-                    </button>
-                  </td>
+          <div className="row m-md-3 shadow mx-md-auto border-top-sm m-0">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Desactivar Taller</th>
+                  <th scope="col">Accion</th>
                 </tr>
+              </thead>
+              {data.map((element, index) => (
+                <tbody key={index}>
+                    <tr>
+                      <td>{element.idtipoevento}</td>
+                      <td>{element.nombre}</td>
+                      <td>
+                        <input
+                          disabled={true}
+                          type="checkbox"
+                          defaultChecked={element.desactivataller === 1 ? true : false}
+                          className="form-check-input"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-verde me-1"
+                          onClick={() => this.showModalEdit(element)}
+                        >
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16" 
+                          height="16" 
+                          fill="currentColor" 
+                          className="bi bi-pencil-square" 
+                          viewBox="0 0 16 16">
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                          <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                          
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-rojo"
+                          onClick={() => this.delete(element)}
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                </tbody>
               ))}
-            </tbody>
-          </table>
+            </table>
+          </div>
         </Container>
 
         <Modal isOpen={this.state.modalInsert}>
@@ -153,37 +274,25 @@ class TypeEvents extends React.Component {
           </ModalHeader>
           <ModalBody>
             <FormGroup>
-              <label htmlFor="idTable" className="control-label">
-                ID:
-              </label>
-              <input
-                type="text"
-                name="idTable"
-                id="idTable"
-                className="form-control"
-                value={this.state.data.length}
-              />
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor="nameTypeEvent" className="control-label">
+              <label htmlFor="nombre" className="control-label">
                 Nombre de tipo de evento:
               </label>
               <input
                 type="text"
-                name="nameTypeEvent"
-                id="nameTypeEvent"
+                name="nombre"
+                id="nombre"
                 className="form-control"
                 onChange={this.handleChange}
               />
             </FormGroup>
             <FormGroup>
-              <label htmlFor="checkTaller" className="control-label">
+              <label htmlFor="desactivataller" className="control-label">
                 Desactivar taller:
               </label>
               <input
                 type="checkbox"
-                name="checkTaller"
-                id="checkTaller"
+                name="desactivataller"
+                id="desactivataller"
                 readOnly
                 className="form-check-input"
                 onChange={this.handleChange}
@@ -193,18 +302,20 @@ class TypeEvents extends React.Component {
           <ModalFooter>
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn btn-rojo"
               data-bs-dismiss="modal"
               onClick={() => this.handleModalInsert()}
             >
-              Cerrar
+              Cancelar
             </button>
             <button
               type="button"
-              className="btn btn-primary"
-              onClick={() => this.addNewEvent()}
+              className="btn btn-azul"
+              onClick={() => this.guardarNuevo()}
             >
-              Agregar
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                    </svg>Agregar
             </button>
           </ModalFooter>
         </Modal>
@@ -218,45 +329,48 @@ class TypeEvents extends React.Component {
             </div>
           </ModalHeader>
           <ModalBody>
-            <FormGroup>
-              <label htmlFor="idTable" className="control-label">
-                ID:
-              </label>
-              <input
-                type="text"
-                name="idTable"
-                id="idTable"
-                className="form-control"
-                readOnly
-                value={this.state.form.id}
-              />
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor="nameTypeEvent" className="control-label">
-                Nombre de tipo de evento:
-              </label>
-              <input
-                type="text"
-                name="nameTypeEvent"
-                id="nameTypeEvent"
-                className="form-control"
-                onChange={this.handleChange}
-                value={this.state.form.nameTypeEvent}
-              />
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor="checkTaller" className="control-label">
-                Desactivar taller:
-              </label>
-              <input
-                type="checkbox"
-                name="checkTaller"
-                id="checkTaller"
-                className="form-check-input"
-                onChange={this.handleChange}
-                value={this.state.form.checkTaller}
-              />
-            </FormGroup>
+            <Form>
+              <FormGroup>
+                <label htmlFor="idtipoevento" className="control-label">
+                  ID:
+                </label>
+                <input
+                  type="text"
+                  name="idtipoevento"
+                  id="idtipoevento"
+                  className="form-control"
+                  readOnly
+                  onChange={this.handleChange}
+                  value={this.state.form.idtipoevento}
+                />
+              </FormGroup>
+              <FormGroup>
+                <label htmlFor="nombre" className="control-label">
+                  Nombre de tipo de evento:
+                </label>
+                <input
+                  type="text"
+                  name="nombre"
+                  id="nombre"
+                  className="form-control"
+                  onChange={this.handleChange}
+                  value={this.state.form.nombre}
+                />
+              </FormGroup>
+              <FormGroup>
+                <label htmlFor="desactivataller" className="control-label">
+                  Desactivar taller:
+                </label>
+                <input
+                  type="checkbox"
+                  name="desactivataller"
+                  id="desactivataller"
+                  className="form-check-input"
+                  onChange={this.handleChange}
+                  defaultChecked={this.state.form.desactivataller === 1 ? true : false}
+                />
+              </FormGroup>
+            </Form>
           </ModalBody>
           <ModalFooter>
             <button
@@ -272,7 +386,7 @@ class TypeEvents extends React.Component {
               className="btn btn-primary"
               onClick={() => this.edit(this.state.form)}
             >
-              Editar
+              Guardar
             </button>
           </ModalFooter>
         </Modal>
