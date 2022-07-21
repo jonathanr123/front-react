@@ -183,7 +183,8 @@ class ListaEvolucion extends Component {
     }
 
     render() {
-            const {show, showNuevo, evoluciones, nombreEpElegido}=this.state;
+            const {show, showNuevo, evoluciones }=this.state;
+            const { nombreEpElegido }=this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
