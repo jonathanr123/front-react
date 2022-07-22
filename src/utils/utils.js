@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 class Utils {
   convertirFormatoFecha(string) {
     var info = string.split("-");
@@ -76,6 +78,64 @@ class Utils {
         return "";
     }
   }
+
+  // Notificaciones
+  notificacionGuardar () {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+      
+      Toast.fire({
+        icon: 'success',
+        title: 'Se ha guardado con éxito'
+      })
+  }
+
+  notificacionEliminar (info, id, funcion) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+              confirmButton: 'btn btn-success margenbutton',
+              cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+          })
+          
+          swalWithBootstrapButtons.fire({
+            title: 'Estas seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si!',
+            cancelButtonText: 'No',
+            reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+                funcion(info, id)
+              swalWithBootstrapButtons.fire(
+                'Eliminado!',
+                'Se ha eliminado el registro',
+                'success'
+              )
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              swalWithBootstrapButtons.fire(
+                'Cancelado',
+                'No se eliminaron registros',
+                'error'
+              )
+            }
+          })
+    }
 }
 
 export default new Utils();
