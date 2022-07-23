@@ -147,3 +147,29 @@ table th, table td {
       text-align:center;
   }
 }
+
+.form-control, .form-select {
+  border-color: white;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.field-error {
+  font-size: 12px;
+	margin-bottom: 0;
+	color:red;
+  font-weight: bold;
+}
+
+/*
+.form-paciente {
+  justify-content:center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding: 2.5rem 2rem;
+  background: rgba( 255, 255, 255, 0.25 );
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 10.5px );
+  -webkit-backdrop-filter: blur( 10.5px );
+  border-radius: 12px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+} */

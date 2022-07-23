@@ -1,6 +1,36 @@
 import Swal from "sweetalert2";
 
 class Utils {
+
+  retornarProvincias() {
+    const arrayProvincias = [
+      { id: 1, provincia: "Buenos Aires" },
+      { id: 2, provincia: "Catamarca" },
+      { id: 3, provincia: "Chaco" },
+      { id: 4, provincia: "Chubut" },
+      { id: 5, provincia: "Córdoba" },
+      { id: 6, provincia: "Corrientes" },
+      { id: 7, provincia: "Entre Ríos" },
+      { id: 8, provincia: "Formosa" },
+      { id: 9, provincia: "Jujuy" },
+      { id: 10, provincia: "La Pampa" },
+      { id: 11, provincia: "La Rioja" },
+      { id: 12, provincia: "Mendoza" },
+      { id: 13, provincia: "Misiones" },
+      { id: 14, provincia: "Neuquén" },
+      { id: 15, provincia: "Río Negro" },
+      { id: 16, provincia: "Salta" },
+      { id: 17, provincia: "San Juan" },
+      { id: 18, provincia: "San Luis" },
+      { id: 19, provincia: "Santa Cruz" },
+      { id: 20, provincia: "Santa Fe" },
+      { id: 21, provincia: "Santiago del Estero" },
+      { id: 22, provincia: "Tierra del Fuego" },
+      { id: 23, provincia: "Tucumán" },
+    ];
+    return arrayProvincias;
+  }
+
   convertirFormatoFecha(string) {
     var info = string.split("-");
     return info[2] + "/" + info[1] + "/" + info[0];
@@ -79,6 +109,17 @@ class Utils {
     }
   }
 
+  fechaActual() {
+    const fecha = new Date();
+    const dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    const anio = fecha.getFullYear();
+    if (mes < 10) {
+      mes = "0" + mes;
+    }
+    return anio + "-" + mes + "-" + dia;
+  }
+
   // Notificaciones
   notificacionGuardar () {
     const Toast = Swal.mixin({
@@ -136,6 +177,36 @@ class Utils {
             }
           })
     }
+
+  send() {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Formulario enviado con éxito!",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+
+  errorSend() {
+    Swal.fire({
+      position: "center",
+      icon: "error",
+      title: "Hubo un error al enviar el formulario!",
+      text: "Intentelo mas tarde.",
+      confirmButtonText: "OK",
+    });
+  }
+
+  errorform() {
+    Swal.fire({
+      position: "center",
+      icon: "error",
+      title: "Formulario incompleto",
+      text: "Campos vacíos o incorrectos.",
+      confirmButtonText: "OK",
+    });
+  }
 }
 
 export default new Utils();

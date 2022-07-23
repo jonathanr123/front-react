@@ -1,150 +1,155 @@
-import React, { Component } from "react";
+import React from "react";
 
-class Vivienda extends Component {
-  detectarCambio(field, e) {
-    console.log(field + e.target.value);
-    let campo = this.props.state.campo;
-    campo[field] = e.target.value;
+const Vivienda = (register, errors, watch, tipo, arrayProvincias, municipios) => {
 
-    // Cambio de estado de campo
-    this.setState({
-      campo,
-    });
-
-    console.log(this.props.state);
-  }
-
-  render() {
-    const tipo = this.props.tipo;
     return (
-      <div className="container">
-        <div className="row">
-          <h3 className="mt-4">Datos de Vivienda</h3>
-          <hr />
-          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-            <label className="col-form-label">Provincia</label>
-            <div>
-              <select
-                className="form-select"
-                id={"provincia" + tipo}
-                onChange={this.detectarCambio.bind(this, "provincia" + tipo)}
-                value={this.props.state.campo["provincia" + tipo] || ""}
-              >
-                <option value="">Provincia</option>
-                {this.props.arrayProvincias &&
-                  this.props.arrayProvincias.map((provincia, index) => (
-                    <option value={provincia.provincia} key={index}>
-                      {provincia.provincia}
-                    </option>
-                  ))}
-              </select>
-              <span style={{ color: "red" }}>
-                {this.props.state.error["provincia" + tipo]}
-              </span>
+        <div>
+            <div className="row mt-4">
+                <div className="col-12 col-md-12 col-lg-12 col-xl-12">
+                    <h3>Datos de Vivienda</h3>
+                    <hr/>
+                </div>
             </div>
-          </div>
-          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-            <label className="col-form-label">Municipio</label>
-            <div>
-              <select
-                className="form-select"
-                id={"municipio" + tipo}
-                onChange={this.detectarCambio.bind(this, "municipio" + tipo)}
-                value={this.props.state.campo["municipio" + tipo] || ""}
-              >
-                <option value="">Municipio</option>
-                {this.props.municipios &&
-                  this.props.municipios
-                    .filter(
-                      (municipio) =>
-                        municipio.provincia ===
-                        this.props.state.campo["provincia" + tipo]
-                    )
-                    .map((municipio, index) => (
-                      <option value={municipio.idmunicipio} key={index}>
-                        {municipio.nombre}
-                      </option>
-                    ))}
-              </select>
-              <span style={{ color: "red" }}>
-                {this.props.state.error["municipio" + tipo]}
-              </span>
+            
+            <div className="row">
+                <div className="mt-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                    <label className="col-form-label">Provincia</label>
+                    <select
+                        type="text"
+                        className="form-select"
+                        {...register ("provincia"+tipo,{
+                            required: {
+                                value: true,
+                                message: "Debe seleccionar una opción"
+                            }
+                        })}
+                    >
+                        <option value="">Provincia</option>
+                        {arrayProvincias &&
+                            arrayProvincias.map((provincia, index) => (
+                                <option value={provincia.provincia} key={index}>
+                                    {provincia.provincia}
+                                </option>
+                            ))}
+                    </select>
+                    {errors["provincia"+tipo] && <small className="field-error">{errors["provincia"+tipo].message}</small>}
+                </div>
+                <div className="mt-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                    <label className="col-form-label">Municipio</label>
+                    <select
+                        type="text"
+                        className="form-select"
+                        {...register ("municipio"+tipo,{
+                            required: {
+                                value: true,
+                                message: "Debe seleccionar una opción"
+                            }
+                        })}
+                    >
+                        <option value="">Municipio</option>
+                        {municipios &&
+                            municipios
+                                .filter((municipio) => municipio.provincia === watch("provincia" + tipo))
+                                .map((municipio, index) => (
+                                <option value={municipio.idmunicipio} key={index}>
+                                    {municipio.nombre}
+                                </option>
+                                ))}
+                    </select>
+                    {errors["municipio"+tipo] && <small className="field-error">{errors["municipio"+tipo].message}</small>}
+                </div>
+                <div className="mt-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                    <label className="col-form-label">Localidad</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Localidad"
+                        {...register ("localidad"+tipo,{
+                            required: {
+                                value: true,
+                                message: "El campo no puede estar vacío"
+                            },
+                            minLength: {
+                                value: 2,
+                                message: "El campo no puede tener menos de 2 caracteres"
+                            }
+                        })}
+                    />
+                    {errors["localidad"+tipo] && <small className="field-error">{errors["localidad"+tipo].message}</small>}
+                </div>
+                <div className="mt-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                    <label className="col-form-label">Calle</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Calle"
+                        {...register ("calle"+tipo,{
+                            required: {
+                                value: true,
+                                message: "El campo no puede estar vacío"
+                            }
+                        })}
+                    />
+                    {errors["calle"+tipo] && <small className="field-error">{errors["calle"+tipo].message}</small>}
+                </div>
             </div>
-          </div>
-          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-            <label className="col-form-label">Localidad</label>
-            <div>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Localidad"
-                id={"localidad" + tipo}
-                aria-describedby={"localidad" + tipo + "Help"}
-                onChange={this.detectarCambio.bind(this, "localidad" + tipo)}
-                value={this.props.state.campo["localidad" + tipo] || ""}
-              />
-              <span style={{ color: "red" }}>
-                {this.props.state.error["localidad" + tipo]}
-              </span>
+            <div className="row">
+                <div className="mt-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                    <label className="col-form-label">Número</label>
+                    <input
+                        type="tel"
+                        className="form-control"
+                        placeholder="Número"
+                        {...register ("numero"+tipo,{
+                            required: {
+                                value: true,
+                                message: "El campo no puede estar vacío"
+                            },
+                            pattern: {
+                                value: /^-?[0-9]\d*\.?\d*$/g,
+                                message: "El campo debe contener solo números"
+                            }
+                        })}
+                    />
+                    {errors["numero"+tipo] && <small className="field-error">{errors["numero"+tipo].message}</small>}
+                </div>
+                <div className="mt-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                    <label className="col-form-label">Departamento</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Departamento"
+                        {...register ("departamento"+tipo,{
+                            required: {
+                                value: true,
+                                message: "El campo no puede estar vacío"
+                            }
+                        })}
+                    />
+                    {errors["departamento"+tipo] && <small className="field-error">{errors["departamento"+tipo].message}</small>}
+                </div>
+                <div className="mt-2 col-12 col-md-6 col-lg-4 col-xl-3">
+                    <label className="col-form-label">Piso</label>
+                    <input
+                        type="tel"
+                        className="form-control"
+                        placeholder="Piso"
+                        {...register ("piso"+tipo,{
+                            required: {
+                                value: true,
+                                message: "El campo no puede estar vacío"
+                            },
+                            pattern: {
+                                value: /^-?[0-9]\d*\.?\d*$/g,
+                                message: "El campo debe contener solo números"
+                            }
+                        })}
+                    />
+                    {errors["piso"+tipo] && <small className="field-error">{errors["piso"+tipo].message}</small>}
+                </div>
             </div>
-          </div>
-          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-            <label className="col-form-label">Calle</label>
-            <div>
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Calle"
-                id={"calle" + tipo}
-                aria-describedby={"calle" + tipo + "Help"}
-                onChange={this.detectarCambio.bind(this, "calle" + tipo)}
-                value={this.props.state.campo["calle" + tipo] || ""}
-              />
-              <span style={{ color: "red" }}>
-                {this.props.state.error["calle" + tipo]}
-              </span>
-            </div>
-          </div>
-
-          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-            <label className="col-form-label">Numero</label>
-            <div>
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Numero"
-                id={"numero" + tipo}
-                aria-describedby={"numero" + tipo + "Help"}
-                onChange={this.detectarCambio.bind(this, "numero" + tipo)}
-                value={this.props.state.campo["numero" + tipo] || ""}
-              />
-              <span style={{ color: "red" }}>
-                {this.props.state.error["numero" + tipo]}
-              </span>
-            </div>
-          </div>
-
-          <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-3">
-            <label className="col-form-label">Piso</label>
-            <div>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Piso"
-                id={"piso" + tipo}
-                aria-describedby={"piso" + tipo + "Help"}
-                onChange={this.detectarCambio.bind(this, "piso" + tipo)}
-                value={this.props.state.campo["piso" + tipo] || ""}
-              />
-              <span style={{ color: "red" }}>
-                {this.props.state.error["piso" + tipo]}
-              </span>
-            </div>
-          </div>
         </div>
-      </div>
     );
-  }
 }
 
 export default Vivienda;
