@@ -80,7 +80,7 @@ class TypeEvents extends React.Component {
         if (data.idtipoevento === listdata.idtipoevento) {
           list.splice(cont, 1);
         }
-        cont++;
+        return cont++;
       });
       this.deleteTypeEvent(data.idtipoevento);
       this.setState({ typeEvent: list });
@@ -147,11 +147,11 @@ class TypeEvents extends React.Component {
   }
 
   clear() {
-    this.setState({ form: { nombre: "", desactivataller: 0 } });
+    this.setState({ form: { idtipoevento:0, nombre: "", desactivataller: 0 } });
   }
 
   addNewEvent() {
-    this.setState({ form: { nombre: "", desactivataller: 0 } });
+    this.clear();
   }
 
   //notificaciones
@@ -194,13 +194,8 @@ class TypeEvents extends React.Component {
     });
   }
 
-  // handleSubmit(event) {
-  //   // alert('An essay was submitted: ' + this.state.value);
-  //   event.preventDefault();
-  // }
   render() {
-    const data = this.state.typeEvent;
-    console.log(data);
+    console.log(this.state.typeEvent);
     return (
       <>
         <Container>
@@ -220,7 +215,7 @@ class TypeEvents extends React.Component {
                   <th scope="col">Accion</th>
                 </tr>
               </thead>
-              {data.map((element, index) => (
+              {this.state.typeEvent.map((element, index) => (
                 <tbody key={index}>
                     <tr>
                       <td>{element.idtipoevento}</td>
@@ -229,7 +224,7 @@ class TypeEvents extends React.Component {
                         <input
                           disabled={true}
                           type="checkbox"
-                          defaultChecked={element.desactivataller === 1 ? true : false}
+                          checked={element.desactivataller === 1 ? true : false}
                           className="form-check-input"
                         />
                       </td>
