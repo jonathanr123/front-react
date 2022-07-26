@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { eventRespository } from "../services/event.service";
 import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.css";
@@ -180,8 +180,9 @@ class Events extends React.Component {
                   name="idpersonaep"
                   onChange={this.handleChange}
                   >
+                  <option disabled={true} selected={true} value={-1}>Seleccione una persona</option>
                   {this.state.namePersonEP.map((element) => (
-                    <option id="idpersonaep" key={element.idpersona} value={element.idpersona}>{element.idpersona.nombre} {element.idpersona.apellido}</option>
+                    <option id="idpersonaep" key={element.idpersona.idpersona} value={element.idpersona.idpersona}>{element.idpersona.nombre} {element.idpersona.apellido}</option>
                   ))}
                 </select>
               </div>
@@ -197,6 +198,7 @@ class Events extends React.Component {
                   name="idtipoevento"
                   onChange={this.handleChange}
                   >
+                  <option disabled={true} selected={true} value={-1}>Seleccione un tipo de evento</option>
                   {this.state.typeEvent.map((element) => (
                       <option id='idtipoevento' key={element.idtipoevento}  value={element.idtipoevento} >{element.nombre}</option>
                   ))}
