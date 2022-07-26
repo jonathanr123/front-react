@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
 import { obrasocialRepository } from "../services/obrasocialService";
