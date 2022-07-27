@@ -72,19 +72,33 @@ class TypeEvents extends React.Component {
   };
   
   delete = (data) => {
-    let opcion = window.confirm("Realmente desea eliminar el tipo de evento" + data.idtipoevento);
-    if (opcion) {
-      let cont = 0;
-      let list = this.state.typeEvent;
-      list.map((listdata) => {
-        if (data.idtipoevento === listdata.idtipoevento) {
-          list.splice(cont, 1);
-        }
-        return cont++;
-      });
-      this.deleteTypeEvent(data.idtipoevento);
-      this.setState({ typeEvent: list });
-    }
+    Swal.fire({
+      title: `¿Seguro que desea eliminar el tipo de evento ${data.nombre}?`,
+      // text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Eliminar el tipo de evento'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Eliminado con exito!',
+          `Se elimino el evento ${data.nombre}`,
+          'success'
+        )
+        let cont = 0;
+        let list = this.state.typeEvent;
+        list.map((listdata) => {
+          if (data.idtipoevento === listdata.idtipoevento) {
+            list.splice(cont, 1);
+          }
+          return cont++;
+        });
+        this.deleteTypeEvent(data.idtipoevento);
+        this.setState({ typeEvent: list });
+      }
+    })
   };
 
 
@@ -116,20 +130,12 @@ class TypeEvents extends React.Component {
       });
       this.setState({ list, modalEdit: false, error: "" });
   };
-
-  // Función que obtiene la lista de tipos de eventos
-  getEventAll = async () => {
-    let response = await eventRespository.getEventAll();
-    if (response) {
-      this.setState({ typeEvent: response.data });
-    }
-  };
-
+  
   guardarNuevo() {
     let data = {};
     data = {
       nombre: this.state.form.nombre,
-      desactivataller: (this.state.form.desactivataller === 'on') ? 1 : 0
+      desactivataller: (this.state.form.desactivataller === true) ? 1 : 0
     };
     eventRespository
       .createTypeEvent(data)
@@ -145,6 +151,14 @@ class TypeEvents extends React.Component {
         this.notificacionError();
       });
   }
+  // Función que obtiene la lista de tipos de eventos
+  getEventAll = async () => {
+    let response = await eventRespository.getEventAll();
+    if (response) {
+      this.setState({ typeEvent: response.data });
+    }
+  };
+
 
   clear() {
     this.setState({ form: { idtipoevento:0, nombre: "", desactivataller: 0 } });
@@ -288,7 +302,6 @@ class TypeEvents extends React.Component {
                 type="checkbox"
                 name="desactivataller"
                 id="desactivataller"
-                readOnly
                 className="form-check-input"
                 onChange={this.handleChange}
               />
