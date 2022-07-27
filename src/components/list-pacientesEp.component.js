@@ -5,9 +5,12 @@ import { connect } from "react-redux";
 import { cambiarID } from "../actions/global";
 import { pacienteRepository } from "../services/pacienteService";
 import "../styles/list-pacientesEp.css"
+import { Spinner } from "reactstrap";
+import utils from "../utils/utils";
 
 const ListaPaciente = (props) => {
 
+    const [loading, setLoading] = useState(true);
     const [buscador, setBuscador] = useState('');
     const [pacientes, setPacientes] = useState([]);
 
@@ -17,9 +20,10 @@ const ListaPaciente = (props) => {
 
     // Funcion que obtiene la lista de pacientes
     const getPacientes = async () => {
-        const response = await pacienteRepository.getPacientes().catch(() => undefined);
+        const response = await pacienteRepository.getPacientes().catch(() => utils.notificacionError());
         if (response) {
             setPacientes(response.data);
+            setLoading(false);
         }
     }
 
@@ -57,7 +61,15 @@ const ListaPaciente = (props) => {
                 </div>
                     
                 <div className="row">
-                    <div className="col-12 col-md-12 col-lg-12 col-xl-12">
+                    <div className="col-12 col-md-12 col-lg-12 col-xl-12 text-center">
+                        {loading ? (<Spinner
+                            color="primary"
+                            style={{
+                            height: '4rem',
+                            width: '4rem',
+                            }}
+                            >Loading...
+                        </Spinner>) : (
                         <table className="table table-bordered table-hover shadow table-striped">
                             <thead>
                                 <tr>
@@ -113,7 +125,7 @@ const ListaPaciente = (props) => {
                                         </tr>
                                     ))}
                             </tbody>
-                        </table>
+                        </table>)}
                     </div>
                 </div>
             </main>

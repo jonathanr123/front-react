@@ -1,46 +1,31 @@
 import React, { useEffect, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
-import { obrasocialRepository } from "../services/obrasocialService";
 import { osRepository } from "../services/osService";
 import utils from "../utils/utils";
-import ObraSocialForm from "./ListObraSocial/ObraSocialForm";
+import ObraSocialModal from "./ListObraSocial/ObraSocialModal";
+import { Spinner } from "reactstrap";
 
 const ListaObraSocial = (props) => {
     
+    const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(false);
     const [showNuevo, setShowNuevo] = useState(false);
     const [campo, setCampo] = useState({obrasocial:''});
-    const [idEditado, setIdEditado] = useState('');
-    const [obrasociales, setObraSociales] = useState([]);
     const [osociales, setOsociales] = useState([]);
     const { idEpElegido, nombreEpElegido } = props;
 
     useEffect(() => {
-        getObrasocial();
         getOs();
-    }, []);
-
-    // Funcion que obtiene la lista de obras sociales
-    const getObrasocial = async () => {
-        const response = await obrasocialRepository.getAll().catch(() => undefined);
-        if (response) {
-            setObraSociales(response.data);
-        }
-    };
+    }, []);    
 
     // Funcion que obtiene la lista de obras sociales de un paciente
     const getOs = async () => {
-        const response = await osRepository.get(idEpElegido).catch(() => undefined);
+        const response = await osRepository.get(idEpElegido).catch(() => utils.notificacionError());
         if (response) {
             setOsociales(response.data);
+            setLoading(false);
         }
-    };
-
-    // Funcion que guarda el valor de los campos
-    const detectarCambio = (e) => {
-        const { name, value } = e.target;
-        setCampo({...campo, [name]: value});
     }
 
     // Funcion que habilita el formulario de agregar
@@ -54,54 +39,7 @@ const ListaObraSocial = (props) => {
     const editar = (obrasocial, idos) => {
         setShow(true);
         setShowNuevo(false);
-        setIdEditado(idos);
-        setCampo({obrasocial:obrasocial});
-    }
-
-    // Funcion que cancela las operaciones y oculta los formularios
-    const cancelar = () => {
-        setShow(false);
-        setShowNuevo(false);
-        setCampo({...campo, obrasocial:''});
-    }
-
-    // Funcion que crea una nueva obra social y la guarda en la base de datos
-    const cargarNuevo = async () => {
-        const idObrasocial= campo.obrasocial;
-        if(idObrasocial!=='' ){
-            const data = {
-                idpersonaep: idEpElegido,
-                idobrasocial: idObrasocial,
-                borrado:"0",
-            };
-            const response = await osRepository.create(data).catch(e => console.log(e));
-            if (response) {
-                getOs();
-                utils.notificacionGuardar();
-                setShow(false);
-                setCampo({...campo, obrasocial:''});
-            }
-        };
-    }
-
-    // Funcion que actualiza una obra social y la guarda en la base de datos
-    const guardar = async () => {
-        const idObrasocial= campo.obrasocial;
-        const id= idEditado;
-        if(idObrasocial!=='' ){
-            const data = {
-                idpersonaep: idEpElegido,
-                idobrasocial: idObrasocial,
-                borrado:"0",
-            };
-            const response = await osRepository.update(id, data).catch(e => console.log(e));
-            if (response) {
-                getOs();
-                utils.notificacionGuardar();
-                setShow(false);
-                setCampo({...campo, obrasocial:''});
-            }
-        };
+        setCampo({obrasocial:obrasocial, idos:idos});
     }
 
     // Funcion que elimina una obra social
@@ -111,7 +49,7 @@ const ListaObraSocial = (props) => {
             idobrasocial: info.idobrasocial,
             borrado:"1",
         };
-        const response = await osRepository.update(id, data).catch(e => console.log(e));
+        const response = await osRepository.update(id, data).catch(() => utils.notificacionError());
         if (response) {
             getOs();
             setShow(false);
@@ -123,7 +61,7 @@ const ListaObraSocial = (props) => {
             <main className="container form-paciente">
                 <div className="row">
                     <div className="mb-2 col-12 col-md-12 col-lg-12 col-xl-12">
-                        <h3 className="mt-4">Obra Social de Persona con EP</h3>
+                        <h3>Obra Social de Persona con EP</h3>
                         <hr />
                     </div>
                 </div>
@@ -135,34 +73,24 @@ const ListaObraSocial = (props) => {
                     <div className="col-12 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right'}}>
                         <button type="button" className="btn btn-azul" onClick={() => agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
                         <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
-                        </svg>Agregar</button>
+                        </svg> Agregar</button>
                     </div>
                 </div>                
-                
-                {showNuevo ? (
-                    <ObraSocialForm
-                        titulo={"Cargar Obra Social"}
-                        funcionCambiar={detectarCambio}
-                        obrasociales={obrasociales}
-                        funcionConfirmar={cargarNuevo}
-                        funcionCancelar={cancelar}
-                        value={campo.obrasocial}
-                    />
-                ):('')}
 
-                {show ? (
-                    <ObraSocialForm
-                        titulo={"Editar Obra Social"}
-                        funcionCambiar={detectarCambio}
-                        obrasociales={obrasociales}
-                        funcionConfirmar={guardar}
-                        funcionCancelar={cancelar}
-                        value={campo.obrasocial}
-                    />
-                ):('')}
+                {ObraSocialModal ("crear", showNuevo, setShowNuevo, idEpElegido, getOs, campo)}
+
+                {ObraSocialModal ("editar", show, setShow, idEpElegido, getOs, campo)}
                 
                 <div className="row">
-                    <div className="col-12 col-md-12 col-lg-12 col-xl-12">
+                    <div className="col-12 col-md-12 col-lg-12 col-xl-12 text-center">
+                        {loading ? (<Spinner
+                            color="primary"
+                            style={{
+                            height: '4rem',
+                            width: '4rem',
+                            }}
+                            >Loading...
+                        </Spinner>) : (
                         <table className="table table-bordered table-hover shadow table-striped">
                             <thead>
                                 <tr>
@@ -191,7 +119,7 @@ const ListaObraSocial = (props) => {
                                         </tr>
                                     ))}
                             </tbody>
-                        </table>
+                        </table>)}
                     </div>
                 </div>                
             </main>
