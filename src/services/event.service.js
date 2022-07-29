@@ -1,6 +1,7 @@
 import http from "../http-common";
 
 export const eventRespository = {
+  // service tipo de evento 
   async getEventAll() {
     let response = await http.get(`/tipoevento`);
 
@@ -22,7 +23,7 @@ export const eventRespository = {
     return await http.delete(`/tipoevento/${id}`);
   },
 
-
+// service de evento 
   async createEvent(data) {
     let response = await http.post(`/evento`, data);
 
@@ -34,9 +35,17 @@ export const eventRespository = {
 
     return response;
   },
-
+// service de persona 
   async getAll() {
     let response = await http.get(`/personaP`);
     return response;
   },
+
+  async updatePerson(id, data) {
+    let response = await http.put(`/personaP/${id}`, data);
+    return response;
+  },
+  async deletePerson(id) {
+    return await http.delete(`/personaP/${id}`);
+  }
 };
