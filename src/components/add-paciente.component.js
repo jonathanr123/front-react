@@ -161,8 +161,6 @@ class AddPaciente extends Component {
   savePersonaEP() {
     const { campo, hoy } = this.state;
     console.log(campo);
-    //let perro=0;
-    //if(perro==0) {} funciona
 
     this.props
       .createDireccion(

@@ -147,23 +147,38 @@ class Search extends React.Component {
   }
   
   buscar() {
+    console.log(this.state.searchArrayperson, "primero");
     let nombre = this.state.searchArrayperson.nombre
-    let apellido = this.state.searchArrayperson.apellido
+    // let apellido = this.state.arrayPerson.idpersona.apellido
     let arrayPersonas = this.state.arrayPerson.filter(function (person) {
-      return person.idpersona.nombre.includes(nombre) && person.idpersona.apellido.includes(apellido)
+      return person.idpersona.nombre.includes(nombre) 
     });
-    this.setState({ searchArrayperson: arrayPersonas })
+    this.setState({ 
+      searchArrayperson: {
+        idpersona: arrayPersonas.idpersona.idpersona,
+        nombre: arrayPersonas.idpersona.nombre,
+        apellido: arrayPersonas.idpersona.apellido,
+        telefono:arrayPersonas.idpersona.telefono,
+        sexo:arrayPersonas.sexo
+      } 
+    })
+    console.log(this.state.searchArrayperson);
   }
 
-  buscarName(event) {
+  buscarName(e) {
     this.setState({
-      nombre: event.target.value
+      searchArrayperson: {
+        nombre: e.target.value
+      },
     })
   }
 
-  buscarLastName(event) {
+  buscarLastName(e) {
     this.setState({
-      apellido: event.target.value
+      searchArrayperson: {
+        ...this.state.searchArrayperson,
+        [e.target.name]: e.target.value,
+      },
     })
   }
   
