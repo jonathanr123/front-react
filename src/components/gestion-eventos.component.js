@@ -51,11 +51,12 @@ class Events extends React.Component {
   guardarNuevo() {
     let data = {};
     data = {
-      fechaDesde: this.state.events.fechaDesde,
-      fechaHasta: this.state.events.fechaHasta,
+      fechadesde: this.state.events.fechaDesde,
+      fechahasta: this.state.events.fechaHasta,
       motivo: this.state.events.motivo,
       idpersonaep:this.state.events.idpersonaep,
-      idtipoevento: this.state.events.idtipoevento
+      idtipoevento: this.state.events.idtipoevento,
+      borrado: 0,
     };
 
     eventRespository

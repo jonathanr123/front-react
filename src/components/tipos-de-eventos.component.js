@@ -67,8 +67,11 @@ class TypeEvents extends React.Component {
   };
   
   // Función que obtiene para eliminar un tipos de evento
-  deleteTypeEvent = async (id) => {
-    await eventRespository.deleteTypeEvent(id);
+  deleteTypeEvent = async (data) => {
+    let modifidedEvent = {
+      borrado: 1,
+    }
+    await eventRespository.updateTypeEvent(data.idtipoevento, modifidedEvent)
   };
   
   delete = (data) => {
@@ -95,7 +98,7 @@ class TypeEvents extends React.Component {
           }
           return cont++;
         });
-        this.deleteTypeEvent(data.idtipoevento);
+        this.deleteTypeEvent(data);
         this.setState({ typeEvent: list });
       }
     })
@@ -110,7 +113,8 @@ class TypeEvents extends React.Component {
         modifidedEvent = {
           id: data.idtipoevento,
           nombre: data.nombre,
-          desactivataller: data.desactivataller === true ? 1 : 0
+          desactivataller: data.desactivataller === true ? 1 : 0,
+          borrado: 0,
         }
         return modifidedEvent
       }
@@ -135,7 +139,8 @@ class TypeEvents extends React.Component {
     let data = {};
     data = {
       nombre: this.state.form.nombre,
-      desactivataller: (this.state.form.desactivataller === true) ? 1 : 0
+      desactivataller: (this.state.form.desactivataller === true) ? 1 : 0,
+      borrado: 0,
     };
     eventRespository
       .createTypeEvent(data)
@@ -229,7 +234,7 @@ class TypeEvents extends React.Component {
                   <th scope="col">Accion</th>
                 </tr>
               </thead>
-              {this.state.typeEvent.map((element, index) => (
+              {this.state.typeEvent.filter(element => element.borrado === 0).map((element, index) => (
                 <tbody key={index}>
                     <tr>
                       <td>{element.idtipoevento}</td>
