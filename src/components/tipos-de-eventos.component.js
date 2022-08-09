@@ -77,7 +77,6 @@ class TypeEvents extends React.Component {
   delete = (data) => {
     Swal.fire({
       title: `¿Seguro que desea eliminar el tipo de evento ${data.nombre}?`,
-      // text: "You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -218,6 +217,7 @@ class TypeEvents extends React.Component {
     return (
       <>
         <Container>
+        <h1 className="mt-4 mt-md-2 text-center">Tipos de eventos</h1>
           <button
             className="btn btn-primary mb-2 mt-2"
             onClick={() => this.showModalInsert()}

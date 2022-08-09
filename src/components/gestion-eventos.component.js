@@ -24,7 +24,7 @@ class Events extends React.Component {
   }
   // Función que obtiene la lista de personas con ep
   getPersonAll = async () => {
-    let response = await eventRespository.getAll();
+    let response = await eventRespository.getPersonAll();
     if (response) {
       this.setState({ namePersonEP: response.data });
     }
@@ -121,7 +121,7 @@ class Events extends React.Component {
     return (
       <div className="container">
         <form id="myForm"> 
-          <main className="justify-content-center row container-lg form-paciente m-md-3 shadow mx-md-auto border-top-sm m-0">
+          <main className="justify-content-center row container-lg m-md-3 shadow mx-md-auto border-top-sm m-0">
             <h1 className="mt-4 mt-md-2 text-center">Gestion de eventos</h1>
             <h3 className="ms-4 text-center">Eventos</h3>
             <div className="row">

@@ -23,7 +23,8 @@ class Search extends React.Component {
         nombre: "",
         apellido: "",
         telefono:0,
-        sexo:""
+        borrado:0,
+        espaciente: 0
       },
     modalEdit: false,
     }
@@ -44,21 +45,22 @@ class Search extends React.Component {
   };
   edit = (data) => {
     let list = this.state.arrayPerson;
-    let modifidedEvent;
+    let modifidedPerson;
     list.map((listdata) => {
-      if (data.idpersona === listdata.idpersona.idpersona) {
-        modifidedEvent = {
+      if (data.idpersona === listdata.idpersona) {
+        modifidedPerson = {
           id: data.idpersona,
           nombre: data.nombre,
           apellido: data.apellido,
           telefono: data.telefono,
-          sexo: data.sexo
+          borrado: listdata.borrado,
+          espaciente: listdata.espaciente
         }
-        return modifidedEvent
+        return modifidedPerson
       }
       return list
     });
-    eventRespository.updatePerson(data.idpersona, modifidedEvent)
+    eventRespository.updatePerson(data.idpersona, modifidedPerson)
       .then((response) => {
         if (response) {
           this.notificacionExito();
@@ -75,7 +77,7 @@ class Search extends React.Component {
   showModalEdit = (data) => {
     this.setState({
       modalEdit: true,
-      searchArrayperson: {idpersona: data.idpersona.idpersona, nombre: data.idpersona.nombre, apellido: data.idpersona.apellido, telefono:data.idpersona.telefono, sexo: data.sexo },
+      searchArrayperson: {idpersona: data.idpersona, nombre: data.nombre, apellido: data.apellido, telefono:data.telefono },
       error: "",
     });
   };
@@ -83,7 +85,7 @@ class Search extends React.Component {
     this.setState({ modalEdit: false });
   };
   clear() {
-    this.setState({ searchArrayperson: { idpersona:0, nombre: "", apellido: "", telefono:0, sexo:"" } });
+    this.setState({ searchArrayperson: { idpersona:0, nombre: "", apellido: "", telefono:0, espaciente:0, borrado:0 } });
   }
    //notificaciones
    notificacionExito() {
@@ -132,34 +134,55 @@ class Search extends React.Component {
       }
   };
 
-   // Función que obtiene para eliminar un tipos de evento
-  deletePerson = async (id) => {
-    await eventRespository.deletePerson(id);
-  };
-
-  eliminar(id) {
-    let arrayPersonas = this.state.arrayPerson.filter(function (person) {
-      return person.idpersona.idpersona !== (id)
+  eliminar(persona) {
+    let arrayPersonas = this.state.arrayPerson.filter(function (e) {
+      return e.idpersona !== (persona.idpersona)
     });
-    this.setState({ arrayPerson: arrayPersonas })
-    this.setState({ searchArrayperson: this.state.arrayPerson })
-    this.deletePerson(arrayPersonas.idpersona.idpersona);
+    // modifico el borrado logico de la persona 
+    persona.borrado = 1
+    Swal.fire({
+      title: `¿Seguro que desea eliminar a  ${persona.nombre}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: `Si, Eliminar el a ${persona.nombre}`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Eliminado con exito!',
+          `Se elimino a${persona.nombre}`,
+          'success'
+        )
+          eventRespository.updatePerson(persona.idpersona, persona)
+          .then((response) => {
+            if (response) {
+              this.notificacionExito();
+              this.getPersonAll();
+            }
+          })
+          .catch((error) => {
+            this.notificacionError();
+          });
+          this.setState({ arrayPerson: arrayPersonas })
+          this.setState({ searchArrayperson: this.state.arrayPerson })
+      }
+    })
   }
   
   buscar() {
-    console.log(this.state.searchArrayperson, "primero");
     let nombre = this.state.searchArrayperson.nombre
     // let apellido = this.state.arrayPerson.idpersona.apellido
     let arrayPersonas = this.state.arrayPerson.filter(function (person) {
-      return person.idpersona.nombre.includes(nombre) 
+      return person.nombre.includes(nombre) 
     });
     this.setState({ 
       searchArrayperson: {
-        idpersona: arrayPersonas.idpersona.idpersona,
-        nombre: arrayPersonas.idpersona.nombre,
-        apellido: arrayPersonas.idpersona.apellido,
-        telefono:arrayPersonas.idpersona.telefono,
-        sexo:arrayPersonas.sexo
+        idpersona: arrayPersonas.idpersona,
+        nombre: arrayPersonas.nombre,
+        apellido: arrayPersonas.apellido,
+        telefono:arrayPersonas.telefono,
+        espaciente:arrayPersonas.espaciente
       } 
     })
     console.log(this.state.searchArrayperson);
@@ -183,10 +206,11 @@ class Search extends React.Component {
   }
   
   render() {
+    let arrayPersonIspaciente = this.state.arrayPerson.filter(e => e.espaciente === 1 && e.borrado !== 1)
     return (
       <>
-      <main className="border-top-sm m-0 row justify-content-center m-md-3 rounded shadow container-lg mx-md-auto">
-        <div className="mt-1 mb-2">
+      <main className="border-top-sm m-0 justify-content-center m-md-3 rounded shadow container-lg mx-md-auto">
+        {/* <div className="mt-1 mb-2">
           <label id="nombre" htmlFor="" className="me-1" >Nombre</label>
           <input type="text" nombre="nombre" id="nombre" onChange={this.buscarName} />
         </div>
@@ -194,8 +218,9 @@ class Search extends React.Component {
           <label id="apellido" htmlFor="" className="me-1">Apellido</label>
           <input type="text" nombre="apellido" id="apellido" onChange={this.buscarLastName} />
           <button type="button" className="btn btn-success col ms-3" onClick={() => this.buscar()}>Confirmar</button>
-        </div>
-        <div>
+        </div> */}
+        <h1 className="mt-4 mt-md-2 text-center">Personas con EP</h1>
+        <div className='row'>
           <table className="table">
             <thead>
               <tr>
@@ -203,19 +228,19 @@ class Search extends React.Component {
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
                 <th scope="col">Telefono</th>
-                <th scope="col">Sexo</th>
+                {/* <th scope="col">borrado</th> */}
                 <th scope="col">Accion</th>
-
+                
               </tr>
             </thead>
-            {this.state.arrayPerson.map((person, index) => (
+            {arrayPersonIspaciente.map((person, index) => (
                 <tbody key={index}>
-                    <tr key={person.idpersona.idpersona}>
-                    <th scope="row">{person.idpersona.idpersona}</th>
-                    <td>{person.idpersona.nombre}</td>
-                    <td>{person.idpersona.apellido}</td>
-                    <td>{person.idpersona.telefono}</td>
-                    <td>{person.sexo}</td>
+                    <tr key={person.idpersona}>
+                    <th scope="row">{person.idpersona}</th>
+                    <td>{person.nombre}</td>
+                    <td>{person.apellido}</td>
+                    <td>{person.telefono}</td>
+                    {/* <td>{person.borrado}</td> */}
                     <td>
                     <button
                           type="button"
@@ -234,7 +259,7 @@ class Search extends React.Component {
                         </svg>
                           
                         </button>
-                      <button type="button" className="btn btn-danger" onClick={() => this.eliminar(person.id)}>Eliminar</button>
+                      <button type="button" className="btn btn-danger" onClick={() => this.eliminar(person)}>Eliminar</button>
                     </td>
                   </tr>
                 </tbody>
@@ -303,19 +328,6 @@ class Search extends React.Component {
                className="form-control"
                onChange={this.handleChange}
                value={this.state.searchArrayperson.telefono}
-             />
-           </FormGroup>
-           <FormGroup>
-             <label htmlFor="sexo" className="control-label">
-              sexo 
-             </label>
-             <input
-               type="text"
-               name="sexo"
-               id="sexo"
-               className="form-control"
-               onChange={this.handleChange}
-               value={this.state.searchArrayperson.sexo}
              />
            </FormGroup>
          </Form>

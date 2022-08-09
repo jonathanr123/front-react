@@ -37,15 +37,18 @@ export const eventRespository = {
   },
 // service de persona 
   async getAll() {
-    let response = await http.get(`/personaP`);
+    let response = await http.get(`/persona`);
     return response;
   },
-
+  async getPersonAll() {
+    let response = await http.get(`/personaP`);
+    return response;
+  },  
   async updatePerson(id, data) {
-    let response = await http.put(`/personaP/${id}`, data);
+    let response = await http.put(`/persona/${id}`, data);
     return response;
   },
   async deletePerson(id) {
-    return await http.delete(`/personaP/${id}`);
+    return await http.delete(`/persona/${id}`);
   }
 };

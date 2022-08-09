@@ -289,7 +289,6 @@ class AddPaciente extends Component {
       showConfirmButton: false,
       timer: 1500,
     });
-    //setTimeout('window.location.reload(true)', 1500);
   }
 
   errorSend() {
@@ -526,7 +525,7 @@ class AddPaciente extends Component {
                 {localidades &&
                   localidades
                     .filter(
-                      (localidad) => localidad.idmunicipio === campo.municipioEP
+                      (localidad) => localidad.idmunicipio == campo.municipioEP
                     )
                     .map((localidad, index) => (
                       <option value={localidad.idlocalidad} key={index}>
