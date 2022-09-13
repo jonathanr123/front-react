@@ -24,7 +24,7 @@ class Events extends React.Component {
   }
   // Función que obtiene la lista de personas con ep
   getPersonAll = async () => {
-    let response = await eventRespository.getAll();
+    let response = await eventRespository.getPersonAll();
     if (response) {
       this.setState({ namePersonEP: response.data });
     }
@@ -51,13 +51,14 @@ class Events extends React.Component {
   guardarNuevo() {
     let data = {};
     data = {
-      fechaDesde: this.state.events.fechaDesde,
-      fechaHasta: this.state.events.fechaHasta,
+      fechadesde: this.state.events.fechaDesde,
+      fechahasta: this.state.events.fechaHasta,
       motivo: this.state.events.motivo,
       idpersonaep:this.state.events.idpersonaep,
-      idtipoevento: this.state.events.idtipoevento
+      idtipoevento: this.state.events.idtipoevento,
+      borrado: 0,
     };
-    debugger;
+
     eventRespository
       .createEvent(data)
       .then((response) => {
@@ -68,13 +69,9 @@ class Events extends React.Component {
       .catch((error) => {
         this.notificacionError();
       });
-  }
+  };
 
-  // addNewEvent() {
-  //   this.setState({ form: { nombre: "", desactivataller: 0 } });
-  // }
-
-  //notificaciones
+//notificaciones
   notificacionExito() {
     const Toast = Swal.mixin({
       toast: true,
@@ -112,15 +109,19 @@ class Events extends React.Component {
       title: "Error: Hubo un problema en la carga.",
     });
   }
-
-
-
+  validateDate (fechaDesde, fechaHasta) {
+    if (fechaDesde !== "" && fechaHasta !== "") {
+      return fechaDesde > fechaHasta;
+    }
+    return false
+  }
   render() {
-    console.log(this.state.events);
+    const validate = this.validateDate(this.state.events.fechaDesde,this.state.events.fechaHasta);
+    console.log(this.state.events, validate);
     return (
       <div className="container">
         <form id="myForm"> 
-          <main className="justify-content-center row container-lg form-paciente m-md-3 shadow mx-md-auto border-top-sm m-0">
+          <main className="justify-content-center row container-lg m-md-3 shadow mx-md-auto border-top-sm m-0">
             <h1 className="mt-4 mt-md-2 text-center">Gestion de eventos</h1>
             <h3 className="ms-4 text-center">Eventos</h3>
             <div className="row">
@@ -153,6 +154,11 @@ class Events extends React.Component {
                 />
               </div>
             </div>
+            {validate &&
+              <div className="row">
+              <span style={{ color: 'red' }}><strong>La Fecha de finalizacion es menor a la Fecha de inicio</strong>. Coloque una fecha de finalizacion mayor a la fecha de inicio.</span>
+              </div>
+            }
             <div className="row">
               <div className="form-grup">
                 <label htmlFor="motivo" className="control-label">
@@ -180,7 +186,7 @@ class Events extends React.Component {
                   name="idpersonaep"
                   onChange={this.handleChange}
                   >
-                  <option disabled={true} selected={true} value={-1}>Seleccione una persona</option>
+                  <option disabled={true} selected={true} defaultValue={-1}>Seleccione una persona</option>
                   {this.state.namePersonEP.map((element) => (
                     <option id="idpersonaep" key={element.idpersona.idpersona} value={element.idpersona.idpersona}>{element.idpersona.nombre} {element.idpersona.apellido}</option>
                   ))}
@@ -198,7 +204,7 @@ class Events extends React.Component {
                   name="idtipoevento"
                   onChange={this.handleChange}
                   >
-                  <option disabled={true} selected={true} value={-1}>Seleccione un tipo de evento</option>
+                  <option disabled={true} selected={true} defaultValue={-1}>Seleccione un tipo de evento</option>
                   {this.state.typeEvent.map((element) => (
                       <option id='idtipoevento' key={element.idtipoevento}  value={element.idtipoevento} >{element.nombre}</option>
                   ))}
@@ -210,6 +216,7 @@ class Events extends React.Component {
                 <button
                   type="button"
                   className="btn btn-azul"
+                  disabled={validate}
                   onClick={() => this.guardarNuevo()}
                 >
                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">

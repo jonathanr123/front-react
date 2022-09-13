@@ -67,24 +67,40 @@ class TypeEvents extends React.Component {
   };
   
   // Función que obtiene para eliminar un tipos de evento
-  deleteTypeEvent = async (id) => {
-    await eventRespository.deleteTypeEvent(id);
+  deleteTypeEvent = async (data) => {
+    let modifidedEvent = {
+      borrado: 1,
+    }
+    await eventRespository.updateTypeEvent(data.idtipoevento, modifidedEvent)
   };
   
   delete = (data) => {
-    let opcion = window.confirm("Realmente desea eliminar el tipo de evento" + data.idtipoevento);
-    if (opcion) {
-      let cont = 0;
-      let list = this.state.typeEvent;
-      list.map((listdata) => {
-        if (data.idtipoevento === listdata.idtipoevento) {
-          list.splice(cont, 1);
-        }
-        return cont++;
-      });
-      this.deleteTypeEvent(data.idtipoevento);
-      this.setState({ typeEvent: list });
-    }
+    Swal.fire({
+      title: `¿Seguro que desea eliminar el tipo de evento ${data.nombre}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Eliminar el tipo de evento'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Eliminado con exito!',
+          `Se elimino el evento ${data.nombre}`,
+          'success'
+        )
+        let cont = 0;
+        let list = this.state.typeEvent;
+        list.map((listdata) => {
+          if (data.idtipoevento === listdata.idtipoevento) {
+            list.splice(cont, 1);
+          }
+          return cont++;
+        });
+        this.deleteTypeEvent(data);
+        this.setState({ typeEvent: list });
+      }
+    })
   };
 
 
@@ -96,7 +112,8 @@ class TypeEvents extends React.Component {
         modifidedEvent = {
           id: data.idtipoevento,
           nombre: data.nombre,
-          desactivataller: data.desactivataller === true ? 1 : 0
+          desactivataller: data.desactivataller === true ? 1 : 0,
+          borrado: 0,
         }
         return modifidedEvent
       }
@@ -116,20 +133,13 @@ class TypeEvents extends React.Component {
       });
       this.setState({ list, modalEdit: false, error: "" });
   };
-
-  // Función que obtiene la lista de tipos de eventos
-  getEventAll = async () => {
-    let response = await eventRespository.getEventAll();
-    if (response) {
-      this.setState({ typeEvent: response.data });
-    }
-  };
-
+  
   guardarNuevo() {
     let data = {};
     data = {
       nombre: this.state.form.nombre,
-      desactivataller: (this.state.form.desactivataller === 'on') ? 1 : 0
+      desactivataller: (this.state.form.desactivataller === true) ? 1 : 0,
+      borrado: 0,
     };
     eventRespository
       .createTypeEvent(data)
@@ -145,6 +155,14 @@ class TypeEvents extends React.Component {
         this.notificacionError();
       });
   }
+  // Función que obtiene la lista de tipos de eventos
+  getEventAll = async () => {
+    let response = await eventRespository.getEventAll();
+    if (response) {
+      this.setState({ typeEvent: response.data });
+    }
+  };
+
 
   clear() {
     this.setState({ form: { idtipoevento:0, nombre: "", desactivataller: 0 } });
@@ -199,6 +217,7 @@ class TypeEvents extends React.Component {
     return (
       <>
         <Container>
+        <h1 className="mt-4 mt-md-2 text-center">Tipos de eventos</h1>
           <button
             className="btn btn-primary mb-2 mt-2"
             onClick={() => this.showModalInsert()}
@@ -215,7 +234,7 @@ class TypeEvents extends React.Component {
                   <th scope="col">Accion</th>
                 </tr>
               </thead>
-              {this.state.typeEvent.map((element, index) => (
+              {this.state.typeEvent.filter(element => element.borrado === 0).map((element, index) => (
                 <tbody key={index}>
                     <tr>
                       <td>{element.idtipoevento}</td>
@@ -288,7 +307,6 @@ class TypeEvents extends React.Component {
                 type="checkbox"
                 name="desactivataller"
                 id="desactivataller"
-                readOnly
                 className="form-check-input"
                 onChange={this.handleChange}
               />
