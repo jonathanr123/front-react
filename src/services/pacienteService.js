@@ -25,13 +25,17 @@ export const pacienteRepository = {
         nombre: data.nombreR,
         apellido: data.apellidoR,
         telefono: data.telefonoR,
-        iddireccion: direccionR.data.iddireccion
+        iddireccion: direccionR.data.iddireccion,
+        borrado: 0,
+        espaciente: 0
     }
     let dataPersEP = {
         nombre: data.nombreEP,
         apellido: data.apellidoEP,
         telefono: data.telefonoEP,
-        iddireccion: direccionEP.data.iddireccion
+        iddireccion: direccionEP.data.iddireccion,
+        borrado: 0,
+        espaciente: 1
     }
 
     console.log(dataPersEP)
