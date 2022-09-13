@@ -86,7 +86,12 @@
   background: #C9D6FF;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #E1E1E3, #ffffff);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #E1E1E3, #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  border-radius: 12px !important;
+  border-radius: 12px;
+  box-shadow:0 .5rem 1rem rgba(0,0,0,.15);
+  justify-content:center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding: 2.5rem 2rem;
 } 
 
 .logo {
@@ -142,3 +147,29 @@ table th, table td {
       text-align:center;
   }
 }
+
+.form-control, .form-select {
+  border-color: white;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.field-error {
+  font-size: 12px;
+	margin-bottom: 0;
+	color:red;
+  font-weight: bold;
+}
+
+/*
+.form-paciente {
+  justify-content:center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding: 2.5rem 2rem;
+  background: rgba( 255, 255, 255, 0.25 );
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 10.5px );
+  -webkit-backdrop-filter: blur( 10.5px );
+  border-radius: 12px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+} */

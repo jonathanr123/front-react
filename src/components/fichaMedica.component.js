@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
-import { retrieveDiagnosticosEp } from "../actions/diagnostico";
-import { retrieveEvolucionEp } from "../actions/evolucion";
-import { retrieveOSEp } from "../actions/os";
-import { retrieveIndicacionEp } from "../actions/indicacion";
+import { diagnosticoRepository } from "../services/diagnosticoService"
+import { evolucionRepository } from "../services/evolucionService";
+import { osRepository } from "../services/osService";
+import { indicacionRepository } from "../services/indicacionService";
+import utils from "../utils/utils";
 
 class FichaMedica extends Component {
 
@@ -17,53 +18,52 @@ class FichaMedica extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveDiagnosticosEp(this.props.idEpElegido);
-        this.props.retrieveEvolucionEp(this.props.idEpElegido);
-        this.props.retrieveOSEp(this.props.idEpElegido);
-        this.props.retrieveIndicacionEp(this.props.idEpElegido)
+        this.getDiagnosticos();
+        this.getEvoluciones();
+        this.getOs();
+        this.getIndicaciones();
     }
 
+    // Funcion que obtiene la lista de diagnosticos de un paciente
+    getDiagnosticos = async () => {
+        let response = await diagnosticoRepository.get(this.props.idEpElegido);
 
-    convertirFormatoFecha(string){
-        var info = string.split('-');
-        return info[2] + '/' + info[1] + '/' + info[0];
-    }
-
-    convertirFormatoHora(string){
-        var info = string.split(':');
-        return info[0] + ':' + info[1];
-    }
-
-    convertirEstado(estado){
-        if( estado === 1 ){
-            return 'Vigente';
-        } else{
-            return 'Caducado';
+        if (response) {
+            this.setState({ diagnosticos: response.data })
         }
-    }
+    };
 
-    convertirTipo(tipo){
-        if( tipo === 1 ){
-            return 'Publica';
-        } else{
-            return 'Privada';
-        }
-    }
+    // Funcion que obtiene la lista de evolucion de un paciente
+    getEvoluciones = async () => {
+        let response = await evolucionRepository.get(this.props.idEpElegido);
 
-    describirEstado(estado){
-        switch (estado) {
-            case 0: return "Ausencia de signos patológicos.";
-            case 1: return "Los síntomas parkinsonianos afectan sólo a un lado del cuerpo.";
-            case 2: return "Afectación de los dos lados del cuerpo sin transtorno del equilibrio.";
-            case 3: return "Alteración bilateral leve o moderada, con cierta inestabilidad postural. El paciente es fisicamente independiente.";
-            case 4: return "Incapacidad grave: es capaz de caminar o de permanecer de pié sin ayuda.";
-            case 5: return "El paciente necesita ayuda para todo. Permanece en cama o sentado.";
+        if (response) {
+            this.setState({ evoluciones: response.data })
         }
-    }
+    };
+
+    // Funcion que obtiene la lista de obras sociales de un paciente
+    getOs = async () => {
+        let response = await osRepository.get(this.props.idEpElegido);
+
+        if (response) {
+            this.setState({ osociales: response.data })
+        }
+    };
+
+    // Funcion que obtiene la lista de indicaciones de un paciente
+    getIndicaciones = async () => {
+        let response = await indicacionRepository.get(this.props.idEpElegido);
+
+        if (response) {
+            this.setState({ indicaciones: response.data })
+        }
+    };
 
 
     render() {
-            const {diagnosticos, evoluciones, osociales, indicaciones, nombreEpElegido} = this.props;
+            const { nombreEpElegido } = this.props;
+            const { diagnosticos, evoluciones, osociales, indicaciones } = this.state;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -72,7 +72,7 @@ class FichaMedica extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-12 col-lg-12 col-xl-12">
-                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
+                    <h5><b>Nombre y Apellido:</b> {nombreEpElegido}</h5>
                 </div>
                 </div>
                 
@@ -96,10 +96,10 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {diagnosticos &&
-                                    diagnosticos.filter(diagnostico => diagnostico.borrado == "0").map((diagnostico, index) => (
+                                    diagnosticos.filter(diagnostico => diagnostico.borrado === 0).map((diagnostico, index) => (
                                         <tr key={index}>
                                         <td >{diagnostico.idenfermedad.nombre}</td>
-                                        <td>{this.convertirFormatoFecha(diagnostico.fecha)}</td>
+                                        <td>{utils.convertirFormatoFecha(diagnostico.fecha)}</td>
                                         </tr>
                                     ))}
                 </tbody>
@@ -129,11 +129,11 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {evoluciones &&
-                                    evoluciones.filter(evolucion => evolucion.borrado == "0").map((evolucion, index) => (
+                                    evoluciones.filter(evolucion => evolucion.borrado === 0).map((evolucion, index) => (
                                         <tr key={index}>
                                         <td>Estado: {evolucion.escalaevolucion}</td>
-                                        <td>{this.describirEstado(evolucion.escalaevolucion)}</td>
-                                        <td>{this.convertirFormatoFecha(evolucion.fecha)}</td>
+                                        <td>{utils.describirEstado(evolucion.escalaevolucion)}</td>
+                                        <td>{utils.convertirFormatoFecha(evolucion.fecha)}</td>
                                         </tr>
                                     ))}
                 </tbody>
@@ -161,10 +161,10 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {osociales &&
-                                    osociales.filter(osocial => osocial.borrado == "0").map((osocial, index) => (
+                                    osociales.filter(osocial => osocial.borrado === 0).map((osocial, index) => (
                                         <tr key={index}>
                                         <td>{osocial.idobrasocial.nombre}</td>
-                                        <td>{this.convertirTipo(osocial.idobrasocial.esestatal)}</td>
+                                        <td>{utils.convertirTipo(osocial.idobrasocial.esestatal)}</td>
                                         </tr>
                                     ))}
                 </tbody>
@@ -195,13 +195,13 @@ class FichaMedica extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {indicaciones &&
-                                        indicaciones.filter(indicacion => indicacion.borrado == "0").map((indicacion, index) => (
+                                        indicaciones.filter(indicacion => indicacion.borrado === 0).map((indicacion, index) => (
                                             <tr key={index}>
                                             <td >{indicacion.idmedicamento.nombre}</td>
                                             <td >{indicacion.cantidadmiligramos} mg</td>
-                                            <td >Cada {this.convertirFormatoHora(indicacion.horadetoma)} hs</td>
-                                            <td>{this.convertirFormatoFecha(indicacion.fechaprescripcion)}</td>
-                                            <td >{this.convertirEstado(indicacion.estavigente)}</td>
+                                            <td >Cada {utils.convertirFormatoHora(indicacion.horadetoma)} hs</td>
+                                            <td>{utils.convertirFormatoFecha(indicacion.fechaprescripcion)}</td>
+                                            <td >{utils.convertirEstado(indicacion.estavigente)}</td>
                                             </tr>
                                         ))}
                 </tbody>
@@ -219,13 +219,9 @@ class FichaMedica extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      diagnosticos: state.diagnostico,
-      evoluciones: state.evolucion,
-      osociales: state.os,
-      indicaciones: state.indicacion,
       idEpElegido: state.global.idEpElegido,
       nombreEpElegido: state.global.nombreEpElegido
     };
 };
 
-export default connect(mapStateToProps, { retrieveDiagnosticosEp, retrieveEvolucionEp, retrieveOSEp, retrieveIndicacionEp})(FichaMedica);
+export default connect(mapStateToProps)(FichaMedica);

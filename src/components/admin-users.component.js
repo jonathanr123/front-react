@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../styles/list-pacientesEp.css"
-import { userRepository } from "../services/users.service";
+import { userRepository } from "../services/usersService";
 import Swal from 'sweetalert2';
-import { TokenService } from "../services/token.service";
+import { TokenService } from "../services/tokenService";
+import utils from "../utils/utils";
 
 class AdminUsuarios extends Component {
 
@@ -108,23 +109,6 @@ class AdminUsuarios extends Component {
                         this.setState({ usuarios: users })
                     }
                 };
-
-
-    convertRole(role) {
-        if (role === true) {
-            return "Administrador"
-        } else {
-            return "Usuario"
-        }
-    }
-            
-    convertStateUser(state) {
-        if (state === true) {
-            return "Activo"
-        } else {
-            return "Inactivo"
-        }
-    }
 
     editUser(user){
         this.setState({
@@ -257,7 +241,7 @@ class AdminUsuarios extends Component {
           })
     }
 
-    //Progress bar
+    // Loader
     cargando(){
         Swal.fire({
         title: 'Espere...',
@@ -272,8 +256,6 @@ class AdminUsuarios extends Component {
     }
 
     render() {
-            
-            
             const { usuarios, show, showNuevo }= this.state;
             console.log(usuarios);
         return (
@@ -286,7 +268,7 @@ class AdminUsuarios extends Component {
                         <input type="search" className="form-control" placeholder="Buscar" id="buscador" aria-describedby="buscador" onChange={this.detectarCambio.bind(this, "buscador")} value={this.state.campo["buscador"] || ''}/>
                     </div>
                     <div className="mb-4 col-2 col-md-2 col-lg-6 col-xl-6" style={{paddingLeft:"0px"}}>
-                        <button type="button" className="btn btn-verde" onClick={()=>this.buscar()}><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <button type="button" className="btn btn-verde" onClick={()=>this.buscar()}><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                         </svg></button>
                     </div>
@@ -407,7 +389,7 @@ class AdminUsuarios extends Component {
                 ):('')}
                 
                 <div className="row">
-                <div className="col-12 col-md-12 col-lg-12 col-xl-12" style={{position: "relative", height: "350px", overflow: "auto", display: "block"}}>
+                <div className="col-12 col-md-12 col-lg-12 col-xl-12" style={{position: "relative"}}>
                 <table className="table table-bordered table-hover shadow table-striped" style={{width:'100%'}}>
                 <thead>
                     <tr>
@@ -425,8 +407,8 @@ class AdminUsuarios extends Component {
                                         <tr key={index}>
                                         <td>{usuario.username}</td>
                                         <td>{usuario.name}</td>
-                                        <td>{this.convertRole(usuario.is_superuser)}</td>
-                                        <td>{this.convertStateUser(usuario.is_active)}</td>
+                                        <td>{utils.convertRole(usuario.is_superuser)}</td>
+                                        <td>{utils.convertStateUser(usuario.is_active)}</td>
 
                                         <td>
                                         <button type="button" className="btn btn-verde" style={{marginRight:10}} onClick={() => this.editUser(usuario)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">

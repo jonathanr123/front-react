@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.css';
 import { connect } from "react-redux";
-import { retrieveEvolucionEp, createEvolucion, updateEvolucion, deleteEvolucion } from "../actions/evolucion";
+import { evolucionRepository } from "../services/evolucionService";
+import utils from "../utils/utils";
 class ListaEvolucion extends Component {
 
     constructor(props) {
@@ -20,26 +21,18 @@ class ListaEvolucion extends Component {
     }
 
     componentDidMount() {
-        this.props.retrieveEvolucionEp(this.props.idEpElegido);
+        this.getEvoluciones();
     }
 
+    // Funcion que obtiene la lista de evolucion de un paciente
+    getEvoluciones = async () => {
+        let response = await evolucionRepository.get(this.props.idEpElegido);
 
-    convertirFormatoFecha(string){
-        var info = string.split('-');
-        return info[2] + '/' + info[1] + '/' + info[0];
-    }
-
-    describirEstado(estado){
-        switch (estado) {
-            case 0: return "Ausencia de signos patológicos.";
-            case 1: return "Los síntomas parkinsonianos afectan sólo a un lado del cuerpo.";
-            case 2: return "Afectación de los dos lados del cuerpo sin transtorno del equilibrio.";
-            case 3: return "Alteración bilateral leve o moderada, con cierta inestabilidad postural. El paciente es fisicamente independiente.";
-            case 4: return "Incapacidad grave: es capaz de caminar o de permanecer de pié sin ayuda.";
-            case 5: return "El paciente necesita ayuda para todo. Permanece en cama o sentado.";
-            default: return "";
+        if (response) {
+            this.setState({ evoluciones: response.data })
         }
-    }
+    };
+
 
     editar(nroEvolucion, fecha, idevolucion){
         this.setState({show:true, showNuevo:false, idEditado:idevolucion, campo:{nroEvolucion:nroEvolucion, fecha:fecha}});
@@ -50,16 +43,16 @@ class ListaEvolucion extends Component {
         let fechaEvolucion=this.state.campo.fecha;
         let id=this.state.idEditado;
         if(escala!=='' & fechaEvolucion!=='' ){
-            var data = {
+            let data = {
                 escalaevolucion: escala,
                 fecha: fechaEvolucion,
                 idpersonaep: this.props.idEpElegido,
                 borrado: "0",
               };
-            this.props
-                .updateEvolucion(id, data)
+            evolucionRepository
+                .update(id, data)
                 .then(() => {
-                    this.props.retrieveEvolucionEp(this.props.idEpElegido);
+                    this.getEvoluciones();
                     this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -92,11 +85,16 @@ class ListaEvolucion extends Component {
         let escala=this.state.campo.nroEvolucion;
         let fechaEvolucion=this.state.campo.fecha;
         if(escala!=='' & fechaEvolucion!=='' ){
-            this.props
-                .createEvolucion(escala, fechaEvolucion, this.props.idEpElegido, "0")
+            let data = {
+                escalaevolucion: escala,
+                fecha: fechaEvolucion,
+                idpersonaep: this.props.idEpElegido,
+                borrado: "0",
+              };
+            evolucionRepository
+                .create(data)
                 .then((dataevolucion) => {
-                        console.log(dataevolucion,'Evolucion creado');
-                        this.props.retrieveEvolucionEp(this.props.idEpElegido);
+                        this.getEvoluciones();
                         this.notificacionGuardar();
                  })
                 .catch((e) => {
@@ -115,10 +113,10 @@ class ListaEvolucion extends Component {
                 idpersonaep: this.props.idEpElegido,
                 borrado: "1",
               };
-        this.props
-                .updateEvolucion(id, data)
+        evolucionRepository
+                .update(id, data)
                 .then(() => {
-                    this.props.retrieveEvolucionEp(this.props.idEpElegido);
+                    this.getEvoluciones();
                  })
                 .catch((e) => {
                         console.log(e);
@@ -185,8 +183,8 @@ class ListaEvolucion extends Component {
     }
 
     render() {
-            const {show, showNuevo}=this.state;
-            const {evoluciones, nombreEpElegido} = this.props;
+            const {show, showNuevo, evoluciones }=this.state;
+            const { nombreEpElegido }=this.props;
 
         return (
             <main className="border-top-sm m-0 row justify-content-center form-paciente m-md-3 rounded shadow container-lg mx-md-auto" style={{paddingTop:20}}>
@@ -195,7 +193,7 @@ class ListaEvolucion extends Component {
                 <hr />
                 <div className="row">
                 <div className="col-12 col-md-6 col-lg-6 col-xl-6">
-                    <a><b>Nombre y Apellido:</b> {nombreEpElegido}</a>
+                    <h5><b>Nombre y Apellido:</b> {nombreEpElegido}</h5>
                 </div>
                 <div className="mb-4 col-12 col-md-6 col-lg-6 col-xl-6" style={{textAlign:'right'}}>
                 <button type="button" className="btn btn-azul" onClick={() => this.agregar()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -273,11 +271,11 @@ class ListaEvolucion extends Component {
                 <tbody style={{verticalAlign:'middle'}}>
                     
                     {evoluciones &&
-                                    evoluciones.filter(evolucion => evolucion.borrado == "0").map((evolucion, index) => (
+                                    evoluciones.filter(evolucion => evolucion.borrado === 0).map((evolucion, index) => (
                                         <tr key={index}>
                                         <td>Estado: {evolucion.escalaevolucion}</td>
-                                        <td>{this.describirEstado(evolucion.escalaevolucion)}</td>
-                                        <td>{this.convertirFormatoFecha(evolucion.fecha)}</td>
+                                        <td>{utils.describirEstado(evolucion.escalaevolucion)}</td>
+                                        <td>{utils.convertirFormatoFecha(evolucion.fecha)}</td>
                                         <td><button type="button" className="btn btn-verde" style={{marginRight:10}} onClick={() => this.editar(evolucion.escalaevolucion, evolucion.fecha, evolucion.idevolucion)}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                 <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -303,10 +301,9 @@ class ListaEvolucion extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      evoluciones: state.evolucion,
       idEpElegido: state.global.idEpElegido,
       nombreEpElegido: state.global.nombreEpElegido
     };
 };
 
-export default connect(mapStateToProps, { retrieveEvolucionEp, createEvolucion, updateEvolucion, deleteEvolucion})(ListaEvolucion);
+export default connect(mapStateToProps)(ListaEvolucion);

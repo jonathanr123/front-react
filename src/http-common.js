@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TokenService } from "./services/token.service";
+import { TokenService } from "./services/tokenService";
 
 const instance = axios.create({
   baseURL: "http://localhost:8080/api",
