@@ -18,6 +18,12 @@ import ListaPaciente from "./components/list-pacientesEp.component";
 import Sidebar from "./components/sidebar.component";
 import { TokenService } from "./services/tokenService";
 
+//ema
+import Encuentro from "./components/encuentro";
+import Talleres from "./components/talleres";
+import Actividad from "./components/actividad";
+
+
 class App extends Component {
   
   //arrow function para logout
@@ -73,6 +79,13 @@ class App extends Component {
                     <Route exact path="/nomenclador" component={Nomenclador} />
                     <Route exact path="/events" component={Events} />
                     <Route exact path="/type-events" component={TypeEvents} />
+
+
+                    <Route exact path="/encuentros" component={Encuentro} />
+                    <Route exact path="/talleres" component={Talleres} />
+                    <Route exact path="/actividad" component={Actividad} />
+
+
                   </span>
                   
                 ):(<Redirect to="/" />)}

@@ -83,7 +83,7 @@ class ListaDiagnostico extends Component {
         this.setState({
             campo
         });
-        console.log(campo);
+        console.log(e.target.value, ",", this.state.campo.fecha, ",", this.state.campo.enfermedad);
     }
 
     agregar(){
