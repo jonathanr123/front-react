@@ -749,7 +749,8 @@ const Encuentro = () => {
           <div>
             <h3>Actividades del encuentro:</h3>
             <label className="control-label">
-              {form.idencuentro} : {utils.convertirFormatoFecha(form.fecha)}
+             <div>id: {form.idencuentro}</div> 
+             <div>fecha: {utils.convertirFormatoFecha(form.fecha)}</div> 
             </label>
           </div>
 
@@ -770,13 +771,13 @@ const Encuentro = () => {
                   </tr>
                 </thead>
                 */}
-                {
+               {/**  {
                   actividad.filter(element => element.checked === true).map((act, index) => (
                     <li key={index}>
                       {act.nombre}
                     </li>
                   ))
-                }
+                }*/}
                 <tbody style={{ verticalAlign: 'middle' }}>
                   {Object.keys(actividadesPorTaller).map((tallerNombre, tallerIndex) => (
                     <React.Fragment key={tallerIndex}>
