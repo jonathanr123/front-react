@@ -240,7 +240,7 @@ const Encuentro = () => {
         console.log("Encuentro actualizado con éxito");
 
         // Elimina las actividades realizadas existentes antes de agregar las nuevas
-      console.log("los id de las actividades realizaas", actividadesRealizadasIds );
+      console.log("los id de las actividades realizadas", actividadesRealizadasIds );
         await Promise.all(actividadesRealizadasIds.map(id => actividadRealizadaRepository.delete(id)));
 
         // Obtener las actividades seleccionadas para despues guardarlas

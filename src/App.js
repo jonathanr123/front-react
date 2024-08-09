@@ -22,6 +22,8 @@ import { TokenService } from "./services/tokenService";
 import Encuentro from "./components/encuentro";
 import Talleres from "./components/talleres";
 import Actividad from "./components/actividad";
+import Asistencia from "./components/asistencia-taller";
+
 
 
 class App extends Component {
@@ -84,6 +86,8 @@ class App extends Component {
                     <Route exact path="/encuentros" component={Encuentro} />
                     <Route exact path="/talleres" component={Talleres} />
                     <Route exact path="/actividad" component={Actividad} />
+                    <Route exact path="/asistencia" component={Asistencia} />
+
 
 
                   </span>
