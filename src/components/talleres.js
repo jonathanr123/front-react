@@ -55,7 +55,7 @@ const Talleres = () => {
       ...form,
       [e.target.name]: e.target.value,
     });
-    console.log( e.target.value,",",form.tipotallerid);
+    console.log(e.target.value, ",", form.tipotallerid);
 
   };
 
@@ -387,7 +387,7 @@ const Talleres = () => {
 
 
   const guardarAct = () => {
-    
+
     actividades.forEach((actividad) => {
       actividad.idtaller = form.idtaller;
       console.log("id del taller que se guarda", form.idtaller)
@@ -399,15 +399,17 @@ const Talleres = () => {
           getActividades();
         })
         .catch((error) => {
-         });
+        });
     });
     setActividades([]);
-    setModalInsertAct(false);  }
+    setModalInsertAct(false);
+  }
 
 
 
   return (
     <>
+    {/** mostrar actividades */}
       <Container>
         <h1 className="mt-4 mt-md-2 text-center">Talleres</h1>
         <button
@@ -457,22 +459,9 @@ const Talleres = () => {
                       onClick={() => deleteT(element)}
                     >
 
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-trash"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M13.5 3a.5.5 0 0 1 .5.5V4h-11v-.5a.5.5 0 0 1 1 0V4h9V3.5a.5.5 0 0 1 .5-.5zM5.5 6a.5.5 0 0 0-.5.5V13a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5V6.5a.5.5 0 0 0-.5-.5h-5z"
-                        />
-                        <path
-                          fillRule="evenodd"
-                          d="M4.5 1a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5V2h-7V1z"
-                        />
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                        <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
                       </svg>
                     </button>
 
@@ -586,7 +575,6 @@ const Talleres = () => {
           </button>
         </ModalFooter>
       </Modal>
-
 
 
       {/* EDITAR TALLER */}

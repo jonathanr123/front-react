@@ -80,7 +80,7 @@ class App extends Component {
                     <Route exact path="/events" component={Events} />
                     <Route exact path="/type-events" component={TypeEvents} />
 
-
+                    {/** ema */}
                     <Route exact path="/encuentros" component={Encuentro} />
                     <Route exact path="/talleres" component={Talleres} />
                     <Route exact path="/actividad" component={Actividad} />

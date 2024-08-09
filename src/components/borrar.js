@@ -23,11 +23,11 @@ import utils from "../utils/utils";
 
 const Encuentro = () => {
 
-  const [taller, setTaller] = useState([]); //estado para todos los talleres
-  const [actividad, setActividad] = useState([]);  //estados para todos las actividades
-  const [actividadesMarcadas, setActividadesMarcadas] = useState([]); //estado para las actividades marcadas checkbox
+  const [taller, setTaller] = useState([]);
+  const [actividad, setActividad] = useState([]);
+  const [actividadesF, setActividadesF] = useState([]); //estado para las actividades basadas en el idtaller seleccionado (taller en específico)
 
-  const [idEncuentro, setIdEncuentro] = useState(0);
+  //const [editIndex, setEditIndex] = useState(-1);
   const [encuentro, setEncuentro] = useState([]);
   //const [isEditing, setIsEditing] = useState("");
   const [isVirtual, setIsVirtual] = useState(1); // Estado para controlar si el checkbox está marcado o no
@@ -47,11 +47,6 @@ const Encuentro = () => {
   const [modalInsert, setModalInsert] = useState(false); // showNuevo ---> SetShowNuevo 
   const [modalEdit, setModalEdit] = useState(false); // show ---> setShow
   const [editActivities, setEditActivities] = useState([]); // Estado para almacenar las actividades seleccionadas para el encuentro en edición
-
-  //estas dos const es para la elccion de las actividades del encuentro
-  const [modalInsertAct, setModalInsertAct] = useState(false);
-  const [actividades, setActividades] = useState([]);
-
 
 
   const [editIndex, setEditIndex] = useState(-1); // Estado para almacenar el índice del encuentro que se está editando
@@ -114,22 +109,37 @@ const Encuentro = () => {
         [e.target.name]: e.target.value,
       });
     }
-    console.log("que es esto?", e.target.value, ",", form.fecha);
+
+    // Verificar si el campo modificado es el nombre del taller
+    if (e.target.name === 'nombreTaller') {
+      // Obtener el idtaller seleccionado
+
+      const idTallerSeleccionado = e.target.value;
+      console.log("id del taller para traer las actividades", idTallerSeleccionado);
+      console.log("todas las actividades", actividad);
+
+
+      // Filtrar las actividades basadas en el idtaller seleccionado
+      const actividadesFiltradas = actividad.filter(item => item.idtaller === parseInt(idTallerSeleccionado));
+
+      // Actualizar el estado de las actividades con las actividades filtradas
+      setActividadesF(actividadesFiltradas);
+      console.log("actividades del taller seleccionado", actividadesFiltradas);
+
+    }
+
+    console.log(e.target.value, ",", form.idtaller, ",", form.fecha, ",", form.nombreTaller);
 
   };
 
 
-
-  /* ----------------- esto iria en la grilla de selccionar las actividades como dice la profe */
   /** manejador de estados de los checkboxes para crear */
-  const handleActividadCheck = (idactividad) => {
-    setActividad(prevActividades =>
-      prevActividades.map(act =>
-        act.idactividad === idactividad
-          ? { ...act, checked: !act.checked }
-          : act
-      )
-    );
+  const handleActividadCheck = (index) => {
+    const updatedActividades = [...actividadesF];
+    updatedActividades[index].checked = !updatedActividades[index].checked;
+    setActividadesF(updatedActividades);
+
+    console.log("actividades marcadas", actividadesF);
   };
 
   /** manejador de estados de los checkboxes para editar */
@@ -140,9 +150,6 @@ const Encuentro = () => {
 
     console.log("actividades marcadas en el editar", updatedActividades);
   };
-  /* ----------------- hasta acá -  iria en la grilla de selccionar las actividades como dice la profe */
-
-
 
   const handleChangeVirtual = (e) => {
     // Manejar el cambio de estado del checkbox
@@ -151,10 +158,11 @@ const Encuentro = () => {
   };
 
   //guarda en la tabla actividadrealizada el par idencuentro-idactividad
-  const guardarActividadesSeleccionadas = () => {
-    const actividadesSeleccionadas = actividad.filter(actividad => actividad.checked);
+  const guardarActividadesSeleccionadas = (idEncuentro) => {
+
+    const actividadesSeleccionadas = actividadesF.filter(actividad => actividad.checked);
     const actividadesToSave = actividadesSeleccionadas.map(actividad => ({
-      idencuentro: form.idencuentro,
+      idencuentro: idEncuentro,
       idactividad: actividad.idactividad // Asumiendo que cada actividad tiene una propiedad `id`
     }));
 
@@ -164,42 +172,38 @@ const Encuentro = () => {
       actividadRealizadaRepository.create(actividad)
         .then(response => {
           if (response) {
-            notificacionExito();
-
-            console.log('Actividades guardada:', actividad);
+            console.log('Actividad guardada:', actividad);
           }
         })
         .catch(e => {
           console.log(e);
         });
-    }
-    );
-    setModalInsertAct(false);
-
+    });
+    
   };
 
 
   const guardarNuevo = () => {
-    //let idTaller = form.nombreTaller;
+    let idTaller = form.nombreTaller;
     let fechaTaller = form.fecha;
     let virtual = form.virtual; //ver cual es la diferencia entre isVirtual donde se guarda lo de la virtualidad
 
-    console.log("mentira", ",", fechaTaller, ",", form.fecha)
+    console.log("mentira", ",", form.idtaller, ",", fechaTaller, ",", form.fecha)
 
-    if (fechaTaller !== '' & virtual !== '') {
+    if (idTaller !== '' & fechaTaller !== '' & virtual !== '') {
       let data = {
         fecha: fechaTaller,
-        // idtaller: idTaller,
+        idtaller: idTaller,
         virtual: isVirtual, //y si pongo form.virtual que pasa?, es lo mismo?
       };
 
       encuentroRepository.createEncuentro(data).then(response => {
         if (response) {
           // Obtener el id del encuentro creado
-          setIdEncuentro(response.data.idencuentro); // Asegúrate de que este es el camino correcto para obtener el id
-          console.log("id del encuentro", idEncuentro, response.data.idencuentro);
+          const idEncuentro = response.data.idencuentro; // Asegúrate de que este es el camino correcto para obtener el id
+          console.log("id del encuentro", idEncuentro);
           // Guardar las actividades seleccionadas
-          //guardarActividadesSeleccionadas(idEncuentro);
+          guardarActividadesSeleccionadas(idEncuentro);
           getEncuentroAll();
           notificacionExito();
         }
@@ -213,7 +217,7 @@ const Encuentro = () => {
   }
 
   //edita un encuentro
-  const guardarEdición = async () => {
+  const guardarEdición = async () => { 
 
     // Actualizar el encuentro en la tabla `encuentro`
     let idTaller = form.nombreTaller;
@@ -236,7 +240,7 @@ const Encuentro = () => {
         console.log("Encuentro actualizado con éxito");
 
         // Elimina las actividades realizadas existentes antes de agregar las nuevas
-        console.log("los id de las actividades realizaas", actividadesRealizadasIds);
+      console.log("los id de las actividades realizaas", actividadesRealizadasIds );
         await Promise.all(actividadesRealizadasIds.map(id => actividadRealizadaRepository.delete(id)));
 
         // Obtener las actividades seleccionadas para despues guardarlas
@@ -339,19 +343,18 @@ const Encuentro = () => {
     console.log("todas las actividades", actividad);
 
     try {
-      //le paso el idencuentro y me trae las actividades (tabla actividad) que marqué al crear el encuentro correspondiente
       const response = await actividadRealizadaRepository.get(data.idencuentro);
-      console.log("encuentro", data.idencuentro, "actividades marcadas del encuentro", response);
 
-      // Obtener las actividades filtradas basadas en el idtaller seleccionado - todas las marcadas y sin marcar
+      // Obtener las actividades filtradas basadas en el idtaller seleccionado
       const actividadesFiltradas = actividad.filter(item => item.idtaller === parseInt(idTallerSeleccionado));
-      console.log("todas las actividades del taller", actividadesFiltradas);
+      console.log("actividades del taller", actividadesFiltradas);
+      console.log("actividades marcadas", response);
 
-      // Modificar editActivities para incluir el estado inicial de cada actividad, es decir me muestra (en la interfaz) 
-      // las actividades que marqué cuando creé un encuentro 
+     
+
+      // Modificar editActivities para incluir el estado inicial de cada actividad, es decir me muestra las actividades que marqué cuando creé un ecuentro 
       const actividadesConEstadoInicial = actividadesFiltradas.map(actividad => ({
-        ...actividad, //copia todas las propiedades de actividadesFiltradas (idtaller, idactividad, nombre) en el 
-        //nuevo objeto actividadesConEstadoInicial para luego agregarle la nueva propiedad checked
+        ...actividad,
         checked: response.data.some(realizada => realizada.idactividad === actividad.idactividad) // Marcar si está en response
       }));
       console.log("muestras todas las actividades pero solo marca las elegidas ", actividadesConEstadoInicial);
@@ -422,6 +425,39 @@ const Encuentro = () => {
   };
 
 
+  /*const editarActividad = (index, nombreActividad) => {
+    setEditIndex(index);
+    setNombreAct(nombreActividad)
+ 
+  };
+ 
+ 
+  const guardarActEdit = async (actividadId, nuevoNombre) => {
+    const nuevasActividades = act.map(actividad => {
+      if (actividad.idactividad === actividadId) {
+        return {
+          ...actividad,
+          nombre: nuevoNombre
+        };
+      }
+      return actividad;
+    });
+ 
+    setAct(nuevasActividades);
+    console.log("que contine nuevasActividades", nuevasActividades)
+    console.log("que contine ahora act?", nuevasActividades)
+    setEditIndex(-1);
+  };
+ 
+ 
+  // Funcion que elimina una actvidad elegida
+  const eliminar = async (id) => {
+    const actividadesBorradas = actividades.filter((_, index) => index !== id);
+    setActividades(actividadesBorradas);
+ 
+  };
+*/
+
   const clear = () => {
     setForm({
       idtaller: 0,
@@ -433,70 +469,6 @@ const Encuentro = () => {
   };
 
 
-
-  /** estas tres ultimas funciones es para la eleccion de las actividades del encuentro */
-  const showModalInsertAct = async (data) => {
-    setModalInsertAct(true);
-    setForm({
-      idencuentro: data.idencuentro,
-      fecha: data.fecha,
-    });
-
-    console.log("id del taller para traer las actividades", data.idencuentro);
-    console.log("todas las actividades", actividad);
-
-    try {
-      const response = await actividadRealizadaRepository.get(data.idencuentro);
-      console.log("todas las actividades realizadas", response);
-
-
-      // Modificar editActivities para incluir el estado inicial de cada actividad, es decir me muestra las actividades que marqué cuando creé un ecuentro 
-      const actividadesConEstadoInicial = actividad.map(actividad => ({
-        ...actividad,
-        checked: response.data.some(realizada => realizada.idactividad === actividad.idactividad) // Marcar si está en response
-      }));
-      console.log("muestras todas las actividades pero solo marca las elegidas ", actividadesConEstadoInicial);
-      setActividad(actividadesConEstadoInicial);
-
-    } catch (error) {
-      console.error("Error al obtener las actividades del encuentro:", error);
-    }
-  };
-
-  const handleModalInsertAct = () => {
-    setModalInsertAct(false);
-    setActividades([]);
-  };
-
-  const guardarAct = () => {
-
-    actividades.forEach((actividad) => {
-      actividad.idtaller = form.idtaller;
-      console.log("id del taller que se guarda", form.idtaller)
-      // Llamar a la API para crear la actividad
-      actiRepository.create(actividad)
-        .then((response) => {
-          setModalInsertAct(false);
-          notificacionExito();
-          getActividadAll();
-        })
-        .catch((error) => {
-        });
-    });
-    setActividades([]);
-    setModalInsertAct(false);
-  }
-
-  //agrupa las actividades por taller. El nombre del taller será la clave 
-  //y las actividades serán el valor (un array de actividades).
-  const actividadesPorTaller = actividad.reduce((acc, actividad) => {
-    const tallerNombre = taller.find(taller => taller.idtaller === actividad.idtaller)?.nombre || "Taller no encontrado";
-    if (!acc[tallerNombre]) {
-      acc[tallerNombre] = [];
-    }
-    acc[tallerNombre].push(actividad);
-    return acc;
-  }, {});
 
   return (
     <>
@@ -517,7 +489,7 @@ const Encuentro = () => {
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Fecha</th>
-                {/* <th scope="col">Taller</th> */}
+                <th scope="col">Taller</th>
                 <th scope="col">Virtual</th>
 
                 <th scope="col">Acción</th>
@@ -529,7 +501,7 @@ const Encuentro = () => {
                 <tr key={index}>
                   <td>{element.idencuentro}</td>
                   <td>{utils.convertirFormatoFecha(element.fecha)}</td>
-                  {/*<td>{taller.find(taller => taller.idtaller === element.idtaller)?.nombre}</td> */}
+                  <td>{taller.find(taller => taller.idtaller === element.idtaller)?.nombre}</td>
                   <td>{element.virtual}</td>
 
                   <td>
@@ -548,41 +520,14 @@ const Encuentro = () => {
                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                         <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                       </svg>
-                    </button>
 
+                    </button>
                     <button
                       type="button"
                       className="btn btn-rojo"
                       onClick={() => deleteE(element)}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                        <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                      </svg>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-verde me-1"
-                      onClick={() => showModalInsertAct(element)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-plus-square"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M11 8a.5.5 0 0 1 .5.5v1.5H13a.5.5 0 0 1 0 1h-1.5V13a.5.5 0 0 1-1 0v-1.5H9a.5.5 0 0 1 0-1h1.5V8.5A.5.5 0 0 1 11 8z"
-                        />
-                        <path
-                          fillRule="evenodd"
-                          d="M8 2a1 1 0 0 1 1 1v3.5h3a1 1 0 0 1 0 2h-3V13a1 1 0 0 1-2 0V8.5H4a1 1 0 0 1 0-2h3V3a1 1 0 0 1 1-1z"
-                        />
-                      </svg>
+                      Eliminar
                     </button>
                   </td>
                 </tr>
@@ -595,7 +540,7 @@ const Encuentro = () => {
       {/** fin mostrar encuentros*/}
 
 
-      {/** nuevo encuentro*/}
+      {/** nuevo taller*/}
       <Modal isOpen={modalInsert}>
         <ModalHeader>
           <div>
@@ -603,7 +548,6 @@ const Encuentro = () => {
           </div>
         </ModalHeader>
 
-        {/** crear nuevo encuentro, fecha y virtualidad*/}
         <ModalBody>
           <div className="row">
             <div className="col-md-6">
@@ -633,6 +577,68 @@ const Encuentro = () => {
               </FormGroup>
             </div>
           </div>
+
+          <div className="col-md-6">
+            <FormGroup>
+              <label htmlFor="input_nombre" className="control-label">
+                Taller:
+              </label>
+              <select
+                className="form-select"
+                placeholder="Elijaaaa el taller"
+                name="nombreTaller"
+                id="nombreTaller"
+                value={form.nombreTaller}
+                onChange={handleChange}
+              >
+                <option value="">
+                  Elija el taller
+                </option>
+                {taller.filter(tallerElegido => tallerElegido.borrado === 0).map((tallerElegido) => (
+                  <option
+                    id="idTaller"
+                    key={tallerElegido.idtaller}
+                    value={tallerElegido.idtaller}
+                  >
+                    {tallerElegido.nombre}
+                  </option>
+                ))}
+              </select>
+
+              {actividadesF.length > 0 && (
+                <div className="border shadow p-3 mb-5 bg-white rounded">
+                  <label>Actividades</label>
+                  {
+                    actividadesF.map((actividad, index) => (
+                      <div key={index} className="form-check">
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          id={`actividad-${index}`} // Asigna un ID único al checkbox
+                          value={actividad.id} // Usa el ID de la actividad como valor del checkbox
+                          checked={actividad.checked} // Marca la actividad como seleccionada si está en el estado actividadesSeleccionadas
+                          onChange={() => handleActividadCheck(index)}
+                        />
+                        <label className="form-check-label" htmlFor={`actividad-${index}`}>
+                          {actividad.nombre}
+                        </label>
+                      </div>
+                    ))
+                  }
+                </div>
+              )}
+
+              {
+                actividadesF.filter(element => element.checked === true).map((act, index) => (
+                  <li key={index}>
+                    {act.nombre}
+                  </li>
+                ))
+              }
+
+
+            </FormGroup>
+          </div>
         </ModalBody>
 
         <ModalFooter>
@@ -655,7 +661,8 @@ const Encuentro = () => {
           </button>
         </ModalFooter>
       </Modal>
-      {/** Fin nuevo encuentro*/}
+      {/** Fin nuevo taller*/}
+
 
 
       {/* EDITAR TALLER */}
@@ -721,6 +728,46 @@ const Encuentro = () => {
                 </div>
               </FormGroup>
             </div>
+
+            {/* taller */}
+            <div className="col-md-6">
+              <FormGroup>
+                <label htmlFor="input_nombre" className="control-label">
+                  Taller:
+                </label>
+
+                <input
+                  type="text"
+                  id="input_nombre"
+                  className="form-control"
+                  value={taller.find(tallerElegido => tallerElegido.idtaller === form.nombreTaller)?.nombre || 'Elija el taller'}
+                  readOnly
+                />
+
+                <FormGroup>
+                  <div className="border shadow p-3 mb-5 bg-white rounded">
+                    <label htmlFor="actividades" className="control-label">Actividades</label>
+                    {
+                      editActivities.map((actividad, index) => (
+                        <div key={index} className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id={`actividad-${index}`} // Asigna un ID único al checkbox
+                            value={actividad.id} // Usa el ID de la actividad como valor del checkbox
+                            checked={actividad.checked} // Marca la actividad como seleccionada si está en el estado actividadesSeleccionadas
+                            onChange={() => handleActividadCheckEdit(index)}
+                          />
+                          <label className="form-check-label" htmlFor={`actividad-${index}`}>
+                            {actividad.nombre}
+                          </label>
+                        </div>
+                      ))
+                    }
+                  </div>
+                </FormGroup>
+              </FormGroup>
+            </div>
           </div>
         </ModalBody>
 
@@ -742,112 +789,8 @@ const Encuentro = () => {
           </button>
         </ModalFooter>
       </Modal >
-
-      {/** elegir actividades */}
-      <Modal isOpen={modalInsertAct}>
-        <ModalHeader>
-          <div>
-            <h3>Actividades del encuentro:</h3>
-            <label className="control-label">
-              {form.idencuentro} : {utils.convertirFormatoFecha(form.fecha)}
-            </label>
-          </div>
-
-        </ModalHeader>
-
-        <ModalBody>
-          <div className="row">
-
-            <div className="col-12 col-md-12 col-lg-12 col-xl-12" style={{ position: "relative", maxHeight: "350px", overflow: "auto", display: "block" }}>
-
-              <table className="table table-bordered table-hover shadow" style={{ width: '100%' }}>
-                {/**     <thead>
-               
-                  <tr>
-                   <th scope="col"></th>
-                    <th scope="col">Actividad</th>
-                   <th scope="col">Taller</th>
-                  </tr>
-                </thead>
-                */}
-                {
-                  actividad.filter(element => element.checked === true).map((act, index) => (
-                    <li key={index}>
-                      {act.nombre}
-                    </li>
-                  ))
-                }
-                <tbody style={{ verticalAlign: 'middle' }}>
-                  {Object.keys(actividadesPorTaller).map((tallerNombre, tallerIndex) => (
-                    <React.Fragment key={tallerIndex}>
-                      <tr>
-                        <td colSpan="1" style={{ fontWeight: 'bold', backgroundColor: '#f2f2f2' }}>
-                          {tallerNombre}
-                        </td>
-                      </tr>
-
-                      {actividadesPorTaller[tallerNombre].map((act, index) => (
-                        <tr key={act.idactividad}>
-
-                          <td>{act.nombre}</td>
-                          <td>
-                            <input
-                              type="checkbox"
-                              className="form-check-input"
-                              id={`actividad-${act.idactividad}`}
-                              value={act.idactividad}
-                             // checked={editActivities.find(a => a.idactividad === act.idactividad)?.checked || false}
-
-                            checked={act.checked || false}
-                              onChange={() => handleActividadCheck(act.idactividad)}
-                            />
-                          </td>
-                          {/*  <td>{tallerNombre}</td> */}
-                        </tr>
-                      ))}
-                    </React.Fragment>
-                  ))}
-
-
-                  {/*<label className="control-label">
-                  Actividades existentes:
-                </label>
-                    */}
-
-                </tbody>
-
-
-              </table>
-            </div>
-
-
-          </div>
-        </ModalBody>
-
-        <ModalFooter>
-          <button
-            type="button"
-            className="btn btn-rojo"
-            data-bs-dismiss="modal"
-            onClick={() => handleModalInsertAct()}
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            className="btn btn-azul"
-            onClick={() => guardarActividadesSeleccionadas()}
-          >
-            Guardar
-          </button>
-        </ModalFooter>
-      </Modal>
-      {/** Fin agregar actividades */}
     </>
   );
 }
 
-
 export default Encuentro;
-
-
