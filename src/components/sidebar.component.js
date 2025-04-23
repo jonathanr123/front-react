@@ -104,6 +104,18 @@ class Sidebar extends React.Component {
                         <span className="tooltip">Ingresar/Modificar Familiar</span>
                     </li>
 
+
+                    <li className={(current_url === '/nomenclador') ? 'active' : ''}>
+                        <a href="./nomenclador">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-list-check" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
+                            </svg>
+                            <span className="links_name">Modificar Nomencladores</span>
+                        </a>
+                        <span className="tooltip">Modificar Nomencladores</span>
+
+                    </li>
+
                     <li className={(current_url === '/list-pacientes') ? 'active' : ''}>
                         <a href="./list-pacientes">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-medical" viewBox="0 0 16 16">
@@ -117,14 +129,14 @@ class Sidebar extends React.Component {
 
                     </li>
 
-                    <li className={(current_url === '/nomenclador') ? 'active' : ''}>
-                        <a href="./nomenclador">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-list-check" viewBox="0 0 16 16">
-                                <path fillRule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
+                    <li className={(current_url === '/type-events') ? 'active' : ''}>
+                        <a href="./type-events">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-table" viewBox="0 0 16 16" >
+                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
                             </svg>
-                            <span className="links_name">Modificar Nomencladores</span>
+                            <span className="links_name">Ingresar/Modificar Tipo de evento</span>
                         </a>
-                        <span className="tooltip">Modificar Nomencladores</span>
+                        <span className="tooltip">Ingresar/Modificar Tipo de evento</span>
 
                     </li>
 
@@ -140,25 +152,54 @@ class Sidebar extends React.Component {
 
                     </li>
 
-                    <li className={(current_url === '/type-events') ? 'active' : ''}>
-                        <a href="./type-events">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-table" viewBox="0 0 16 16" >
-                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
-                            </svg>
-                            <span className="links_name">Ingresar/Modificar Tipo de evento</span>
-                        </a>
-                        <span className="tooltip">Ingresar/Modificar Tipo de evento</span>
 
-                    </li>
 
-                    <li className={(current_url === '/talleres') ? 'active' : ''}>
-                        <a href="./talleres">
+                    <li className={(current_url === '/taller') ? 'active' : ''}>
+                        <a href="./taller">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path d="M2.5 1a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5h2zM15 0a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4.414a1 1 0 0 1-.707-.293l-3-3A1 1 0 0 1 0 10.414V1a1 1 0 0 1 1-1h14zM6 3a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1H6zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H6zm0 2a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H6zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1H6z" />
                             </svg>
-                            <span className="links_name">Ingresar/modificar Taller</span>
+                            <span className="links_name">Ingresar/Modificar taller</span>
                         </a>
-                        <span className="tooltip">Ingresar/Modificar Taller</span>
+                        <span className="tooltip">Ingresar/Modificar taller</span>
+
+                    </li>
+
+                    <li className={(current_url === '/encuentro') ? 'active' : ''}>
+                        <a href="./encuentro">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M2.5 1a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5h2zM15 0a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4.414a1 1 0 0 1-.707-.293l-3-3A1 1 0 0 1 0 10.414V1a1 1 0 0 1 1-1h14zM5 2a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H5z" />
+                                <path d="M13.5 1.5a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5H12V2h1.5a.5.5 0 0 1 .5-.5zM11 0H4.414a1 1 0 0 0-.707.293l-3 3A1 1 0 0 0 0 4.414V12h11V0z" />
+                            </svg>
+                            <span className="links_name">Ingresar/Modificar encuentro</span>
+                        </a>
+                        <span className="tooltip">Ingresar/Modificar encuentro</span>
+
+                    </li>
+
+
+
+                    <li className={(current_url === '/aistencia') ? 'active' : ''}>
+                        <a href="./asistencia">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                                <path d="M10 6a2 2 0 1 0-4 0 2 2 0 0 0 4 0z" />
+                                <path d="M2 13s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H2z" />
+                                <path fill-rule="evenodd" d="M12.293 4.707a1 1 0 0 1 1.414 0L16 7.293l-2.293 2.293a1 1 0 0 1-1.414-1.414L14.086 7.5 12.293 5.707a1 1 0 0 1 0-1.414z" />
+                            </svg>
+
+                            <span className="links_name">Registrar asistencia</span>
+                        </a>
+                        <span className="tooltip">Registrar asistencia</span>
+                    </li>
+
+                    <li className={(current_url === '/consulta') ? 'active' : ''}>
+                        <a href="./consulta">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-checklist" viewBox="0 0 16 16">
+                                <path d="M1.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-13A.5.5 0 0 1 .5 1h1zM15 0a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h11zM6 4a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6zm0 4a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H6zm0 4a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H6zm5.854-6.646a.5.5 0 0 1 0 .707l-2.5 2.5a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708L9 7.793l2.146-2.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .707l-2.5 2.5a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708L9 11.793l2.146-2.147a.5.5 0 0 1 .708 0z" />
+                            </svg>
+                            <span className="links_name">Consultas</span>
+                        </a>
+                        <span className="tooltip">Consultas</span>
 
                     </li>
 

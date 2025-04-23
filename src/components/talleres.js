@@ -21,14 +21,13 @@ const Talleres = () => {
   const [taller, setTaller] = useState([]);
   const [act, setAct] = useState([]);
   const [actividades, setActividades] = useState([]);
-  const [editIndex, setEditIndex] = useState(-1);
   const [nombreAct, setNombreAct] = useState("");
-  const [isEditing, setIsEditing] = useState("");
+  const [errores, setErrores] = useState({});
+
   const [form, setForm] = useState({
     idtaller: 0,
     tipotallerid: 0,
     input_nombre: "",
-    selectedTypeTaller: -1,
     act: "",
     nombreAct: "",
   });
@@ -36,19 +35,18 @@ const Talleres = () => {
   const [tipotaller, setTipoTaller] = useState([
     { idtipotaller: 1, nombre: 'Educación física' },
     { idtipotaller: 2, nombre: 'Literario' },
-    { idtipotaller: 3, nombre: 'Danza' }
+    { idtipotaller: 3, nombre: 'Danza' },
+    
   ]);
 
   const [modalInsert, setModalInsert] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [modalInsertAct, setModalInsertAct] = useState(false);
 
-
   useEffect(() => {
     getTallerAll();
     getActividades();
   }, []);
-
 
   const handleChange = (e) => {
     setForm({
@@ -56,7 +54,6 @@ const Talleres = () => {
       [e.target.name]: e.target.value,
     });
     console.log(e.target.value, ",", form.tipotallerid);
-
   };
 
   const handleChangeAct = (e) => {
@@ -68,7 +65,12 @@ const Talleres = () => {
   };
 
   const handleModalInsert = () => {
+    setForm({
+      tipotallerid: -1
+    });
     setModalInsert(false);
+    setErrores({});         // Limpia los errores
+
   };
 
   const showModalInsertAct = (data) => {
@@ -80,14 +82,14 @@ const Talleres = () => {
     });
   };
   const handleModalInsertAct = () => {
+    setNombreAct(""); // Limpiar el campo al hacer clic en Cancelar
     setModalInsertAct(false);
-    setActividades([]);
+    setActividades([]); /// ver que funcion cumple sino borrarlo
+    setErrores({});         // Limpia los errores
 
   };
 
-
-  //al editar un taller en especifico muestra sus valores 
-  const showModalEdit = (data) => {
+  const showModalEdit = (data) => { //al editar un taller en especifico muestra sus valores 
     setModalEdit(true);
     setForm({
       idtaller: data.idtaller,
@@ -96,14 +98,13 @@ const Talleres = () => {
     });
   };
 
-
   const handleModalEdit = () => {
     setModalEdit(false);
+    setErrores({});         // Limpia los errores
+
   };
 
-
-  // Función que obtiene para eliminar un taller
-  const deleteTaller = async (data) => {
+  const deleteTaller = async (data) => { // Función que obtiene para eliminar un taller
     let modifidedTaller = {
       borrado: 1,
       tipotaller: data.tipotaller
@@ -111,20 +112,39 @@ const Talleres = () => {
     await tallerRespository.updateTaller(data.idtaller, modifidedTaller);
   };
 
+  const validarCamposTaller = (form) => {
+    const errors = {};
+    console.log("validar campos taller", form);
+
+    // Validar campo de nombre
+    if (!form.input_nombre.trim()) {
+      errors.input_nombre = "El nombre del taller no puede estar vacío.";
+    }
+
+    // Validar campo de tipo de taller
+    if (!form.tipotallerid || form.tipotallerid === "-1") {
+      errors.tipotallerid = "Debe seleccionar un tipo de taller.";
+    }
+
+    return errors; // Devuelve un objeto con los errores encontrados
+  };
 
   const deleteT = (data) => {
     Swal.fire({
-      title: `¿Seguro que desea eliminar el taller? ${data.tipotaller},${data.idtaller}?`,
+      title: `¿Seguro que desea eliminar el taller: ${data.nombre}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Si, eliminar el taller',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, Eliminar el taller'
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true
+
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire(
-          'Eliminado con exito!',
-          `Se elimino el taller ${data.idtaller}`,
+          'Eliminado con éxito!',
+          `Se eliminó el taller ${data.nombre}`,
           'success'
         )
 
@@ -138,10 +158,6 @@ const Talleres = () => {
 
   // Función que obtiene para eliminar una actividad en la DB
   const deleteAct = async (data) => {
-    /* let modifidedActividad = {
-       borrado: 1,
-       tipotaller: data.tipotaller
-     }*/
     const response = await actiRepository.delete(data.idactividad).catch(e => console.log(e));
 
     if (response) {
@@ -152,12 +168,15 @@ const Talleres = () => {
 
   const deleteA = (data) => {
     Swal.fire({
-      title: `¿Seguro que desea eliminar la actividad? ${data.nombre}?`,
+      title: `¿Seguro que desea eliminar la actividad: ${data.nombre}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, Eliminar la actividad'
+      confirmButtonText: 'Si, eliminar la actividad',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true
+
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire(
@@ -171,30 +190,6 @@ const Talleres = () => {
     })
   };
 
-  const editarActividad = (index, nombreActividad) => {
-    setEditIndex(index);
-    setNombreAct(nombreActividad)
-
-  };
-
-
-  const guardarActEdit = async (actividadId, nuevoNombre) => {
-    const nuevasActividades = act.map(actividad => {
-      if (actividad.idactividad === actividadId) {
-        return {
-          ...actividad,
-          nombre: nuevoNombre
-        };
-      }
-      return actividad;
-    });
-
-    setAct(nuevasActividades);
-    console.log("que contine nuevasActividades", nuevasActividades)
-    console.log("que contine ahora act?", nuevasActividades)
-    setEditIndex(-1);
-  };
-
 
   // Funcion que elimina una actvidad elegida
   const eliminar = async (id) => {
@@ -204,8 +199,16 @@ const Talleres = () => {
   };
 
 
-
   const edit = (dataTaller, dataActividad) => {
+    const errores = validarCamposTaller(form); // Llama a la función de validación
+
+    if (Object.keys(errores).length > 0) {
+      setErrores(errores); // Actualiza el estado de errores
+      return; // Evita continuar si hay errores
+    }
+
+    setErrores({}); // Limpia errores previos si la validación pasa
+
     const updatedTaller = taller.map(t => {
       if (dataTaller.idtaller === t.idtaller) {
         return {
@@ -242,11 +245,18 @@ const Talleres = () => {
   };
 
 
-
-
-
   /////////////////////// guardar datos de un nuevo taller ////////////////////////////
   const guardarNuevo = () => {
+    const errores = validarCamposTaller(form, nombreAct); // Llama a la función de validación
+    console.log("que contiene form", form);
+    console.log("que contiene errores", errores);
+    
+    if (Object.keys(errores).length > 0) {
+      setErrores(errores); // Actualiza el estado de errores
+      return; // Evita continuar si hay errores
+    }
+
+    setErrores({}); // Limpia errores previos si la validación pasa
     // Crear objeto de datos para el taller
     const datataller = {
       nombre: form.input_nombre,
@@ -267,26 +277,11 @@ const Talleres = () => {
           clear();
 
           getTallerAll();
-
-          // Crear objeto de datos para la actividad relacionada con el taller
-          // Llamar a la API para crear la actividad
-          // Recorrer las actividades pasadas por parámetro y asignarles el idTaller
-
-          //actividades.forEach((actividad) => {
-          //  actividad.idtaller = nuevoId;
-          // Llamar a la API para crear la actividad
-          //  actiRepository.create(actividad)
-          //    .then((response) => { })
-          //    .catch((error) => { });
-          // });
-
         }
       })
       .catch((error) => {
         notificacionError();
       });
-    // setActividades([]);
-
   };
 
 
@@ -359,35 +354,30 @@ const Talleres = () => {
       input_nombre: "",
       tipotallerid: 0
     });
-
-    //setNombreAct("");
   };
-  const clearAct = () => {
-    setForm({
-      idtaller: 0,
-      nombreAct: "",
-
-    });
-
-    //setNombreAct("");
-  };
-
-
 
   const cargarNuevo = async () => {
+    const newErrors = {};
+
+    if (!nombreAct.trim()) {
+      newErrors.nombreAct = "El nombre de la actividad no puede estar vacío.";
+    } 
+    if (Object.keys(newErrors).length > 0) {
+      setErrores(newErrors); // Limpia errores previos si la validación pasa
+      return;
+    }
+    setErrores({}); // Limpiar errores si la validación pasa
+
     // Crear objeto de datos para la actividad relacionada con el taller
     const nuevaActividad = {
       nombre: nombreAct,
     };
-
+    // Actualizar el estado de actividades
     setActividades([...actividades, nuevaActividad]);
-    setNombreAct("");
-    // await actiRepository.create(nuevaActividad);
+    setNombreAct(""); // Limpiar el campo después de añadir la actividad
   }
 
-
   const guardarAct = () => {
-
     actividades.forEach((actividad) => {
       actividad.idtaller = form.idtaller;
       console.log("id del taller que se guarda", form.idtaller)
@@ -402,29 +392,29 @@ const Talleres = () => {
         });
     });
     setActividades([]);
+    setErrores({});         // Limpia los errores
     setModalInsertAct(false);
   }
 
-
-
   return (
     <>
-    {/** mostrar actividades */}
+      {/** mostrar actividades */}
       <Container>
         <h1 className="mt-4 mt-md-2 text-center">Talleres</h1>
         <button
           className="btn btn-primary mb-2 mt-2"
           onClick={() => showModalInsert()}
         >
-          Insertar nuevo taller
-        </button>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
+          </svg>Agregar        </button>
         <br />
         <br />
         <div className="row m-md-3 shadow mx-md-auto border-top-sm m-0">
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">ID</th>
+                <th scope="col">Código</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Acción</th>
               </tr>
@@ -438,7 +428,9 @@ const Talleres = () => {
                   <td>
                     <button
                       type="button"
-                      className="btn btn-verde me-1"
+                      className="btn"
+                      title="Editar"
+                      style={{ marginRight: 10, boxShadow: "3px 3px #13E000", backgroundImage: "linear-gradient(to right, #9bff92, #8efe86, #80fd79, #71fc6c, #5ffb5e, #58fb54, #51fb4a, #4afb3e, #51fc35, #57fd2a, #5efe1c, #64ff00)" }}
                       onClick={() => showModalEdit(element)}
                     >
                       <svg
@@ -455,10 +447,11 @@ const Talleres = () => {
 
                     <button
                       type="button"
-                      className="btn btn-rojo"
+                      className="btn"
+                      title="Borrar"
                       onClick={() => deleteT(element)}
+                      style={{ marginRight: 10, boxShadow: "3px 3px #D80000", backgroundImage: "linear-gradient(to right, #ff7171, #ff6867, #ff5e5d, #ff5453, #ff4948, #ff4140, #ff3938, #ff302f, #ff2826, #ff1f1d, #ff1311, #ff0000)" }}
                     >
-
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
                         <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
@@ -467,15 +460,17 @@ const Talleres = () => {
 
                     <button
                       type="button"
-                      className="btn btn-verde me-1"
+                      className="btn"
+                      title="Gestionar actividades"
                       onClick={() => showModalInsertAct(element)}
+                      style={{ marginRight: 10, boxShadow: "3px 3px #0059CD", backgroundImage: "linear-gradient(to right, #6ba7f6, #62a2f7, #599df8, #4f98f9, #4593fa, #3c8efb, #338afc, #2a85fd, #2080fe, #157afe, #0a75ff, #006fff)" }}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"
                         fill="currentColor"
-                        className="bi bi-plus-square"
+                        className="bi bi-trash"
                         viewBox="0 0 16 16"
                       >
                         <path
@@ -492,7 +487,6 @@ const Talleres = () => {
                 </tr>
               ))}
             </tbody>
-
           </table>
         </div>
       </Container>
@@ -520,6 +514,8 @@ const Talleres = () => {
                   className="form-control"
                   onChange={handleChange}
                 />
+                {errores.input_nombre && <small className="text-danger">{errores.input_nombre}</small>}
+
               </FormGroup>
             </div>
 
@@ -537,7 +533,7 @@ const Talleres = () => {
                     onChange={handleChange}
                   >
                     <option value={-1}>
-                      Seleccione el tipo de taller
+                      Elija el tipo de taller
                     </option>
                     {tipotaller.map((element) => (
                       <option
@@ -549,6 +545,8 @@ const Talleres = () => {
                       </option>
                     ))}
                   </select>
+                  {errores.tipotallerid && <small className="text-danger">{errores.tipotallerid}</small>}
+
                 </div>
               </FormGroup>
             </div>
@@ -566,12 +564,10 @@ const Talleres = () => {
           </button>
           <button
             type="button"
-            className="btn btn-azul"
+            className="btn btn-verde"
             onClick={() => guardarNuevo()}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
-              <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
-            </svg>Agregar
+            Guardar
           </button>
         </ModalFooter>
       </Modal>
@@ -589,7 +585,7 @@ const Talleres = () => {
           <div className="row">
             <FormGroup>
               <label htmlFor="idtaller" className="control-label">
-                ID:
+                Código:
               </label>
               <input
                 type="text"
@@ -615,8 +611,11 @@ const Talleres = () => {
                   onChange={handleChange}
                   value={form.input_nombre}
                 />
+                {errores.input_nombre && <small className="text-danger">{errores.input_nombre}</small>}
+
               </FormGroup>
             </div>
+
 
             <div className="col-md-6">
               <FormGroup>
@@ -666,7 +665,7 @@ const Talleres = () => {
           </button>
           <button
             type="button"
-            className="btn btn-azul"
+            className="btn btn-verde"
             onClick={() => edit(form, act)} ///creo que es mejor poner las actividades (nombreAct) dentro del form
           >
             Guardar
@@ -680,7 +679,7 @@ const Talleres = () => {
           <div>
             <h3>Actividades del taller:</h3>
             <label className="control-label">
-              {form.idtaller} - {form.input_nombre}
+              {form.input_nombre} <h6>Código: {form.idtaller} </h6>
             </label>
           </div>
         </ModalHeader>
@@ -692,24 +691,27 @@ const Talleres = () => {
                 Ingrese nueva actividad:
               </label>
               <div className="mb-2 col-12 col-md-12 col-lg-12 col-xl-12 input-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="nombreAct"
-                  id="nombreAct"
-                  value={nombreAct}
-                  onChange={handleChangeAct}
-                />
-                <button
-                  type="button"
-                  className="btn btn-azul-simple"
-                  onClick={cargarNuevo} >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
-                    <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
-                  </svg>
-                </button>
-
+                <div className="input-group">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="nombreAct"
+                    id="nombreAct"
+                    value={nombreAct}  // Asocia el valor del input con el estado
+                    onChange={handleChangeAct}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={cargarNuevo} >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                      <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
+                    </svg>
+                  </button>
+                </div>
+                {errores.nombreAct && <small className="text-danger">{errores.nombreAct}</small>}
               </div>
+
             </FormGroup>
 
 
@@ -717,7 +719,7 @@ const Talleres = () => {
               <table className="table table-bordered table-hover shadow table-striped" style={{ width: '100%' }}>
                 <thead>
                   <tr>
-                    <th scope="col">nombre Actividad</th>
+                    <th scope="col">Nombre</th>
 
                     <th scope="col">Acción</th>
                   </tr>
@@ -741,10 +743,6 @@ const Talleres = () => {
                     ))}
 
 
-                  {/*<label className="control-label">
-                  Actividades existentes:
-                </label>
-                    */}
                   {
                     act.filter(actividad => actividad.idtaller === form.idtaller)
                       .reverse().map((actividad, index) => (
@@ -765,8 +763,6 @@ const Talleres = () => {
                 </tbody>
               </table>
             </div>
-
-
           </div>
         </ModalBody>
 
@@ -781,7 +777,7 @@ const Talleres = () => {
           </button>
           <button
             type="button"
-            className="btn btn-azul"
+            className="btn btn-verde"
             onClick={() => guardarAct()}
           >
             Guardar

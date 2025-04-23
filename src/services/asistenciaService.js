@@ -1,32 +1,39 @@
+
+
 import http from "../http-common";
 
 export const asistenciaRepository = {
-  // service taller 
-  async getEncuentroAll() {
-    let response = await http.get(`/encuentro`);
+  async getAsistenciaAll() {
+    let response = await http.get(`/asistenciataller`); //se conecta directamente con la parte de la url.py
 
     return response;
   },
+
+  async createAsistencia(data) {
+    let response = await http.post(`/asistenciataller`, data);
+
+    return response;
+  },
+
   async updateTaller(id, data) {
-    let response = await http.put(`/taller/${id}`, data);
+    let response = await http.put(`/asistenciataller/${id}`, data);
 
     return response;
   },
 
   async updateEncuentro(id, data) {
-    let response = await http.put(`/encuentro/${id}`, data);
-
-    return response;
-  },
-
-  async createTaller(data) {
-    let response = await http.post(`/taller`, data);
+    let response = await http.put(`/asistenciataller/${id}`, data);
 
     return response;
   },
 
   async deleteTaller(id) {
     return await http.delete(`/taller/${id}`);
+  },
+
+  async getAsistenciaByEncuentro(idEncuentro) {
+    let response = await http.get(`/asistenciataller/encuentro/${idEncuentro}`);
+    return response;
   },
 
 // service de encuentro 
@@ -66,3 +73,5 @@ export const asistenciaRepository = {
   }
   */
 };
+
+

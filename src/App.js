@@ -23,6 +23,7 @@ import Encuentro from "./components/encuentro";
 import Talleres from "./components/talleres";
 import Actividad from "./components/actividad";
 import Asistencia from "./components/asistencia-taller";
+import Consulta from "./components/consulta";
 
 
 
@@ -83,10 +84,12 @@ class App extends Component {
                     <Route exact path="/type-events" component={TypeEvents} />
 
                     {/** ema */}
-                    <Route exact path="/encuentros" component={Encuentro} />
-                    <Route exact path="/talleres" component={Talleres} />
+                    <Route exact path="/encuentro" component={Encuentro} />
+                    <Route exact path="/taller" component={Talleres} />
                     <Route exact path="/actividad" component={Actividad} />
                     <Route exact path="/asistencia" component={Asistencia} />
+                    <Route exact path="/consulta" component={Consulta} />
+
 
 
 

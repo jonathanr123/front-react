@@ -45,7 +45,9 @@ export const encuentroRepository = {
   
 
   async deleteEncuentro(id) {
-    return await http.delete(`/encuentro/${id}`);
+    let response = await http.delete(`/encuentro/${id}`);
+
+    return response;
   },
 
 /* service de persona 
