@@ -224,7 +224,7 @@ class Search extends React.Component {
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">ID</th>
+                <th scope="col">Código</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
                 <th scope="col">Telefono</th>
@@ -279,7 +279,7 @@ class Search extends React.Component {
          <Form>
            <FormGroup>
              <label htmlFor="idpersona" className="control-label">
-               ID de la persona
+               Código
              </label>
              <input
                type="text"
@@ -335,7 +335,7 @@ class Search extends React.Component {
        <ModalFooter>
          <button
            type="button"
-           className="btn btn-secondary"
+           className="btn btn-danger"
            data-bs-dismiss="modal"
            onClick={() => this.handleModalEdit()}
          >

@@ -401,13 +401,15 @@ const Talleres = () => {
       {/** mostrar actividades */}
       <Container>
         <h1 className="mt-4 mt-md-2 text-center">Talleres</h1>
-        <button
-          className="btn btn-primary mb-2 mt-2"
-          onClick={() => showModalInsert()}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
-            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
-          </svg>Agregar        </button>
+          <button
+            className="btn btn-primary mb-2 mt-2"
+            onClick={() => showModalInsert()}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg signoMas" viewBox="0 0 16 16">
+              <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
+            </svg>Agregar
+          </button>
+          
         <br />
         <br />
         <div className="row m-md-3 shadow mx-md-auto border-top-sm m-0">

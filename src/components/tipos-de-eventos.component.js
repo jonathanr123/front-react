@@ -222,16 +222,18 @@ class TypeEvents extends React.Component {
             className="btn btn-primary mb-2 mt-2"
             onClick={() => this.showModalInsert()}
           >
-            Insertar nuevo tipo de evento
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg signoMas" viewBox="0 0 16 16">
+              <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
+            </svg>Agregar
           </button>
           <div className="row m-md-3 shadow mx-md-auto border-top-sm m-0">
             <table className="table">
               <thead>
                 <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Nombre</th>
+                  <th scope="col">Código</th>
+                  <th scope="col">Nómbre</th>
                   <th scope="col">Desactivar Taller</th>
-                  <th scope="col">Accion</th>
+                  <th scope="col">Acción</th>
                 </tr>
               </thead>
               {this.state.typeEvent.filter(element => element.borrado === 0).map((element, index) => (
