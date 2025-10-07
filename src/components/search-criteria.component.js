@@ -1,95 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { eventRespository } from "../services/event.service";
+import { pacienteRepository } from "../services/pacienteService";
+import { useForm } from "react-hook-form";
+
 import Swal from "sweetalert2";
-import {
-  Form,
-  FormGroup,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
-class Search extends React.Component {
-  constructor(props) {
-    super(props);
+import { Form, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import addPacientes from "./add-paciente.component.js";
+import utils from "../utils/utils";
 
-    this.state = {
-      arrayPerson: [],
-      // nombre: '',
-      // apellido: '',
-      searchArrayperson: {
-        idpersona: 0,
-        nombre: "",
-        apellido: "",
-        telefono:0,
-        borrado:0,
-        espaciente: 0
-      },
-    modalEdit: false,
-    }
-    this.buscarName = this.buscarName.bind(this);
-    this.buscarLastName = this.buscarLastName.bind(this);
-  }
+const Search = () => {
+  const [arrayPerson, setArrayPerson] = useState([]);
+  const [searchArrayperson, setSearchArrayperson] = useState({
+    idpersona: 0,
+    nombre: "",
+    apellido: "",
+    telefono: 0,
+    borrado: 0,
+    espaciente: 0
+  });
+  const [modalEdit, setModalEdit] = useState(false);
+  const [modalInsert, setModalInsert] = useState(false);
+  const { register, handleSubmit, formState: { errors }, watch, reset } = useForm();
+  const [errores, setErrores] = useState({});
 
-  componentDidMount() {
-    this.getPersonAll();
-  }
-  handleChange = (e) => {
-    this.setState({
-      searchArrayperson: {
-        ...this.state.searchArrayperson,
-        [e.target.name]: e.target.value,
-      },
+
+  useEffect(() => {
+    getPersonAll();
+  }, []);
+
+  const handleChange = (e) => {
+    setSearchArrayperson({
+      ...searchArrayperson,
+      [e.target.name]: e.target.value,
     });
   };
-  edit = (data) => {
-    let list = this.state.arrayPerson;
-    let modifidedPerson;
-    list.map((listdata) => {
-      if (data.idpersona === listdata.idpersona) {
-        modifidedPerson = {
-          id: data.idpersona,
-          nombre: data.nombre,
-          apellido: data.apellido,
-          telefono: data.telefono,
-          borrado: listdata.borrado,
-          espaciente: listdata.espaciente
-        }
-        return modifidedPerson
+
+  const getPersonAll = async () => {
+    try {
+      const response = await eventRespository.getAll();
+      if (response) {
+        setArrayPerson(response.data);
       }
-      return list
-    });
-    eventRespository.updatePerson(data.idpersona, modifidedPerson)
-      .then((response) => {
-        if (response) {
-          this.notificacionExito();
-          this.clear();
-          this.getPersonAll();
-        }
-      })
-      .catch((error) => {
-        this.notificacionError();
-      });
-      this.setState({ list, modalEdit: false, error: "" });
+    } catch (error) {
+      notificacionError();
+    }
   };
 
-  showModalEdit = (data) => {
-    this.setState({
-      modalEdit: true,
-      searchArrayperson: {idpersona: data.idpersona, nombre: data.nombre, apellido: data.apellido, telefono:data.telefono },
-      error: "",
-    });
-  };
-  handleModalEdit = () => {
-    this.setState({ modalEdit: false });
-  };
-  clear() {
-    this.setState({ searchArrayperson: { idpersona:0, nombre: "", apellido: "", telefono:0, espaciente:0, borrado:0 } });
-  }
-   //notificaciones
-   notificacionExito() {
-    const Toast = Swal.mixin({
+  const notificacionExito = () => {
+    Swal.mixin({
       toast: true,
       position: "top-end",
       showConfirmButton: false,
@@ -99,15 +58,14 @@ class Search extends React.Component {
         toast.addEventListener("mouseenter", Swal.stopTimer);
         toast.addEventListener("mouseleave", Swal.resumeTimer);
       },
-    });
-
-    Toast.fire({
+    }).fire({
       icon: "success",
       title: "Se ha guardado con éxito",
     });
-  }
-   notificacionError() {
-    const Toast = Swal.mixin({
+  };
+
+  const notificacionError = () => {
+    Swal.mixin({
       toast: true,
       position: "top-end",
       showConfirmButton: false,
@@ -117,241 +75,220 @@ class Search extends React.Component {
         toast.addEventListener("mouseenter", Swal.stopTimer);
         toast.addEventListener("mouseleave", Swal.resumeTimer);
       },
-    });
-
-    Toast.fire({
+    }).fire({
       icon: "error",
       title: "Error: Hubo un problema en la carga.",
     });
-  }
-
-  // Función que obtiene la lista de personas con ep
-  getPersonAll = async () => {
-    let response = await eventRespository.getAll();
-    if (response) {
-      this.setState({ arrayPerson: response.data });
-      // this.setState({ searchArrayperson: this.state.arrayPerson });
-      }
   };
 
-  eliminar(persona) {
-    let arrayPersonas = this.state.arrayPerson.filter(function (e) {
-      return e.idpersona !== (persona.idpersona)
+  const edit = async (data) => {
+    try {
+      const updatedPerson = { ...data };
+      await eventRespository.updatePerson(data.idpersona, updatedPerson);
+      notificacionExito();
+      clearForm();
+      getPersonAll();
+      setModalEdit(false);
+    } catch (error) {
+      notificacionError();
+    }
+  };
+
+  const showModalEdit = (data) => {
+    setSearchArrayperson({
+      idpersona: data.idpersona,
+      nombre: data.nombre,
+      apellido: data.apellido,
+      telefono: data.telefono,
     });
-    // modifico el borrado logico de la persona 
-    persona.borrado = 1
+    setModalEdit(true);
+  };
+
+  const handleModalEdit = () => setModalEdit(false);
+
+  const showModalInsert = () => {
+    setModalInsert(true);
+  };
+  const handleModalInsert = () => {
+    setModalInsert(false);
+    setErrores({});         // Limpia los errores
+
+  };
+
+  const clearForm = () => {
+    setSearchArrayperson({
+      idpersona: 0,
+      nombre: "",
+      apellido: "",
+      telefono: 0,
+      espaciente: 0,
+      borrado: 0
+    });
+  };
+
+  const eliminar = (persona) => {
+    const arrayPersonas = arrayPerson.filter(e => e.idpersona !== persona.idpersona);
+    persona.borrado = 1;
+
     Swal.fire({
       title: `¿Seguro que desea eliminar a  ${persona.nombre}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: `Si, Eliminar el a ${persona.nombre}`
-    }).then((result) => {
+      confirmButtonText: `Si, Eliminar a ${persona.nombre}`
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire(
-          'Eliminado con exito!',
-          `Se elimino a${persona.nombre}`,
-          'success'
-        )
-          eventRespository.updatePerson(persona.idpersona, persona)
-          .then((response) => {
-            if (response) {
-              this.notificacionExito();
-              this.getPersonAll();
-            }
-          })
-          .catch((error) => {
-            this.notificacionError();
-          });
-          this.setState({ arrayPerson: arrayPersonas })
-          this.setState({ searchArrayperson: this.state.arrayPerson })
+        try {
+          await eventRespository.updatePerson(persona.idpersona, persona);
+          notificacionExito();
+          setArrayPerson(arrayPersonas);
+          getPersonAll();
+        } catch (error) {
+          notificacionError();
+        }
       }
-    })
-  }
-  
-  buscar() {
-    let nombre = this.state.searchArrayperson.nombre
-    // let apellido = this.state.arrayPerson.idpersona.apellido
-    let arrayPersonas = this.state.arrayPerson.filter(function (person) {
-      return person.nombre.includes(nombre) 
     });
-    this.setState({ 
-      searchArrayperson: {
-        idpersona: arrayPersonas.idpersona,
-        nombre: arrayPersonas.nombre,
-        apellido: arrayPersonas.apellido,
-        telefono:arrayPersonas.telefono,
-        espaciente:arrayPersonas.espaciente
-      } 
-    })
-    console.log(this.state.searchArrayperson);
+  };
+
+  const arrayPersonIspaciente = arrayPerson.filter(e => e.espaciente === 1 && e.borrado !== 1);
+
+  const enviarFormulario = async (data) => {
+    const response = await pacienteRepository.guardarPaciente(data).catch(() => utils.errorSend());
+    if (response) {
+      utils.send()
+      reset();
+    }
+  }
+  const customSubmit = (data) => {
+    console.log(data);
+    enviarFormulario(data);
   }
 
-  buscarName(e) {
-    this.setState({
-      searchArrayperson: {
-        nombre: e.target.value
-      },
-    })
-  }
+  return (
+    <>
 
-  buscarLastName(e) {
-    this.setState({
-      searchArrayperson: {
-        ...this.state.searchArrayperson,
-        [e.target.name]: e.target.value,
-      },
-    })
-  }
-  
-  render() {
-    let arrayPersonIspaciente = this.state.arrayPerson.filter(e => e.espaciente === 1 && e.borrado !== 1)
-    return (
-      <>
       <main className="border-top-sm m-0 justify-content-center m-md-3 rounded shadow container-lg mx-md-auto">
-        {/* <div className="mt-1 mb-2">
-          <label id="nombre" htmlFor="" className="me-1" >Nombre</label>
-          <input type="text" nombre="nombre" id="nombre" onChange={this.buscarName} />
-        </div>
-        <div>
-          <label id="apellido" htmlFor="" className="me-1">Apellido</label>
-          <input type="text" nombre="apellido" id="apellido" onChange={this.buscarLastName} />
-          <button type="button" className="btn btn-success col ms-3" onClick={() => this.buscar()}>Confirmar</button>
-        </div> */}
         <h1 className="mt-4 mt-md-2 text-center">Personas con EP</h1>
+        <button
+          className="btn btn-primary mb-2 mt-2"
+          onClick={() => showModalInsert()}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg signoMas" viewBox="0 0 16 16">
+            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
+          </svg>Agregar
+        </button>
+
         <div className='row'>
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">Código</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Apellido</th>
-                <th scope="col">Telefono</th>
-                {/* <th scope="col">borrado</th> */}
-                <th scope="col">Accion</th>
-                
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Telefono</th>
+                <th>Accion</th>
               </tr>
             </thead>
-            {arrayPersonIspaciente.map((person, index) => (
-                <tbody key={index}>
-                    <tr key={person.idpersona}>
-                    <th scope="row">{person.idpersona}</th>
-                    <td>{person.nombre}</td>
-                    <td>{person.apellido}</td>
-                    <td>{person.telefono}</td>
-                    {/* <td>{person.borrado}</td> */}
-                    <td>
-                    <button
-                          type="button"
-                          className="btn btn-verde me-1"
-                          onClick={() => this.showModalEdit(person)}
-                        >
-                        <svg 
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16" 
-                          height="16" 
-                          fill="currentColor" 
-                          className="bi bi-pencil-square" 
-                          viewBox="0 0 16 16">
-                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                          <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                        </svg>
-                          
-                        </button>
-                      <button type="button" className="btn btn-danger" onClick={() => this.eliminar(person)}>Eliminar</button>
-                    </td>
-                  </tr>
-                </tbody>
-            ))}
+            <tbody>
+              {arrayPersonIspaciente.map((person, index) => (
+                <tr key={person.idpersona}>
+                  <th scope="row">{person.idpersona}</th>
+                  <td>{person.nombre}</td>
+                  <td>{person.apellido}</td>
+                  <td>{person.telefono}</td>
+                  <td>
+                    <button className="btn btn-verde me-1" onClick={() => showModalEdit(person)}>
+                      Editar
+                    </button>
+                    <button className="btn btn-danger" onClick={() => eliminar(person)}>Eliminar</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </main>
 
-       {/* EDITAR */}
-       <Modal isOpen={this.state.modalEdit}>
-       <ModalHeader>
-         <div>
-           <h2>Editar la persona con ep</h2>
-         </div>
-       </ModalHeader>
-       <ModalBody>
-         <Form>
-           <FormGroup>
-             <label htmlFor="idpersona" className="control-label">
-               Código
-             </label>
-             <input
-               type="text"
-               name="idpersona"
-               id="idpersona"
-               className="form-control"
-               readOnly
-               onChange={this.handleChange}
-               value={this.state.searchArrayperson.idpersona}
-             />
-           </FormGroup>
-           <FormGroup>
-             <label htmlFor="nombre" className="control-label">
-               Nombre 
-             </label>
-             <input
-               type="text"
-               name="nombre"
-               id="nombre"
-               className="form-control"
-               onChange={this.handleChange}
-               value={this.state.searchArrayperson.nombre}
-             />
-           </FormGroup>
-           <FormGroup>
-             <label htmlFor="apellido" className="control-label">
-              Apellido 
-             </label>
-             <input
-               type="text"
-               name="apellido"
-               id="apellido"
-               className="form-control"
-               onChange={this.handleChange}
-               value={this.state.searchArrayperson.apellido}
-             />
-           </FormGroup>
-           <FormGroup>
-             <label htmlFor="telefono" className="control-label">
-              Telefono 
-             </label>
-             <input
-               type="text"
-               name="telefono"
-               id="telefono"
-               className="form-control"
-               onChange={this.handleChange}
-               value={this.state.searchArrayperson.telefono}
-             />
-           </FormGroup>
-         </Form>
-       </ModalBody>
-       <ModalFooter>
-         <button
-           type="button"
-           className="btn btn-danger"
-           data-bs-dismiss="modal"
-           onClick={() => this.handleModalEdit()}
-         >
-           Cancelar
-         </button>
-         <button
-           type="button"
-           className="btn btn-primary"
-           onClick={() => this.edit(this.state.searchArrayperson)}
-         >
-           Guardar
-         </button>
-       </ModalFooter>
-     </Modal>
-     </>
-    )
-  }
-}
+
+      {/*gregar personas con EP*/}
+      <Modal isOpen={modalInsert}>
+          {addPacientes(register, errors, "EP")}
+          <div className="row">
+            <div className="col-12 col-md-12 col-lg-12 col-xl-12" style={{ textAlign: 'center' }}>
+              <button
+                type="button"
+                className="btn btn-rojo"
+                data-bs-dismiss="modal"
+                onClick={() => handleModalInsert()}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+      </Modal>
+
+      {/*editar personas con EP*/}
+      <Modal isOpen={modalEdit}>
+        <ModalHeader>
+          <h2>Editar la persona con EP</h2>
+        </ModalHeader>
+        <ModalBody>
+          <Form>
+            <FormGroup>
+              <label htmlFor="idpersona">Código</label>
+              <input
+                type="text"
+                name="idpersona"
+                id="idpersona"
+                className="form-control"
+                readOnly
+                onChange={handleChange}
+                value={searchArrayperson.idpersona}
+              />
+            </FormGroup>
+            <FormGroup>
+              <label htmlFor="nombre">Nombre</label>
+              <input
+                type="text"
+                name="nombre"
+                id="nombre"
+                className="form-control"
+                onChange={handleChange}
+                value={searchArrayperson.nombre}
+              />
+            </FormGroup>
+            <FormGroup>
+              <label htmlFor="apellido">Apellido</label>
+              <input
+                type="text"
+                name="apellido"
+                id="apellido"
+                className="form-control"
+                onChange={handleChange}
+                value={searchArrayperson.apellido}
+              />
+            </FormGroup>
+            <FormGroup>
+              <label htmlFor="telefono">Telefono</label>
+              <input
+                type="text"
+                name="telefono"
+                id="telefono"
+                className="form-control"
+                onChange={handleChange}
+                value={searchArrayperson.telefono}
+              />
+            </FormGroup>
+          </Form>
+        </ModalBody>
+        <ModalFooter>
+          <button className="btn btn-danger" onClick={handleModalEdit}>Cancelar</button>
+          <button className="btn btn-primary" onClick={() => edit(searchArrayperson)}>Guardar</button>
+        </ModalFooter>
+      </Modal>
+    </>
+  );
+};
+
 export default Search;

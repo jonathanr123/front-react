@@ -541,7 +541,7 @@ return (
                     type="button"
                     className="btn"
                     style={{ marginRight: 10, boxShadow: "3px 3px #D80000", backgroundImage: "linear-gradient(to right, #ff7171, #ff6867, #ff5e5d, #ff5453, #ff4948, #ff4140, #ff3938, #ff302f, #ff2826, #ff1f1d, #ff1311, #ff0000)" }}
-
+                    title="Borrar"
                     onClick={() => deleteE(element)}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -557,7 +557,7 @@ return (
                     type="button"
                     className="btn"
                     style={{ marginRight: 10, boxShadow: "3px 3px #0059CD", backgroundImage: "linear-gradient(to right, #6ba7f6, #62a2f7, #599df8, #4f98f9, #4593fa, #3c8efb, #338afc, #2a85fd, #2080fe, #157afe, #0a75ff, #006fff)" }}
-
+                    title="Agregar actividades"
                     onClick={() => showModalInsertAct(element)}
                   >
                     <svg
