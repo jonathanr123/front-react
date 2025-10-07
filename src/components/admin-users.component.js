@@ -168,15 +168,19 @@ class AdminUsuarios extends Component {
         let data = {}
         if (this.validarFormulario()) {
             this.cargando();
-            data ={
-                user:this.state.campo.username,
-                first_name:this.state.campo.firstname,
-                last_name:this.state.campo.lastname,
-                password:this.state.campo.password,
-                is_superuser: (this.state.campo.role === 'true') ? true : false,
-                is_active: (this.state.campo.isActive === 'true') ? true : false,
-                is_staff: false
-            }
+                    console.log("ROLE:", this.state.campo.role); // 👀 para ver qué viene del select
+
+       const esAdmin = this.state.campo.role === "true"; // 👈 acá comparamos con string
+
+        data = {
+            user: this.state.campo.username,
+            first_name: this.state.campo.firstname,
+            last_name: this.state.campo.lastname,
+            password: this.state.campo.password,
+            is_superuser: esAdmin,
+            is_staff: esAdmin,
+            is_active: this.state.campo.isActive === "true"
+        }
 
             setTimeout(() => {
                 userRepository.createUser(data).then(response => {
