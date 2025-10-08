@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { eventRespository } from "../services/event.service";
 import { pacienteRepository } from "../services/pacienteService";
 import { useForm } from "react-hook-form";
+import { Pencil , Trash, Plus } from 'react-bootstrap-icons';
 
 import Swal from "sweetalert2";
 import { Form, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
@@ -170,13 +171,15 @@ const Search = () => {
 
       <main className="border-top-sm m-0 justify-content-center m-md-3 rounded shadow container-lg mx-md-auto">
         <h1 className="mt-4 mt-md-2 text-center">Personas con EP</h1>
+        {
+          // Este botón debería ser el estándar
+        }
         <button
           className="btn btn-primary mb-2 mt-2"
           onClick={() => showModalInsert()}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg signoMas" viewBox="0 0 16 16">
-            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
-          </svg>Agregar
+          <Plus/>
+          Agregar
         </button>
 
         <div className='row'>
@@ -199,9 +202,9 @@ const Search = () => {
                   <td>{person.telefono}</td>
                   <td>
                     <button className="btn btn-verde me-1" onClick={() => showModalEdit(person)}>
-                      Editar
+                      <Pencil />
                     </button>
-                    <button className="btn btn-danger" onClick={() => eliminar(person)}>Eliminar</button>
+                    <button className="btn btn-danger" onClick={() => eliminar(person)}><Trash /></button>
                   </td>
                 </tr>
               ))}

@@ -25,6 +25,9 @@ import Actividad from "./components/actividad";
 import Asistencia from "./components/asistencia-taller";
 import Consulta from "./components/consulta";
 
+// Tiago
+// import 'react-bootstrap-icons'; Estos son iconos de bootstrap. Instalé una biblioteca con el comando npm install react-bootstrap-icons
+
 
 
 class App extends Component {
