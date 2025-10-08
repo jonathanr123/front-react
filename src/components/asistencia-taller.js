@@ -404,9 +404,9 @@ const Asistencia = () => {
 
           </table>
           <div className="mb-4 col-12 col-md-6 col-lg-4 col-xl-4" style={{ textAlign: 'center', paddingTop: 38 }}>
+            <button type="button" className="btn btn-verde" style={{ width: '40%', marginLeft: 10 }} onClick={() => guardarAsistencia()}>Guardar</button> {/**implementar guardar */}
             <button type="button" className="btn btn-rojo" style={{ width: '40%' }} onClick={() => clear()}>Cancelar</button>  {/**implementar cancelar */}
 
-            <button type="button" className="btn btn-verde" style={{ width: '40%', marginLeft: 10 }} onClick={() => guardarAsistencia()}>Guardar</button> {/**implementar guardar */}
           </div>
         </div>
 

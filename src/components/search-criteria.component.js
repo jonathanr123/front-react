@@ -283,8 +283,8 @@ const Search = () => {
           </Form>
         </ModalBody>
         <ModalFooter>
+          <button className="btn btn-verde" onClick={() => edit(searchArrayperson)}>Guardar</button>
           <button className="btn btn-danger" onClick={handleModalEdit}>Cancelar</button>
-          <button className="btn btn-primary" onClick={() => edit(searchArrayperson)}>Guardar</button>
         </ModalFooter>
       </Modal>
     </>

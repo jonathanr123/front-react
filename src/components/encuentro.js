@@ -629,18 +629,18 @@ return (
       <ModalFooter>
         <button
           type="button"
+          className="btn btn-verde"
+          onClick={() => guardarNuevo()}
+        >
+          Guardar
+        </button>
+        <button
+          type="button"
           className="btn btn-rojo"
           data-bs-dismiss="modal"
           onClick={() => handleModalInsert()}
         >
           Cancelar
-        </button>
-        <button
-          type="button"
-          className="btn btn-verde"
-          onClick={() => guardarNuevo()}
-        >
-          Guardar
         </button>
       </ModalFooter>
     </Modal>
@@ -715,18 +715,18 @@ return (
       <ModalFooter>
         <button
           type="button"
+          className="btn btn-verde"
+          onClick={() => guardarEdición(form, /*act*/)} ///creo que es mejor poner las actividades (nombreAct) dentro del form
+        >
+          Guardar
+        </button>
+        <button
+          type="button"
           className="btn btn-rojo"
           data-bs-dismiss="modal"
           onClick={() => handleModalEdit()}
         >
           Cancelar
-        </button>
-        <button
-          type="button"
-          className="btn btn-verde"
-          onClick={() => guardarEdición(form, /*act*/)} ///creo que es mejor poner las actividades (nombreAct) dentro del form
-        >
-          Guardar
         </button>
       </ModalFooter>
     </Modal >
@@ -786,18 +786,18 @@ return (
       <ModalFooter>
         <button
           type="button"
+          className="btn btn-verde"
+          onClick={() => guardarActividadesSeleccionadas()}
+        >
+          Guardar
+        </button>
+        <button
+          type="button"
           className="btn btn-rojo"
           data-bs-dismiss="modal"
           onClick={() => handleModalInsertAct()}
         >
           Cancelar
-        </button>
-        <button
-          type="button"
-          className="btn btn-verde"
-          onClick={() => guardarActividadesSeleccionadas()}
-        >
-          Guardar
         </button>
       </ModalFooter>
     </Modal>
